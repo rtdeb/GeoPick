@@ -1,0 +1,33 @@
+{
+  "name": "georef_calc_browser",
+  "version": "1.0.0",
+  "description": "Calculates uncertainty radius from a on-screen digitized line or polygon",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",    
+    "build": "webpack --config webpack.prod.js",
+    "start": "webpack serve --open --config webpack.dev.js"
+  },
+  "keywords": [],
+  "author": "= <=>",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.1",
+    "node-sass": "^7.0.3",
+    "sass-loader": "^13.1.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "@turf/turf": "^6.5.0",
+    "bulma": "^0.9.4",
+    "jquery": "^3.6.1",
+    "leaflet": "^1.9.2",
+    "leaflet-defaulticon-compatibility": "^0.1.1",
+    "leaflet-draw": "^1.0.4"
+  }
+}
