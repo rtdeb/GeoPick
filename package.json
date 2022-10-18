@@ -9,7 +9,7 @@
     "start": "webpack serve --open --config webpack.dev.js"
   },
   "keywords": [],
-  "author": "= <=>",
+  "author": "aescobarr <agustiescobar@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^6.7.1",
