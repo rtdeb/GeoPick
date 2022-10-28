@@ -10,49 +10,79 @@
 <body>
     <div id="container">
         <div id="map"></div>
-        <div id="info">
-            <div class="field">
-                <label class="label">Centroid x</label>
-                <div class="control">
-                    <input id="centroid_x" class="input" type="text" placeholder="">
+        <div id="info">                                    
+            <div class="field is-horizontal">
+                <div class="field-label">Centroid x</div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="centroid_x" class="input" type="text" placeholder="">
+                        </p>
+                    </div>       
                 </div>
-                <label class="label">Snapped Centroid x</label>
-                <div class="control">
-                    <input id="s_centroid_x" class="input" type="text" placeholder="">
-                </div>
+                <div class="field-label">Centroid y</div>                
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="centroid_y" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
+                </div>  
             </div>
-            <div class="field">
-                <label class="label">Centroid y</label>
-                <div class="control">
-                    <input id="centroid_y" class="input" type="text" placeholder="">
+            <div class="field is-horizontal">
+                <div class="field-label">Snapped Centroid x</div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="s_centroid_x" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
                 </div>
-                <label class="label">Snapped Centroid y</label>
-                <div class="control">
-                    <input id="s_centroid_y" class="input" type="text" placeholder="">
+                <div class="field-label">Snapped Centroid y</div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="s_centroid_y" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
+                </div>  
+            </div>                        
+            <div class="field is-horizontal">
+                <div class="field-label">Radius (km)</div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="radius" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label">Radius (km)</label>
-                <div class="control">
-                    <input id="radius" class="input" type="text" placeholder="">
+                <div class="field-label">Radius (m)</div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="radius_m" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
                 </div>
-                <label class="label">Radius (m)</label>
-                <div class="control">
-                    <input id="radius_m" class="input" type="text" placeholder="">
+            </div>                        
+            <div class="field is-horizontal">
+                <div class="field-label">Geometry class</div>
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="g_class" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
+                </div>                
+                <div class="field-label">Centroid in geometry?</div>                
+                <div class="field-body">
+                    <div class="field">
+                        <p class="control">
+                            <input id="inside" class="input" type="text" placeholder="">
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="field">
-                <label class="label">Geometry class</label>
-                <div class="control">
-                    <input id="g_class" class="input" type="text" placeholder="">
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Centroid in geometry?</label>
-                <div class="control">
-                    <input id="inside" class="input" type="text" placeholder="">
-                </div>
-            </div>
+            </div>            
         </div>
     </div>
 </body>

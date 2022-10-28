@@ -1,5 +1,7 @@
 import L from "leaflet";
 import draw from 'leaflet-draw';
+import * as turf from '@turf/turf';
+var $ = require('jquery')
 
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
@@ -9,7 +11,7 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import "./index.css";
 require('./mystyle.scss');
 
-import { clear_centroid_data, display_centroid_data } from './util.js';
+import { calculate, clear_centroid_data, display_centroid_data } from './util.js';
 
 var map = L.map('map').setView([51.505, -0.09], 3);
 
@@ -20,6 +22,7 @@ var buffer_layer = new L.geoJSON();
 map.addLayer(buffer_layer);
 
 var editableLayers = new L.FeatureGroup();
+//var editableLayers = new L.geoJSON();
 map.addLayer(editableLayers);
 
 var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -65,23 +68,24 @@ map.addControl(drawControl);
 
 
 map.on(L.Draw.Event.CREATED, function (e) {
+    clear_centroid_data();
+    centroid_layer.clearLayers();
+    buffer_layer.clearLayers();
+
     var type = e.layerType,
         layer = e.layer;
-
-    if( type === 'polyline' || type === 'polygon' || type === 'rectangle' ){
-        var geometry = layer.toGeoJSON();        
-        display_centroid_data(geometry, buffer_layer, centroid_layer);
-    }
     editableLayers.addLayer(layer);    
+    display_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);            
 });
 
 map.on(L.Draw.Event.EDITED, function (e) {
     clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    var layers = e.layers;
-    var geometry = layers.toGeoJSON().features[0];    
-    display_centroid_data(geometry, buffer_layer, centroid_layer);
+    /*var layers = e.layers;
+    var geometry = layers.toGeoJSON().features[0];
+    display_centroid_data(geometry, buffer_layer, centroid_layer);*/
+    display_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
 });
 
 map.on(L.Draw.Event.DELETED, function (e) {   

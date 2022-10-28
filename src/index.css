@@ -10,19 +10,14 @@ body {
   height: 600px;  
 }
 
-#info {
-  height: 200px;
-  display:flex;
-  gap: 10px;
-}
-
-#container {
-    display:flex;
-    flex-direction:column;
-}
-
 div.info_box {
     background: red;    
     width: 100px;
     height: 100px;
+}
+
+#info{
+  padding: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
 }
