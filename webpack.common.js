@@ -6,6 +6,7 @@ const path = require('path');
    entry: {
         index: './src/index.js',                    
         util: './src/util.js',
+        ui: './src/ui.js',
    },
    output: {
     filename: 'js/[name].bundle.js',

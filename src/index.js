@@ -1,7 +1,5 @@
 import L from "leaflet";
 import draw from 'leaflet-draw';
-import * as turf from '@turf/turf';
-var $ = require('jquery')
 
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
@@ -11,7 +9,8 @@ import "leaflet-draw/dist/leaflet.draw.css";
 import "./index.css";
 require('./mystyle.scss');
 
-import { calculate, clear_centroid_data, display_centroid_data } from './util.js';
+import { clear_centroid_data } from './ui.js';
+import { compute_centroid_data } from './util.js';
 
 var map = L.map('map').setView([51.505, -0.09], 3);
 
@@ -37,17 +36,13 @@ var options = {
     position: 'topleft',
     draw: {
         polyline: {
+            allowIntersection: false,
             shapeOptions: {
-                color: '#f357a1',
-                weight: 10
+                color: '#f357a1'                
             }
         },
         polygon: {
-            allowIntersection: false, // Restricts shapes to simple polygons
-            drawError: {
-                color: '#e1e100', // Color the shape will turn when intersects
-                message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
-            },
+            allowIntersection: false,            
             shapeOptions: {
                 color: '#eb4936'
             }
@@ -58,8 +53,8 @@ var options = {
         marker: false        
     },
     edit: {
-        featureGroup: editableLayers, //REQUIRED!!
-        remove: true
+        featureGroup: editableLayers,
+        //remove: true
     }
 };
 
@@ -73,23 +68,27 @@ map.on(L.Draw.Event.CREATED, function (e) {
     buffer_layer.clearLayers();
 
     var type = e.layerType,
-        layer = e.layer;
-    editableLayers.addLayer(layer);    
-    display_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);            
+        layer = e.layer;        
+    editableLayers.addLayer(layer);
+    compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+    editableLayers.bringToFront();
 });
 
 map.on(L.Draw.Event.EDITED, function (e) {
     clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    /*var layers = e.layers;
-    var geometry = layers.toGeoJSON().features[0];
-    display_centroid_data(geometry, buffer_layer, centroid_layer);*/
-    display_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+    compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+    editableLayers.bringToFront();
 });
+
 
 map.on(L.Draw.Event.DELETED, function (e) {   
     clear_centroid_data();
     centroid_layer.clearLayers();
-    buffer_layer.clearLayers();    
+    buffer_layer.clearLayers();
+    if(editableLayers.toGeoJSON().features.length > 0){
+        compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+        editableLayers.bringToFront();
+    }
 });

@@ -1,17 +1,6 @@
-var $ = require('jquery')
 import * as turf from '@turf/turf';
 
-var clear_centroid_data = function(){
-    $('#centroid_x').val("");
-    $('#centroid_y').val("");
-    $('#s_centroid_x').val("");
-    $('#s_centroid_y').val("");
-    $('#radius').val("");
-    $('#g_class').val("");
-    $('#inside').val("");
-    $('#radius').val("");
-    $('#radius_m').val("");
-}
+import { show_centroid_data, clear_centroid_data } from './ui.js';
 
 var max_distance_point_to_geometry = function(centroid, turf_geometry){
     var geometry_coordinates = turf.coordAll(turf_geometry);
@@ -59,24 +48,25 @@ var get_geometry_from_layer = function(containing_geometry){
     return turf_geometry;
 }
 
-var display_centroid_data = function(containing_geometry, buffer_layer, centroid_layer){
+var compute_centroid_data = function(containing_geometry, buffer_layer, centroid_layer){
     
+    var display_data = {};
+
     var centroid = turf.centroid(containing_geometry);
-    $('#centroid_x').val(centroid.geometry.coordinates[0]);    
-    $('#centroid_y').val(centroid.geometry.coordinates[1]);    
+    display_data.centroid_x = centroid.geometry.coordinates[0];
+    display_data.centroid_y = centroid.geometry.coordinates[1];
+    display_data.s_centroid_x = 'N/A';
+    display_data.s_centroid_y = 'N/A';
+    
     var inside = false;
+    
     var turf_geometry = get_geometry_from_layer(containing_geometry);    
     if ( turf_geometry.geometry.type == 'Polygon'){
         inside = turf.booleanPointInPolygon(centroid, turf_geometry);
         if( !inside ){
             var snapped = turf.nearestPointOnLine(turf.polygonToLineString(turf_geometry), centroid, {units: 'kilometers'});
-            $('#s_centroid_x').val(snapped.geometry.coordinates[0]);
-            $('#s_centroid_y').val(snapped.geometry.coordinates[1]);    
             centroid = snapped;
-        }else{
-            $('#s_centroid_x').val('N/A');
-            $('#s_centroid_y').val('N/A');
-        }
+        }                
     }else if( turf_geometry.geometry.type == 'MultiPolygon' ){
         inside = turf.booleanPointInPolygon(centroid, turf_geometry);
         if( !inside ){
@@ -89,24 +79,14 @@ var display_centroid_data = function(containing_geometry, buffer_layer, centroid
                 if( min_distance_to_line_hull == -1 ||  distance_to_line_hull < min_distance_to_line_hull ){
                     min_distance_to_line_hull = distance_to_line_hull;
                     centroid = snapped_point;
-                }
-                $('#s_centroid_x').val(centroid.geometry.coordinates[0]);
-                $('#s_centroid_y').val(centroid.geometry.coordinates[1]);    
-            }            
-        }else{
-            $('#s_centroid_x').val('N/A');
-            $('#s_centroid_y').val('N/A');
-        }
+                }                
+            }
+        }                    
     }else if( turf_geometry.geometry.type == 'LineString' ){
         inside = turf.booleanPointOnLine(centroid, turf_geometry);
         if( !inside ){
             var snapped = turf.nearestPointOnLine(turf_geometry, centroid, {units: 'kilometers'});
-            $('#s_centroid_x').val(snapped.geometry.coordinates[0]);
-            $('#s_centroid_y').val(snapped.geometry.coordinates[1]);    
-            centroid = snapped;
-        }else{
-            $('#s_centroid_x').val('N/A');
-            $('#s_centroid_y').val('N/A');
+            centroid = snapped;            
         }
     }else if( turf_geometry.geometry.type == 'MultiLineString' ){
         // check inside for individual lines
@@ -123,30 +103,30 @@ var display_centroid_data = function(containing_geometry, buffer_layer, centroid
                 if( min_distance_to_line_hull == -1 ||  distance_to_line_hull < min_distance_to_line_hull ){
                     min_distance_to_line_hull = distance_to_line_hull;
                     centroid = snapped_point;
-                }
+                }                
             }
-        }else{
-            $('#s_centroid_x').val('N/A');
-            $('#s_centroid_y').val('N/A');    
         }
     }else{
         console.log("Unsupported geometry type");
     } 
-    $('#inside').val(inside);
-    $('#g_class').val(turf_geometry.geometry.type);
-    var distance_km = max_distance_point_to_geometry( centroid, turf_geometry );    
-    $('#radius').val( distance_km );
-    $('#radius_m').val( distance_km * 1000 );    
+    
+    if(!inside){
+        display_data.s_centroid_x = centroid.geometry.coordinates[0];
+        display_data.s_centroid_y = centroid.geometry.coordinates[1];    
+    }
+
+    display_data.inside = inside;
+    display_data.geometry_type = turf_geometry.geometry.type;
+    var distance_km = max_distance_point_to_geometry( centroid, turf_geometry );        
+    display_data.radius = distance_km;
+    display_data.radius_m = distance_km * 1000;
+
+    show_centroid_data(display_data);
+
     var buffered = turf.buffer(centroid, distance_km, {units: 'kilometers'});
     
     buffer_layer.addData(buffered);
     centroid_layer.addData(centroid);
-    
 }
 
-var calculate = function( containing_geometry, buffer_layer, centroid_layer ){
-    var centroid = turf.centroid(containing_geometry);    
-    console.log(containing_geometry);    
-}
-
-export { clear_centroid_data, display_centroid_data, calculate };
+export { compute_centroid_data };
