@@ -1,5 +1,7 @@
 import L from "leaflet";
 import draw from 'leaflet-draw';
+import * as turf from '@turf/turf';
+var $ = require('jquery');
 
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
@@ -31,6 +33,8 @@ L.tileLayer(
     osmUrl,
     {minZoom: 2, maxZoom: 18, attribution: osmAttrib}
 ).addTo(map);
+
+L.control.scale().addTo(map);
 
 var options = {
     position: 'topleft',
@@ -66,12 +70,36 @@ map.on(L.Draw.Event.CREATED, function (e) {
     clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-
-    var type = e.layerType,
-        layer = e.layer;        
+    
+    var type = e.layerType;
+    var layer = e.layer;    
     editableLayers.addLayer(layer);
     compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
     editableLayers.bringToFront();
+    map.fitBounds(buffer_layer.getBounds());
+    /*
+    var geojson;
+    var geom;
+    var newGeom;
+    var newLayer;
+
+    var newLayer = e.layer;
+    var newGeom = turf.getGeom(newLayer.toGeoJSON());
+
+    editableLayers.eachLayer(function (layer) {
+        geojson = layer.toGeoJSON();
+        if (geojson.type == 'FeatureCollection') {
+        geojson = geojson.features[0];
+        }
+        geom = turf.getGeom(geojson);
+        if (turf.booleanContains(geom, newGeom)) {
+        newGeom = turf.difference(geom, newGeom);
+        newLayer = L.geoJSON(newGeom);
+        editableLayers.removeLayer(layer);
+        }
+    });
+    editableLayers.addLayer(newLayer);
+    */
 });
 
 map.on(L.Draw.Event.EDITED, function (e) {
@@ -80,6 +108,7 @@ map.on(L.Draw.Event.EDITED, function (e) {
     buffer_layer.clearLayers();
     compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
     editableLayers.bringToFront();
+    map.fitBounds(buffer_layer.getBounds());
 });
 
 

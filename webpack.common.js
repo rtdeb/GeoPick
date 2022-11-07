@@ -26,7 +26,7 @@ const path = require('path');
             filename: 'index.html',
             template: 'src/index.html',
             templateParameters: {
-                title: 'Leaflet'
+                title: 'Uncertainty radius calculator'
             }
         }),
         new MiniCssExtractPlugin({

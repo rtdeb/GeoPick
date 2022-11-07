@@ -3,11 +3,14 @@ body {
   height: 100%;
   padding: 0;
   margin: 0;
+  font-size: 0.9em;
 }
 
-#map {
-  z-index: 0;
-  height: 600px;  
+#map {    
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
 }
 
 div.info_box {
@@ -17,7 +20,21 @@ div.info_box {
 }
 
 #info{
-  padding: 10px;
-  padding-left: 100px;
-  padding-right: 100px;
+  padding: 10px;  
+  /*padding-left: 100px;
+  padding-right: 100px;*/
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 9999;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 10px;
+  background-color: wheat;
+  width: 200px;
+}
+
+#container{
+  
 }

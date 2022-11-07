@@ -120,6 +120,7 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
     var distance_km = max_distance_point_to_geometry( centroid, turf_geometry );        
     display_data.radius = distance_km;
     display_data.radius_m = distance_km * 1000;
+    display_data.d_geojson = JSON.stringify(turf_geometry);
 
     show_centroid_data(display_data);
 

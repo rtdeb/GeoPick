@@ -4,7 +4,7 @@
   "description": "Calculates uncertainty radius from a on-screen digitized line or polygon",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",    
+    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.prod.js",
     "start": "webpack serve --open --config webpack.dev.js"
   },
@@ -28,6 +28,7 @@
     "jquery": "^3.6.1",
     "leaflet": "^1.9.2",
     "leaflet-defaulticon-compatibility": "^0.1.1",
-    "leaflet-draw": "^1.0.4"
+    "leaflet-draw": "^1.0.4",
+    "toastr": "^2.1.4"
   }
 }
