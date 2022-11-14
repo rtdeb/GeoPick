@@ -14,15 +14,15 @@ require('./mystyle.scss');
 import { clear_centroid_data } from './ui.js';
 import { compute_centroid_data } from './util.js';
 
-var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 
 var osm = L.tileLayer(
     osmUrl,
     {minZoom: 2, maxZoom: 18, attribution: osmAttrib}
 );
 
-var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+var googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
 });
