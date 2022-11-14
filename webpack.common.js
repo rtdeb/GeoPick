@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CompressionPlugin = require("compression-webpack-plugin");
 const path = require('path');
 
  module.exports = {   
@@ -40,6 +41,9 @@ const path = require('path');
         }),     
         new MiniCssExtractPlugin({
             filename: 'css/mystyles.css'
+        }),
+        new CompressionPlugin({
+          test: /\.js(\?.*)?$/i,
         }),
     ],
    module: {
