@@ -1,7 +1,7 @@
 import L from "leaflet";
 import draw from 'leaflet-draw';
-import * as turf from '@turf/turf';
-var $ = require('jquery');
+//import * as turf from '@turf/turf';
+//var $ = require('jquery');
 
 import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import 'leaflet-defaulticon-compatibility';
