@@ -1,6 +1,6 @@
 import * as turf from '@turf/turf';
 
-import { show_centroid_data, clear_centroid_data } from './ui.js';
+import { show_centroid_data } from './ui.js';
 
 var max_distance_point_to_geometry = function(centroid, turf_geometry){
     var geometry_coordinates = turf.coordAll(turf_geometry);
