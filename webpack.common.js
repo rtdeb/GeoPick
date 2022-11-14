@@ -44,6 +44,7 @@ const path = require('path');
         }),
         new CompressionPlugin({
           test: /\.js(\?.*)?$/i,
+          deleteOriginalAssets: true,
         }),
     ],
    module: {
