@@ -43,8 +43,7 @@ const path = require('path');
             filename: 'css/mystyles.css'
         }),
         new CompressionPlugin({
-          test: /\.(js|css)(\?.*)?$/i,
-          deleteOriginalAssets: true,
+          test: /\.js(\?.*)?$/i,
         }),
     ],
    module: {
