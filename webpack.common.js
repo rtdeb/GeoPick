@@ -26,7 +26,7 @@ const path = require('path');
             filename: 'index.html',
             template: 'src/index.html',
             templateParameters: {
-                title: 'Uncertainty radius calculator'
+                title: 'Georeferencing tool'
             },
             favicon: 'src/favicon.ico'
         }),        
