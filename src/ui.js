@@ -21,7 +21,11 @@ var controls = [
 
 var show_centroid_data = function( data ){    
     controls.forEach(function (e) {
-        $('#' + e).val(data[e]);
+        if( e == 'centroid_x' || e == 'centroid_y' || e == 'radius_m' ){
+            $('#' + e).val(data[e].toFixed(6));
+        }else{
+            $('#' + e).val(data[e]);
+        }
     });
 }
 
