@@ -14,7 +14,24 @@ require('./mystyle.scss');
 import { clear_centroid_data } from './ui.js';
 import { compute_centroid_data } from './util.js';
 
-var map = L.map('map').setView([51.505, -0.09], 3);
+var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+
+var osm = L.tileLayer(
+    osmUrl,
+    {minZoom: 2, maxZoom: 18, attribution: osmAttrib}
+);
+
+var googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var map = L.map('map', {
+    center: [51.505, -0.09],
+    zoom: 3,
+    layers: [osm, googleSat ]
+});
 
 var centroid_layer = new L.geoJSON();    
 map.addLayer(centroid_layer);
@@ -26,15 +43,14 @@ var editableLayers = new L.FeatureGroup();
 //var editableLayers = new L.geoJSON();
 map.addLayer(editableLayers);
 
-var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-
-L.tileLayer(
-    osmUrl,
-    {minZoom: 2, maxZoom: 18, attribution: osmAttrib}
-).addTo(map);
-
 L.control.scale().addTo(map);
+
+var baseMaps = {
+    "OpenStreetMap": osm,
+    "Google satellite": googleSat
+};
+
+var layerControl = L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
 
 var options = {
     position: 'topleft',
