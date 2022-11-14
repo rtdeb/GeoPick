@@ -19,6 +19,11 @@ div.info_box {
     height: 100px;
 }
 
+.about{
+  text-align: right;
+  margin-right: 1.5rem;
+}
+
 #info{
   padding: 10px;  
   /*padding-left: 100px;

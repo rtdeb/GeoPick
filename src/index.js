@@ -59,13 +59,29 @@ var options = {
             allowIntersection: false,
             shapeOptions: {
                 color: '#f357a1'                
-            }
+            },            
+		    icon: new L.DivIcon({
+                iconSize: new L.Point(10, 10),
+                className: 'leaflet-div-icon leaflet-editing-icon'
+            }),
+            touchIcon: new L.DivIcon({
+                iconSize: new L.Point(10, 10),
+                className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+            }),
         },
         polygon: {
             allowIntersection: false,            
             shapeOptions: {
                 color: '#eb4936'
-            }
+            },
+            icon: new L.DivIcon({
+                iconSize: new L.Point(10, 10),
+                className: 'leaflet-div-icon leaflet-editing-icon'
+            }),
+            touchIcon: new L.DivIcon({
+                iconSize: new L.Point(10, 10),
+                className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+            }),
         },
         circle: false,
         circlemarker: false,
@@ -74,6 +90,16 @@ var options = {
     },
     edit: {
         featureGroup: editableLayers,
+        poly: {
+            icon: new L.DivIcon({
+                iconSize: new L.Point(10, 10),
+                className: 'leaflet-div-icon leaflet-editing-icon'
+            }),
+            touchIcon: new L.DivIcon({
+                iconSize: new L.Point(10, 10),
+                className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+            })
+        }
         //remove: true
     }
 };

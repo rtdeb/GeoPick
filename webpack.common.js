@@ -29,7 +29,15 @@ const path = require('path');
                 title: 'Georeferencing tool'
             },
             favicon: 'src/favicon.ico'
-        }),        
+        }),
+        new HtmlWebpackPlugin({ 
+            filename: 'about.html',
+            template: 'src/about.html',            
+            templateParameters: {
+              title: 'About'
+            },
+            favicon: 'src/favicon.ico'
+        }),     
         new MiniCssExtractPlugin({
             filename: 'css/mystyles.css'
         }),
