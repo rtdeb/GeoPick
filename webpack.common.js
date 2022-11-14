@@ -27,8 +27,9 @@ const path = require('path');
             template: 'src/index.html',
             templateParameters: {
                 title: 'Uncertainty radius calculator'
-            }
-        }),
+            },
+            favicon: 'src/favicon.ico'
+        }),        
         new MiniCssExtractPlugin({
             filename: 'css/mystyles.css'
         }),
