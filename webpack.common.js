@@ -29,7 +29,8 @@ const path = require('path');
             templateParameters: {
                 title: 'Georeferencing tool'
             },
-            favicon: 'src/favicon.ico'
+            favicon: 'src/favicon.ico',
+            inject: 'body'
         }),
         new HtmlWebpackPlugin({ 
             filename: 'about.html',
