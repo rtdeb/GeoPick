@@ -30,7 +30,8 @@ const path = require('path');
                 title: 'Georeferencing tool'
             },
             favicon: 'src/favicon.ico',
-            inject: 'body'
+            inject: 'body',
+            hash: true
         }),
         new HtmlWebpackPlugin({ 
             filename: 'about.html',
