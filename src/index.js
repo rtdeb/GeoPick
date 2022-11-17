@@ -27,10 +27,26 @@ var googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
     subdomains:['mt0','mt1','mt2','mt3']
 });
 
+var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var googleHybrid = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+var googleTerrain = L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    maxZoom: 20,
+    subdomains:['mt0','mt1','mt2','mt3']
+});
+
+
 var map = L.map('map', {
     center: [51.505, -0.09],
     zoom: 3,
-    layers: [osm, googleSat ]
+    layers: [osm, googleSat, googleStreets, googleHybrid, googleTerrain ]
 });
 
 var centroid_layer = new L.geoJSON();    
@@ -46,8 +62,11 @@ map.addLayer(editableLayers);
 L.control.scale().addTo(map);
 
 var baseMaps = {
-    "OpenStreetMap": osm,
-    "Google satellite": googleSat
+    "OpenStreetMap": osm,    
+    "Google streets": googleStreets,
+    "Google hybrid": googleHybrid,
+    "Google terrain": googleTerrain,
+    "Google satellite": googleSat,
 };
 
 var layerControl = L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
