@@ -115,17 +115,24 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
         display_data.s_centroid_y = centroid.geometry.coordinates[1];    
     }
 
+    var distance_km = max_distance_point_to_geometry( centroid, turf_geometry );        
+    var buffered = turf.buffer(centroid, distance_km, {units: 'kilometers'});
+    var area_buffer = turf.area(buffered);
+    var area_geometry = turf.area(turf_geometry);
+    var pointRadiusSpatialFit = 'undefined';
+    if(turf_geometry.geometry.type == 'Polygon' || turf_geometry.geometry.type == 'MultiPolygon'){
+        pointRadiusSpatialFit = area_buffer / area_geometry;
+    }
+    
     display_data.inside = inside;
     display_data.geometry_type = turf_geometry.geometry.type;
-    var distance_km = max_distance_point_to_geometry( centroid, turf_geometry );        
     display_data.radius = distance_km;
     display_data.radius_m = distance_km * 1000;
     display_data.d_geojson = JSON.stringify(turf_geometry);
+    display_data.pointRadiusSpatialFit = pointRadiusSpatialFit;
 
     show_centroid_data(display_data);
-
-    var buffered = turf.buffer(centroid, distance_km, {units: 'kilometers'});
-    
+        
     buffer_layer.addData(buffered);
     centroid_layer.addData(centroid);
 }
