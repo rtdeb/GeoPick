@@ -1,5 +1,6 @@
 const  $ = require('jquery');
 const { stringify } = require('wkt');
+const p = require('../package.json');
 
 import * as Toastr from 'toastr';
 var local_centroid_data = {};
@@ -81,8 +82,9 @@ $("#cpdata").on("click", function(){
     let date = new Date().toISOString();
 
     let pointRadiusSpatialFit = local_centroid_data.pointRadiusSpatialFit;
+    let source_string = p.name + ' v.' + p.version;
 
-    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\tanonymous_georeferencer\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\tgeoreferenceSources\t`;
+    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\tanonymous_georeferencer\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t`;
     navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);
     Toastr.success('Data copied to clipboard!');
 });
