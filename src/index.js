@@ -22,7 +22,7 @@ var osm = L.tileLayer(
     {minZoom: 2, maxZoom: 18, attribution: osmAttrib}
 );
 
-var googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
+/*var googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
 });
@@ -30,23 +30,23 @@ var googleSat = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
 var googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
-});
+});*/
 
 var googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
 });
 
-var googleTerrain = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+/*var googleTerrain = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
     maxZoom: 20,
     subdomains:['mt0','mt1','mt2','mt3']
-});
+});*/
 
 
 var map = L.map('map', {
     center: [51.505, -0.09],
     zoom: 3,
-    layers: [osm, googleSat, googleStreets, googleHybrid, googleTerrain ]
+    layers: [osm, googleHybrid]
 });
 
 var centroid_layer = new L.geoJSON();    
@@ -63,10 +63,10 @@ L.control.scale().addTo(map);
 
 var baseMaps = {
     "OpenStreetMap": osm,    
-    "Google streets": googleStreets,
+    //"Google streets": googleStreets,
     "Google hybrid": googleHybrid,
-    "Google terrain": googleTerrain,
-    "Google satellite": googleSat,
+    //"Google terrain": googleTerrain,
+    //"Google satellite": googleSat,
 };
 
 var layerControl = L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
