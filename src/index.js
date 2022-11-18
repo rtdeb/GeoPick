@@ -1,18 +1,15 @@
-import L from "leaflet";
-import draw from 'leaflet-draw';
-//import * as turf from '@turf/turf';
-//var $ = require('jquery');
+const L = require('leaflet');
+const draw = require('leaflet-draw');
 
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
-import 'leaflet-defaulticon-compatibility';
-
-import "leaflet/dist/leaflet.css";
-import "leaflet-draw/dist/leaflet.draw.css";
-import "./index.css";
+require('leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css');
+require('leaflet-defaulticon-compatibility');
+require('leaflet/dist/leaflet.css');
+require('leaflet-draw/dist/leaflet.draw.css');
+require('./index.css');
 require('./mystyle.scss');
 
-import { clear_centroid_data } from './ui.js';
-import { compute_centroid_data } from './util.js';
+const ui = require('./ui');
+const util = require('./util');
 
 var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
@@ -128,14 +125,14 @@ map.addControl(drawControl);
 
 
 map.on(L.Draw.Event.CREATED, function (e) {
-    clear_centroid_data();
+    ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
     
     var type = e.layerType;
     var layer = e.layer;    
     editableLayers.addLayer(layer);
-    compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+    util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
     editableLayers.bringToFront();
     map.fitBounds(buffer_layer.getBounds());
     /*
@@ -164,21 +161,21 @@ map.on(L.Draw.Event.CREATED, function (e) {
 });
 
 map.on(L.Draw.Event.EDITED, function (e) {
-    clear_centroid_data();
+    ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+    util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
     editableLayers.bringToFront();
     map.fitBounds(buffer_layer.getBounds());
 });
 
 
 map.on(L.Draw.Event.DELETED, function (e) {   
-    clear_centroid_data();
+    ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
     if(editableLayers.toGeoJSON().features.length > 0){
-        compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+        util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
         editableLayers.bringToFront();
     }
 });

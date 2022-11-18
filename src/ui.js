@@ -1,5 +1,5 @@
 const  $ = require('jquery');
-import * as Toastr from 'toastr';
+const Toastr = require('toastr');
 
 Toastr.options = {
     "positionClass": "toast-top-center",
@@ -65,4 +65,7 @@ geojson: ${geojson}`;*/
 
 clear_centroid_data();
 
-export { show_centroid_data, clear_centroid_data };
+module.exports = {
+    show_centroid_data: show_centroid_data, 
+    clear_centroid_data: clear_centroid_data
+}

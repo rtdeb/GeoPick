@@ -1,6 +1,5 @@
-import * as turf from '@turf/turf';
-
-import { show_centroid_data } from './ui.js';
+const turf = require('@turf/turf');
+const ui = require('./ui');
 
 var max_distance_point_to_geometry = function(centroid, turf_geometry){
     var geometry_coordinates = turf.coordAll(turf_geometry);
@@ -122,7 +121,7 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
     display_data.radius_m = distance_km * 1000;
     display_data.d_geojson = JSON.stringify(turf_geometry);
 
-    show_centroid_data(display_data);
+    ui.show_centroid_data(display_data);
 
     var buffered = turf.buffer(centroid, distance_km, {units: 'kilometers'});
     
@@ -130,4 +129,6 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
     centroid_layer.addData(centroid);
 }
 
-export { compute_centroid_data };
+module.exports = {
+    compute_centroid_data: compute_centroid_data
+}
