@@ -1,10 +1,36 @@
 const  $ = require('jquery');
+
 const Toastr = require('toastr');
+const { stringify } = require('wkt');
+const p = require('../package.json');
+
+var local_centroid_data = {};
 
 Toastr.options = {
     "positionClass": "toast-top-center",
     "timeOut": "1500",
 }
+
+const headers = [
+    'decimalLatitude',
+    'decimalLongitude',
+    'geodeticDatum',
+    'coordinateUncertaintyInMeters',
+    'coordinatePrecision',
+    'pointRadiusSpatialFit',
+    'footprintWKT',
+    'footprintSRS',
+    'footprintSpatialFit',
+    'georeferencedBy',
+    'georeferencedDate',
+    'georeferenceProtocol',
+    'georeferenceSources',
+    'georeferenceRemarks'
+];
+
+
+
+//var string_template = `centroid_x: ${centroid_x},  centroid_y: ${centroid_y} uncertainty_m: ${radius_m} geojson: ${geojson}`;
 
 var controls = [
     'centroid_x',
@@ -22,17 +48,19 @@ var controls = [
 var show_centroid_data = function( data ){    
     controls.forEach(function (e) {
         if( e == 'centroid_x' || e == 'centroid_y' || e == 'radius_m' ){
-            $('#' + e).val(data[e].toFixed(6));
+            $('#' + e).val(data[e].toFixed(7));
         }else{
             $('#' + e).val(data[e]);
         }
     });
+    local_centroid_data = data;
 }
 
 var clear_centroid_data = function(){
     controls.forEach(function (e) {
         $('#' + e).val("");
     });
+    local_centroid_data = {};
 }
 
 $("#cpdata").on("click", function(){
@@ -49,17 +77,16 @@ $("#cpdata").on("click", function(){
     //let centroid_in_geometry = $('#inside').val();
     let geojson = $('#d_geojson').val();
 
-    var string_template = 
-`centroid_x: ${centroid_x},  centroid_y: ${centroid_y}
-uncertainty_m: ${radius_m}
-geojson: ${geojson}`;
-/*`centroid_x: ${centroid_x},  centroid_y: ${centroid_y}
-corrected_centroid_x: ${corrected_centroid_x}, corrected_centroid_y: ${corrected_centroid_y}
-radius_km: ${radius_km}, radius_m: ${radius_m}
-geometry_class: ${geometry_class}, centroid_in_geometry: ${centroid_in_geometry}
-geojson: ${geojson}`;*/
+    const geojson_obj = JSON.parse(geojson);
+    let wkt = stringify(geojson_obj)
 
-    navigator.clipboard.writeText(string_template);    
+    let date = new Date().toISOString();
+
+    let pointRadiusSpatialFit = local_centroid_data.pointRadiusSpatialFit;
+    let source_string = p.name + ' v.' + p.version;
+
+    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\tanonymous_georeferencer\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t`;
+    navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);
     Toastr.success('Data copied to clipboard!');
 });
 
