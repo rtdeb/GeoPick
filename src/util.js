@@ -1,5 +1,6 @@
 const turf = require('@turf/turf');
 const ui = require('./ui');
+const mec = require('./minimum_enclosing_circle');
 
 var max_distance_point_to_geometry = function(centroid, turf_geometry){
     var geometry_coordinates = turf.coordAll(turf_geometry);
@@ -47,11 +48,43 @@ var get_geometry_from_layer = function(containing_geometry){
     return turf_geometry;
 }
 
+var get_centroid = function(containing_geometry, type){
+    var geometry_type = containing_geometry.features[0].geometry.type;
+    if(type == 0){                
+        return turf.centroid(containing_geometry);
+    }else{
+        var coords = turf.coordAll(containing_geometry);
+        var points = [];
+        if(geometry_type == 'Polygon'){
+            for(var i = 0; i < coords.length - 1; i++){
+                // Transform to a ref system which uses meters ** THIS IS IMPORTANT **
+                var turf_mercator = turf.toMercator(turf.point([ coords[i][0], coords[i][1] ]));
+                var p = new mec.Point( turf_mercator.geometry.coordinates[0], turf_mercator.geometry.coordinates[1] );
+                points.push( p );
+            }
+        }else if(geometry_type == 'LineString'){
+            for(var i = 0; i < coords.length; i++){
+                // Transform to a ref system which uses meters ** THIS IS IMPORTANT **
+                var turf_mercator = turf.toMercator(turf.point([ coords[i][0], coords[i][1] ]));
+                var p = new mec.Point( turf_mercator.geometry.coordinates[0], turf_mercator.geometry.coordinates[1] );
+                points.push( p );
+            }
+        }else{
+            console.log("Unexpected geometry type");
+        }
+        //console.log(points);
+        var c = mec.makeCircle(points);
+        //It's mercator, transform back to WGS84
+        return turf.toWgs84(turf.point( [ c.x, c.y ] ));
+    }
+}
+
 var compute_centroid_data = function(containing_geometry, buffer_layer, centroid_layer){
     
     var display_data = {};
 
-    var centroid = turf.centroid(containing_geometry);
+    var centroid = get_centroid(containing_geometry, 1);
+
     display_data.centroid_x = centroid.geometry.coordinates[0];
     display_data.centroid_y = centroid.geometry.coordinates[1];
     display_data.s_centroid_x = 'N/A';
@@ -132,7 +165,6 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
 
     ui.show_centroid_data(display_data);
     var buffered = turf.buffer(centroid, distance_km, {units: 'kilometers'});
-    
     buffer_layer.addData(buffered);
     centroid_layer.addData(centroid);
 }
