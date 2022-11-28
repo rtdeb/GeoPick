@@ -98,11 +98,21 @@
                 -->
                 <hr>
                 <div class="field">
-                    <div class="field-label">GeoJSON</div>
+                    <div class="field-label">Georeferenced by:</div>
                     <div class="field-body">
                         <div class="field">
                             <p class="control">
-                                <textarea class="textarea" id="d_geojson" name="story" rows="5" cols="33"></textarea>
+                                <input id="georeferencer_name" class="input" type="text" placeholder="Your name here...">
+                            </p>
+                        </div>
+                    </div>
+                </div>                
+                <div class="field">
+                    <div class="field-label">Georeference remarks:</div>
+                    <div class="field-body">
+                        <div class="field">
+                            <p class="control">
+                                <textarea class="textarea" id="georeference_remarks" name="story" rows="5" cols="33" placeholder="Any comments?"></textarea>
                             </p>
                         </div>
                     </div>
@@ -116,6 +126,7 @@
                     </a>
                 </p>
             </div>
+            <input type="hidden" id="d_geojson">
         </div>
     </div>
 </body>

@@ -85,7 +85,10 @@ $("#cpdata").on("click", function(){
     let pointRadiusSpatialFit = local_centroid_data.pointRadiusSpatialFit;
     let source_string = p.name + ' v.' + p.version;
 
-    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\tanonymous_georeferencer\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t`;
+    let georeferencer_name = $('#georeferencer_name').val();
+    let georeference_remarks = $('#georeference_remarks').val();
+
+    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
     navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);
     Toastr.success('Data copied to clipboard!');
 });
