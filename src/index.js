@@ -43,7 +43,8 @@ var googleTerrain = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z=
 var map = L.map('map', {
     center: [51.505, -0.09],
     zoom: 3,
-    layers: [osm, googleHybrid]
+    layers: [osm, googleHybrid],
+    zoomControl: false
 });
 
 var centroid_layer = new L.geoJSON();    
@@ -66,7 +67,9 @@ var baseMaps = {
     "Google hybrid": googleHybrid,
 };
 
-var layerControl = L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
+L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
+
+L.control.zoom({ position: 'topleft' }).addTo(map);
 
 var options = {
     position: 'topleft',
