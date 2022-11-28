@@ -60,8 +60,8 @@ var clear_centroid_data = function(){
     controls.forEach(function (e) {
         $('#' + e).val("");
     });
-    local_centroid_data = {};
-}
+    local_centroid_data = {};    
+}    
 
 $("#cpdata").on("click", function(){
     //console.log("click!");
@@ -90,9 +90,25 @@ $("#cpdata").on("click", function(){
     Toastr.success('Data copied to clipboard!');
 });
 
+const hideLineDrawControl = function(){
+    $(".leaflet-draw-draw-polyline").hide();
+}
+
+const hidePolyDrawControl = function(){
+    $(".leaflet-draw-draw-polygon").hide();
+}
+
+const resetDrawControls = function(){
+    $(".leaflet-draw-draw-polyline").show();
+    $(".leaflet-draw-draw-polygon").show();
+}
+
 clear_centroid_data();
 
 module.exports = {
     show_centroid_data: show_centroid_data, 
-    clear_centroid_data: clear_centroid_data
+    clear_centroid_data: clear_centroid_data,
+    hideLineDrawControl: hideLineDrawControl,
+    hidePolyDrawControl: hidePolyDrawControl,
+    resetDrawControls: resetDrawControls
 }

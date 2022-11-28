@@ -10,7 +10,7 @@ var max_distance_point_to_geometry = function(centroid, turf_geometry){
     for(var i = 0; i < geometry_coordinates.length; i++){
         var to = turf.point(geometry_coordinates[i]);
         var distance = turf.distance(from, to, options);
-        distances.push(distance);    
+        distances.push(distance);
     }
     distances.sort(function(a, b){return b - a});    
     return distances[0];

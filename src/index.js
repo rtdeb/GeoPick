@@ -124,12 +124,17 @@ var drawControl = new L.Control.Draw(options);
 map.addControl(drawControl);
 
 
-map.on(L.Draw.Event.CREATED, function (e) {
+map.on(L.Draw.Event.CREATED, function (e) {    
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
     
     var type = e.layerType;
+    if(type=='polygon'){
+        ui.hideLineDrawControl();
+    }else{
+        ui.hidePolyDrawControl();
+    }
     var layer = e.layer;    
     editableLayers.addLayer(layer);
     util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
@@ -177,5 +182,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
     if(editableLayers.toGeoJSON().features.length > 0){
         util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
         editableLayers.bringToFront();
-    }
+    }else{
+        ui.resetDrawControls();
+    }    
 });
