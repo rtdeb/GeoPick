@@ -1,3 +1,4 @@
+require('jquery-ui/ui/widgets/autocomplete');
 const  $ = require('jquery');
 
 const Toastr = require('toastr');
@@ -106,12 +107,55 @@ const resetDrawControls = function(){
     $(".leaflet-draw-draw-polygon").show();
 }
 
+const init_autocomplete = function(map, input_id){
+    $( "#" + input_id ).autocomplete({
+        source: function(request, response) {
+          $.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'json' }, response)
+        },      
+        minLength: 2,
+        select: function( event, ui ) {
+          const sw = [ ui.item.boundingbox[0], ui.item.boundingbox[2]  ];
+          const ne = [ ui.item.boundingbox[1], ui.item.boundingbox[3]  ];
+          map.fitBounds( [ne,sw] );
+        },
+        create: function () {
+          $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+              return $('<li>')
+                  .append('<a>' + item.display_name + '</a>')
+                  .appendTo(ul);
+          };
+        }
+    });
+}
+
 clear_centroid_data();
+
+/*
+$( function() {
+    $( "#place_search" ).autocomplete({
+      source: function(request, response) {
+        $.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'json' }, response)
+      },      
+      minLength: 2,
+      select: function( event, ui ) {
+        console.log( ui.item );
+      },
+      create: function () {
+        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+            return $('<li>')
+                .append('<a>' + item.display_name + '</a>')
+                .appendTo(ul);
+        };
+      }
+    })    
+} );
+*/
 
 module.exports = {
     show_centroid_data: show_centroid_data, 
     clear_centroid_data: clear_centroid_data,
     hideLineDrawControl: hideLineDrawControl,
     hidePolyDrawControl: hidePolyDrawControl,
-    resetDrawControls: resetDrawControls
+    resetDrawControls: resetDrawControls,
+    init_autocomplete: init_autocomplete
 }

@@ -8,6 +8,9 @@ require('leaflet-draw/dist/leaflet.draw.css');
 require('./index.css');
 require('./mystyle.scss');
 
+/*require('jquery-ui/themes/base/core.css');
+require('jquery-ui/themes/base/autocomplete.css');*/
+
 const ui = require('./ui');
 const util = require('./util');
 
@@ -189,3 +192,5 @@ map.on(L.Draw.Event.DELETED, function (e) {
         ui.resetDrawControls();
     }    
 });
+
+ui.init_autocomplete(map,"place_search");

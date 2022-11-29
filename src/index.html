@@ -9,6 +9,10 @@
 </head>
 <body>
     <div id="container">
+        <div id="search">            
+                <label for="place_search"><b>Place search:</b> </label>
+                <input id="place_search">            
+        </div>
         <div id="map"></div>        
         <div id="info">
             <div class="about">
@@ -32,40 +36,9 @@
                             </p>
                         </div>
                     </div>  
-                </div>
-                <!--
-                <hr>                
-                <div class="field">
-                    <div class="field-label">Snapped Centroid x</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="s_centroid_x" class="input" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>
-                    <div class="field-label">Snapped Centroid y</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="s_centroid_y" class="input" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>  
-                </div>
-                -->
+                </div>                
                 <hr>
-                <div class="field">
-                    <!--
-                    <div class="field-label">Radius (km)</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="radius" class="input" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>
-                    -->
+                <div class="field">                    
                     <div class="field-label">Uncertainty in meters</div>
                     <div class="field-body">
                         <div class="field">
@@ -74,28 +47,7 @@
                             </p>
                         </div>
                     </div>
-                </div>
-                <!--
-                <hr>                        
-                <div class="field">
-                    <div class="field-label">Geometry class</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="geometry_type" class="input" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>                
-                    <div class="field-label">Centroid in geometry?</div>                
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="inside" class="input" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>
-                </div>            
-                -->
+                </div>                
                 <hr>
                 <div class="field">
                     <div class="field-label">Georeferenced by:</div>
@@ -126,8 +78,9 @@
                     </a>
                 </p>
             </div>
-            <input type="hidden" id="d_geojson">
-        </div>
+            <input type="hidden" id="d_geojson">            
+        </div>        
     </div>
+    
 </body>
 </html>
