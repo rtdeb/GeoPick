@@ -29,16 +29,12 @@ const headers = [
     'georeferenceRemarks'
 ];
 
-
-
-//var string_template = `centroid_x: ${centroid_x},  centroid_y: ${centroid_y} uncertainty_m: ${radius_m} geojson: ${geojson}`;
-
-var controls = [
+const controls = [
     'centroid_x',
     'centroid_y',
     /*'s_centroid_x',
-    's_centroid_y',*/
-    'radius',
+    's_centroid_y',
+    'radius',*/
     //'geometry_type',
     //'inside',
     //'radius',
@@ -46,7 +42,16 @@ var controls = [
     'd_geojson'
 ];
 
-var show_centroid_data = function( data ){    
+const empty_controls = function() {
+    for (c in controls){
+        if ( $('#' + controls[c]).val().trim() != '' ){
+            return false;
+        }
+    }
+    return true;
+}
+
+const show_centroid_data = function( data ){    
     controls.forEach(function (e) {
         if( e == 'centroid_x' || e == 'centroid_y' || e == 'radius_m' ){
             $('#' + e).val(data[e].toFixed(7));
@@ -57,7 +62,7 @@ var show_centroid_data = function( data ){
     local_centroid_data = data;
 }
 
-var clear_centroid_data = function(){
+const clear_centroid_data = function(){
     controls.forEach(function (e) {
         $('#' + e).val("");
     });
@@ -65,21 +70,23 @@ var clear_centroid_data = function(){
 }    
 
 $("#cpdata").on("click", function(){
-    //console.log("click!");
-    //Toastr.success('This works!');
-
+    if( empty_controls() ){
+        Toastr.warning('Nothing to copy!');
+        return;
+    }
     let centroid_x = $('#centroid_x').val();
     let centroid_y = $('#centroid_y').val();
-    /*let corrected_centroid_x = $('#s_centroid_x').val();
-    let corrected_centroid_y = $('#s_centroid_y').val();*/
-    //let radius_km = $('#radius').val();
     let radius_m = $('#radius_m').val();
-    //let geometry_class = $('#geometry_type').val();
-    //let centroid_in_geometry = $('#inside').val();
     let geojson = $('#d_geojson').val();
 
-    const geojson_obj = JSON.parse(geojson);
-    let wkt = stringify(geojson_obj)
+    let wkt = '';
+
+    try{
+        const geojson_obj = JSON.parse(geojson);
+        wkt = stringify(geojson_obj);
+    }catch(error){
+        console.log("Error parsing geomettry or empty geometry");
+    }
 
     let date = new Date().toISOString();
 
@@ -129,27 +136,6 @@ const init_autocomplete = function(map, input_id){
 }
 
 clear_centroid_data();
-
-/*
-$( function() {
-    $( "#place_search" ).autocomplete({
-      source: function(request, response) {
-        $.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'json' }, response)
-      },      
-      minLength: 2,
-      select: function( event, ui ) {
-        console.log( ui.item );
-      },
-      create: function () {
-        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-            return $('<li>')
-                .append('<a>' + item.display_name + '</a>')
-                .appendTo(ul);
-        };
-      }
-    })    
-} );
-*/
 
 module.exports = {
     show_centroid_data: show_centroid_data, 
