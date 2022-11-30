@@ -67,3 +67,7 @@ div.info_box {
 #search input{
   padding: 5px;
 }
+
+.leaflet-control-coordinates .uiElement.label {
+  font-size: 14px; 
+}

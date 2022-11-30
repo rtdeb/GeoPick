@@ -129,10 +129,13 @@ const makeCircumcircle = function (a, b, c) {
     return new Circle(x, y, Math.max(ra, rb, rc));
 }
 /* Simple mathematical functions */
-//const MULTIPLICATIVE_EPSILON = 1 + 1e-14;
+const MULTIPLICATIVE_EPSILON = 1 + 1e-14;
 const isInCircle = function (c, p) {
-    // return c !== null && distance(p.x, p.y, c.x, c.y) <= c.r * MULTIPLICATIVE_EPSILON;
-    return c !== null && distance(p.x, p.y, c.x, c.y) <= c.r;        
+    return c !== null && distance(p.x, p.y, c.x, c.y) <= c.r * MULTIPLICATIVE_EPSILON;
+    // return c !== null && distance(p.x, p.y, c.x, c.y) <= c.r;
+    /*const circle = turf.circle( turf.toWgs84(turf.point([ c.x, c.y ])), c.r/1000, { units: 'kilometers'} );
+    const point = turf.toWgs84(turf.point([ p.x, p.y ]));
+    return c !== null && turf.booleanContains(circle, point);*/
 }
 // Returns twice the signed area of the triangle defined by (x0, y0), (x1, y1), (x2, y2).
 const crossProduct = function (x0, y0, x1, y1, x2, y2) {
@@ -141,10 +144,11 @@ const crossProduct = function (x0, y0, x1, y1, x2, y2) {
 
 const distance = function (x0, y0, x1, y1) {
     const p1 = turf.toWgs84(turf.point([ x0, y0 ]));
-    const p2 = turf.toWgs84(turf.point([ x1, y1 ]));    
+    const p2 = turf.toWgs84(turf.point([ x1, y1 ]));
     const dist = turf.distance( p1, p2, { units: 'kilometers' } );
     const haver = dist*1000;    
     return haver;
+    //return Math.hypot( x1-x0, y1-y0 );
 }
 
 module.exports = {

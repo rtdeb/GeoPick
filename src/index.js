@@ -1,10 +1,12 @@
 const L = require('leaflet');
 const draw = require('leaflet-draw');
+require('leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min')
 
 require('leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css');
 require('leaflet-defaulticon-compatibility');
 require('leaflet/dist/leaflet.css');
 require('leaflet-draw/dist/leaflet.draw.css');
+require('leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css')
 require('./index.css');
 require('./mystyle.scss');
 
@@ -128,6 +130,9 @@ var options = {
 
 var drawControl = new L.Control.Draw(options);
 map.addControl(drawControl);
+
+var coordControl = L.control.coordinates({ position:"bottomleft", enableUserInput:false });
+map.addControl(coordControl);
 
 
 map.on(L.Draw.Event.CREATED, function (e) {    
