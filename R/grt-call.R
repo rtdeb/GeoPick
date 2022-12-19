@@ -20,16 +20,16 @@ getMBC <- function(obj.geojson){
 }
 
 # POLYGONS EXAMPLE
-# df <- data.frame(
-#   name = c("Barcelona", "Dublin", "Malmö", "Budapest", "Barcelona"),
-#   lon = c(2.178, -6.251, 13.001, 19.049, 2.178),
-#   lat = c(41.397, 53.349, 55.614, 47.525, 41.397)
-# )
-# obj.sf <- df %>%
-#   st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
-#   summarise(geometry = st_combine(geometry)) %>%
-#   st_cast("POLYGON")
-# obj.geojson <- sf_geojson(obj.sf)
+df <- data.frame(
+  name = c("Barcelona", "Dublin", "Malmö", "Budapest", "Barcelona"),
+  lon = c(2.178, -6.251, 13.001, 19.049, 2.178),
+  lat = c(41.397, 53.349, 55.614, 47.525, 41.397)
+)
+obj.sf <- df %>%
+  st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
+  summarise(geometry = st_combine(geometry)) %>%
+  st_cast("POLYGON")
+obj.geojson <- sf_geojson(obj.sf)
 
 # LINES EXAMPLE
 # df <- data.frame(
@@ -59,7 +59,8 @@ obj.geojson <- sf_geojson(obj.sf)
 cat(getVersion())
 
 # Get minimum bounding circle
-mbc <- geojson_sf(getMBC(obj.geojson))
+mbc <- geojson_sf(fromJSON(getMBC(obj.geojson))$output)
+json <- getMBC(obj.geojson)
 
 # Plot result, WGS84
 r <- rast("tmp/HYP_50M_SR/HYP_50M_SR.tif")
