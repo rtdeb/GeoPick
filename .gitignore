@@ -3,3 +3,7 @@ node_modules
 package-lock.json
 git_push.sh
 tmp
+docker
+log.md
+.Rproj.user
+georef_calc_browser.Rproj
