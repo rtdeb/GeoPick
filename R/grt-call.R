@@ -44,21 +44,22 @@ obj.geojson <- sf_geojson(obj.sf)
 # obj.geojson <- sf_geojson(obj.sf)
 
 # POINTS EXAMPLE
-df <- data.frame(
-  name = c("Barcelona", "Dublin", "Malmö", "Budapest", "Lisbon", "Oslo"),
-  lon = c(2.178, -6.251, 13.001, 19.049, -9.142685, 10.752245),
-  lat = c(41.397, 53.349, 55.614, 47.525, 38.736946, 59.913868)
-)
-obj.sf <- df %>%
-  st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
-  summarise(geometry = st_combine(geometry)) %>%
-  st_cast("MULTIPOINT")
-obj.geojson <- sf_geojson(obj.sf)
+# df <- data.frame(
+#   name = c("Barcelona", "Dublin", "Malmö", "Budapest", "Lisbon", "Oslo"),
+#   lon = c(2.178, -6.251, 13.001, 19.049, -9.142685, 10.752245),
+#   lat = c(41.397, 53.349, 55.614, 47.525, 38.736946, 59.913868)
+# )
+# obj.sf <- df %>%
+#   st_as_sf(coords = c("lon", "lat"), crs = 4326) %>%
+#   summarise(geometry = st_combine(geometry)) %>%
+#   st_cast("MULTIPOINT")
+# obj.geojson <- sf_geojson(obj.sf)
 
 # Print version
 cat(getVersion())
 
 # Get minimum bounding circle
+req <- fromJSON(getMBC(obj.geojson))
 mbc <- geojson_sf(fromJSON(getMBC(obj.geojson))$output)
 json <- getMBC(obj.geojson)
 
