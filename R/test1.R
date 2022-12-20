@@ -94,3 +94,15 @@ leaflet() %>%
   addPolygons(data = mbc_1)
 
 
+rc.3857 <- project(rc, "epsg:3857")
+mbc.3857 <- st_transform(mbc_1, crs("EPSG:3857"))
+plot(rc.3857)
+plot(mbc.3857, add = T)
+
+x1 <- st_bbox(mbc_1)["xmin"]
+y1 <- st_bbox(mbc_1)["ymin"]
+x2 <- st_bbox(mbc_1)["xmax"]
+y2 <- st_bbox(mbc_1)["ymax"]
+p1 <- st_sfc(st_point(c(x1, y1))) %>% st_set_crs(4326)
+p2 <- st_sfc(st_point(c(x2, y2))) %>% st_set_crs(4326)
+as.numeric(st_distance(p1, p2))
