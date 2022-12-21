@@ -4,16 +4,29 @@ library(geojsonsf)
 library(sf)
 library(jsonlite)
 
-#* @param geojson GeoJson to process
+#* @filter cors
+cors <- function(res) {
+    res$setHeader("Access-Control-Allow-Origin", "*")
+    res$setHeader("Access-Control-Allow-Methods", "*")
+    plumber::forward()
+}
+
+#* @options /mbc
+options <- function() {}
+
+#* @options /version
+options <- function() {}
+
+
 #* @get /version
 function() {
   "GRT version 1.0.0"
 }
 
-#* @param geojson GeoJson to process
 #* @post /mbc
-function(geojson=NULL) {
-  polygon.sf <- geojson_sf(geojson)
+function(req) {
+  polygon.sf <- geojson_sf(toJSON(req$body))
+  
   # Minimum bounding circle
   mbc <- st_minimum_bounding_circle(polygon.sf, nQuadSegs = 30)
   mbc.json = sf_geojson(mbc)
