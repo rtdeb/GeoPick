@@ -62,11 +62,11 @@ plotResult <- function(r, site, mbc, centre, p1, p2, l1, l2){
   plot(r)
   plot(site, add=T)
   plot(mbc, add=T)
-  plot(centre, add=T)
-  plot(p1, add=T)
-  plot(p2, add=T)
-  plot(l1, add=T)
-  plot(l2, add=T)
+  # plot(centre, add=T)
+  # plot(p1, add=T)
+  # plot(p2, add=T)
+  # plot(l1, add=T)
+  # plot(l2, add=T)
 }
 
 # ================================================================================================ #
@@ -110,14 +110,14 @@ rc <- crop(r, ext(-65, 50, 30, 85))
 plotResult(rc, site, mbc, centre, p1, p2, l1, l2)
 
 # Show result in leaflet
-# leaflet() %>% 
-#   addTiles() %>% 
+# leaflet() %>%
+#   addTiles() %>%
 #   addMarkers(lng=xc, lat=yc) %>%
-#   addMarkers(lng=st_coordinates(p1)[1], lat=st_coordinates(p1)[2]) %>% 
-#   addMarkers(lng=st_coordinates(p2)[1], lat=st_coordinates(p2)[2]) %>% 
-#   addPolygons(data = site) %>% 
-#   addPolygons(data = mbc) %>% 
-#   addPolylines(data = l1) %>% 
+#   addMarkers(lng=st_coordinates(p1)[1], lat=st_coordinates(p1)[2]) %>%
+#   addMarkers(lng=st_coordinates(p2)[1], lat=st_coordinates(p2)[2]) %>%
+#   addPolygons(data = site) %>%
+#   addPolygons(data = mbc) %>%
+#   addPolylines(data = l1) %>%
 #   addPolylines(data = l2)
 
 # Write shapefiles to disk for QGIS
