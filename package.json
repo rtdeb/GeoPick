@@ -16,6 +16,7 @@
     "css-loader": "^6.7.1",
     "html-webpack-plugin": "^5.5.0",
     "jquery-ui": "^1.13.2",
+    "leaflet-spin": "^1.1.2",
     "leaflet.coordinates": "github:MrMufflon/Leaflet.Coordinates",
     "mini-css-extract-plugin": "^2.6.1",
     "node-sass": "^7.0.3",
@@ -26,7 +27,6 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "@turf/turf": "^6.5.0",
     "bulma": "^0.9.4",
     "jquery": "^3.6.1",
     "leaflet": "^1.9.2",

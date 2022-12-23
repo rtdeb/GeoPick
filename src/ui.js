@@ -9,7 +9,7 @@ var local_centroid_data = {};
 
 Toastr.options = {
     "positionClass": "toast-top-center",
-    "timeOut": "1500",
+    "timeOut": "3000",
 }
 
 const headers = [
@@ -51,6 +51,7 @@ const empty_controls = function() {
     return true;
 }
 
+/*
 const show_centroid_data = function( data ){    
     controls.forEach(function (e) {
         if( e == 'centroid_x' || e == 'centroid_y' || e == 'radius_m' ){
@@ -61,6 +62,7 @@ const show_centroid_data = function( data ){
     });
     local_centroid_data = data;
 }
+*/
 
 const clear_centroid_data = function(){
     controls.forEach(function (e) {
@@ -70,8 +72,8 @@ const clear_centroid_data = function(){
 }    
 
 $("#cpdata").on("click", function(){
-    if( empty_controls() ){
-        Toastr.warning('Nothing to copy!');
+    if( empty_controls() ){        
+        toast_warning('Nothing to copy!');
         return;
     }
     let centroid_x = $('#centroid_x').val();
@@ -97,8 +99,8 @@ $("#cpdata").on("click", function(){
     let georeference_remarks = $('#georeference_remarks').val();
 
     var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
-    navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);
-    Toastr.success('Data copied to clipboard!');
+    navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);    
+    toast_success('Data copied to clipboard!');
 });
 
 const hideLineDrawControl = function(){
@@ -135,13 +137,34 @@ const init_autocomplete = function(map, input_id){
     });
 }
 
+const show_api_centroid_data = function(parsed_json){
+    $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
+    $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
+    $('#radius_m').val( parsed_json.uncertainty.toFixed(7) );
+}
+
+const toast_error = function(message){
+    Toastr.error(message);
+}
+
+const toast_success = function(message){
+    Toastr.success(message);
+}
+
+const toast_warning = function(message){
+    Toastr.warning(message);
+}
+
 clear_centroid_data();
 
 module.exports = {
-    show_centroid_data: show_centroid_data, 
+    toast_error: toast_error,
+    toast_success: toast_success,
+    toast_warning: toast_warning,
     clear_centroid_data: clear_centroid_data,
+    init_autocomplete: init_autocomplete,
     hideLineDrawControl: hideLineDrawControl,
     hidePolyDrawControl: hidePolyDrawControl,
     resetDrawControls: resetDrawControls,
-    init_autocomplete: init_autocomplete
+    show_api_centroid_data: show_api_centroid_data 
 }
