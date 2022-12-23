@@ -1,9 +1,10 @@
 # MBC
+x <- 2
+y <- 42
+buf <- 1000000
 r <- rast("tmp/wc2.1_10m_elev.tif")
-x <- -50
-y <- 70
+rc <- crop(r, ext(x - 30, x + 30, y - 30, y + 30))
 p.4326 <- st_as_sf(st_sfc(st_point(c(x,y)))) %>% st_set_crs(4326)
-buf <- 300000
 # Create buffer
 buffer.4326 <- st_as_sf(terra::buffer(vect(p.4326), buf))
 st_write(buffer.4326, "tmp/buffer-4326.shp", append=F)
