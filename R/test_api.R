@@ -13,11 +13,11 @@ site.name <- china_1_ncd
 site.name <- north_america_1_cd
 site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
 site.name <- transect1_lin1_cd
-site.name <- points1_pnt3_cd
 site.name <- madagascar_2_cd
 site.name <- cap_norfeu_1_cd
 site.name <- europe_1_ncd
 site.name <- africa_1_ncd
+site.name <- points1_pnt3_cd
 site.name <- greenland_pol1_ncd
 crop.dif <- 1 # Air around mbc
 

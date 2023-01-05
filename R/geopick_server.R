@@ -1,4 +1,4 @@
 library(dplyr)
 library(plumber)
-pr("grt-api.R") %>% pr_run(port=8000)
+pr("geopick_api.R") %>% pr_run(port=8000)
 
