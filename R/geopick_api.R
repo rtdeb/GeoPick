@@ -33,7 +33,10 @@ function() {
 #* @post /mbc
 function(req) {
   site.geojson <- toJSON(req$body)
+  print(site.geojson)
   site.sf <- geojson_sf(site.geojson)
+  site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
+  print(site.sf)
   epsg.tr <- 3857
 
   # transform to a projection so that the mbc is done correctly, if not, lat/long
