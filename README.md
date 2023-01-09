@@ -4,9 +4,9 @@ To run:
 
 <code>
 
-git clone https://github.com/aescobarr/georef_calc_browser.git
+git clone https://github.com/aescobarr/GeoPick.git
 
-cd georef_calc_browser
+cd GeoPick
 
 npm install
 
