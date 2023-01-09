@@ -10,6 +10,7 @@ library(stringr)
 cors <- function(res) {
   res$setHeader("Access-Control-Allow-Origin", "*")
   res$setHeader("Access-Control-Allow-Methods", "*")
+  res$setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept")
   plumber::forward()
 }
 
@@ -22,7 +23,7 @@ options <- function() {}
 
 #* @get /version
 function() {
-  "GRT version 1.0.0"
+  "GeoPick API version 1.0.0"
 }
 
 # NOTE: MULTILINESTRINGS do not work. 
