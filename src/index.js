@@ -133,16 +133,21 @@ map.addControl(coordControl);
 
 
 map.on(L.Draw.Event.CREATED, function (e) {    
+    var type = e.layerType;    
+
+    if( type == 'polyline' && editableLayers.toGeoJSON().features.length > 0 ){
+        ui.toast_warning("Sorry, multi-lines are not supported yet.");
+        return false;
+    }        
+
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    
-    var type = e.layerType;
+        
     if(type=='polygon'){
         ui.hideLineDrawControl();
     }else{
-        ui.hidePolyDrawControl();
-        editableLayers.clearLayers();
+        ui.hidePolyDrawControl();        
     }
     var layer = e.layer;    
     editableLayers.addLayer(layer);    
