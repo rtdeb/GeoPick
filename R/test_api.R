@@ -15,10 +15,11 @@ site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
 site.name <- transect1_lin1_cd
 site.name <- madagascar_2_cd
 site.name <- cap_norfeu_1_cd
-site.name <- europe_1_ncd
 site.name <- africa_1_ncd
 site.name <- points1_pnt3_cd
 site.name <- greenland_pol1_ncd
+site.name <- points2_pnt2_ncd
+site.name <- europe_1_ncd
 crop.dif <- 1 # Air around mbc
 
 site <- site.name %>%
@@ -68,4 +69,5 @@ plot(pe, add=T)
 plot(pn, add=T)
 plot(ps, add=T)
 plot(centre, add=T)
+print(response$uncertainty)
 

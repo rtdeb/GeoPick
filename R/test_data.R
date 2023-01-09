@@ -616,3 +616,32 @@ points1_pnt3_cd <- '{
   ]
 }'
 
+
+#### points2_pnt2_ncd ####
+points2_pnt2_ncd <- '{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          174.81,
+          -41.32
+        ],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          -5.50,
+          40.96
+        ],
+        "type": "Point"
+      }
+    }
+  ]
+}'
