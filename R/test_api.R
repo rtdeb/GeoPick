@@ -8,7 +8,6 @@ library(jsonlite)
 library(leaflet)
 
 source("R/test_data.R")
-site.name <- antarctica_2_cd
 site.name <- china_1_ncd
 site.name <- north_america_1_cd
 site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
@@ -20,6 +19,7 @@ site.name <- points1_pnt3_cd
 site.name <- greenland_pol1_ncd
 site.name <- points2_pnt2_ncd
 site.name <- europe_1_ncd
+site.name <- antarctica_2_cd
 crop.dif <- 1 # Air around mbc
 
 site <- site.name %>%
