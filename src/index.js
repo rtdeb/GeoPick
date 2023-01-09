@@ -142,6 +142,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
         ui.hideLineDrawControl();
     }else{
         ui.hidePolyDrawControl();
+        editableLayers.clearLayers();
     }
     var layer = e.layer;    
     editableLayers.addLayer(layer);    
@@ -162,7 +163,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
     if(editableLayers.toGeoJSON().features.length > 0){
-        util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);        
         editableLayers.bringToFront();
     }else{
         ui.resetDrawControls();

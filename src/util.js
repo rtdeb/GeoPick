@@ -1,5 +1,6 @@
 const ui = require('./ui');
 require('leaflet-spin');
+const turf = require('@turf/turf');
 
 const spin_opts = {
     lines: 13, 
@@ -34,7 +35,19 @@ const parse_api_data = function(data){
 }
 
 const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
-    const geom = editableLayers.toGeoJSON().features[0];
+    //const geom = editableLayers.toGeoJSON().features[0];
+    var geom = editableLayers.toGeoJSON().features;
+    if(geom.length > 1){
+        var geom_type = '';
+        var coords = [];
+        for(var i = 0; i < geom.length; i++){
+            geom_type = geom[i].geometry.type;
+            coords.push(geom[i].geometry.coordinates);
+        }
+        if( geom_type == 'Polygon'){
+            geom = turf.multiPolygon(coords);
+        }        
+    }
 
     const fetchdata = {
         method: 'POST',
