@@ -10,9 +10,6 @@ require('leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css')
 require('./index.css');
 require('./mystyle.scss');
 
-/*require('jquery-ui/themes/base/core.css');
-require('jquery-ui/themes/base/autocomplete.css');*/
-
 const ui = require('./ui');
 const util = require('./util');
 
@@ -136,53 +133,33 @@ map.addControl(coordControl);
 
 
 map.on(L.Draw.Event.CREATED, function (e) {    
+    var type = e.layerType;    
+
+    if( type == 'polyline' && editableLayers.toGeoJSON().features.length > 0 ){
+        ui.toast_warning("Sorry, multi-lines are not supported yet.");
+        return false;
+    }        
+
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    
-    var type = e.layerType;
+        
     if(type=='polygon'){
         ui.hideLineDrawControl();
     }else{
-        ui.hidePolyDrawControl();
+        ui.hidePolyDrawControl();        
     }
     var layer = e.layer;    
-    editableLayers.addLayer(layer);
-    util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+    editableLayers.addLayer(layer);    
     editableLayers.bringToFront();
-    map.fitBounds(buffer_layer.getBounds());
-    /*
-    var geojson;
-    var geom;
-    var newGeom;
-    var newLayer;
-
-    var newLayer = e.layer;
-    var newGeom = turf.getGeom(newLayer.toGeoJSON());
-
-    editableLayers.eachLayer(function (layer) {
-        geojson = layer.toGeoJSON();
-        if (geojson.type == 'FeatureCollection') {
-        geojson = geojson.features[0];
-        }
-        geom = turf.getGeom(geojson);
-        if (turf.booleanContains(geom, newGeom)) {
-        newGeom = turf.difference(geom, newGeom);
-        newLayer = L.geoJSON(newGeom);
-        editableLayers.removeLayer(layer);
-        }
-    });
-    editableLayers.addLayer(newLayer);
-    */
+    util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
 });
 
 map.on(L.Draw.Event.EDITED, function (e) {
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
-    editableLayers.bringToFront();
-    map.fitBounds(buffer_layer.getBounds());
+    util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
 });
 
 
@@ -191,7 +168,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
     if(editableLayers.toGeoJSON().features.length > 0){
-        util.compute_centroid_data(editableLayers.toGeoJSON(), buffer_layer, centroid_layer);
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);        
         editableLayers.bringToFront();
     }else{
         ui.resetDrawControls();

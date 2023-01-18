@@ -6,4 +6,7 @@ tmp
 docker
 log.md
 .Rproj.user
-georef_calc_browser.Rproj
+GeoPick.Rproj
+**/._*
+**/.DS_Store
+.Rhistory

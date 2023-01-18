@@ -1,22 +1,83 @@
-const turf = require('@turf/turf');
 const ui = require('./ui');
-const mec = require('./minimum_enclosing_circle');
+require('leaflet-spin');
+const turf = require('@turf/turf');
 
-var max_distance_point_to_geometry = function(centroid, turf_geometry){
-    var geometry_coordinates = turf.coordAll(turf_geometry);
-    var from = turf.point(centroid.geometry.coordinates);
-    var options = {units: 'kilometers'};
-    var distances = [];
-    for(var i = 0; i < geometry_coordinates.length; i++){
-        var to = turf.point(geometry_coordinates[i]);
-        var distance = turf.distance(from, to, options);
-        distances.push(distance);
-    }
-    distances.sort(function(a, b){return b - a});    
-    return distances[0];
+const spin_opts = {
+    lines: 13, 
+    length: 38, 
+    width: 17, 
+    radius: 54, 
+    color: '#ffffff',
+    /*scale: 1, 
+    corners: 1, 
+    speed: 1, 
+    rotate: 0, 
+    animation: 'spinner-line-fade-quick', 
+    direction: 1,     
+    fadeColor: 'transparent',
+    top: 50, 
+    left: 50, 
+    shadow:'0 0 1px transparent', 
+    zIndex: 2000000000, 
+    className: 'spinner', 
+    position: 'absolute'*/
 }
 
-/* Might return a polygon, multipolygon, line or multiline */
+const parse_api_data = function(data){
+    const all_data = JSON.parse(data[0]);
+    const mbc = JSON.parse(all_data.mbc[0]);
+    const center = JSON.parse(all_data.centre[0]);
+    return {
+        center: { type: 'Feature', 'geometry': center },
+        mbc: { type: 'Feature', 'geometry': mbc },
+        uncertainty: all_data.uncertainty[0]
+    };
+}
+
+const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
+    //const geom = editableLayers.toGeoJSON().features[0];
+    var geom = editableLayers.toGeoJSON().features;
+    if(geom.length > 1){
+        var geom_type = '';
+        var coords = [];
+        for(var i = 0; i < geom.length; i++){
+            geom_type = geom[i].geometry.type;
+            coords.push(geom[i].geometry.coordinates);
+        }
+        if( geom_type == 'Polygon'){
+            geom = turf.multiPolygon(coords);
+        }        
+    }
+
+    const fetchdata = {
+        method: 'POST',
+        body: JSON.stringify(geom),
+        headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8'
+        })
+    }
+    
+    map.spin(true, spin_opts);
+    fetch('http://127.0.0.1:8000/mbc',fetchdata)
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(data){        
+        const parsed_json = parse_api_data(data);
+        map.spin(false);
+        buffer_layer.addData( parsed_json.mbc );
+        centroid_layer.addData( parsed_json.center );
+        map.fitBounds(buffer_layer.getBounds());
+        ui.show_api_centroid_data( parsed_json );
+    })
+    .catch(function(error){
+        //console.log(error);
+        ui.toast_error(error);
+        map.spin(false);
+    });
+}
+
+/*
 var get_geometry_from_layer = function(containing_geometry){
     var geometry_type = containing_geometry.features[0].geometry.type;    
     var turf_geometry = null;
@@ -168,7 +229,10 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
     buffer_layer.addData(buffered);
     centroid_layer.addData(centroid);
 }
+*/
 
 module.exports = {
-    compute_centroid_data: compute_centroid_data
+    //compute_centroid_data: compute_centroid_data,
+    parse_api_data: parse_api_data,
+    load_api_data: load_api_data
 }
