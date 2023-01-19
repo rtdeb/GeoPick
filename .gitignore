@@ -10,3 +10,4 @@ GeoPick.Rproj
 **/._*
 **/.DS_Store
 .Rhistory
+.env
