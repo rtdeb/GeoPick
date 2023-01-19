@@ -11,3 +11,6 @@ GeoPick.Rproj
 **/.DS_Store
 .Rhistory
 .env
+grt_api.patch
+.RData
+.Rhistory
