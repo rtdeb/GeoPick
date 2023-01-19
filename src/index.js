@@ -59,7 +59,7 @@ var editableLayers = new L.FeatureGroup();
 //var editableLayers = new L.geoJSON();
 map.addLayer(editableLayers);
 
-L.control.scale().addTo(map);
+L.control.scale({'imperial':false}).addTo(map);
 
 var baseMaps = {
     "OpenStreetMap": osm,    
