@@ -8,9 +8,9 @@ library(stringr)
 
 #* @filter cors
 cors <- function(res) {
-  res$setHeader("Access-Control-Allow-Origin", "*")
+  res$setHeader("Access-Control-Allow-Origin", "nhc.creaf.cat")
   res$setHeader("Access-Control-Allow-Methods", "*")
-  res$setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept")
+  res$setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
   plumber::forward()
 }
 
