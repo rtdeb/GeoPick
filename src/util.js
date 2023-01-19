@@ -2,6 +2,10 @@ const ui = require('./ui');
 require('leaflet-spin');
 const turf = require('@turf/turf');
 
+const api_base_url = process.env.API_URL;
+const api_username = process.env.USER;
+const api_pwd = process.env.PASSWORD;
+
 const spin_opts = {
     lines: 13, 
     length: 38, 
@@ -53,12 +57,13 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
         method: 'POST',
         body: JSON.stringify(geom),
         headers: new Headers({
-            'Content-Type': 'application/json; charset=UTF-8'
-        })
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Basic ' + btoa(api_username + ":" + api_pwd)
+        })        
     }
     
     map.spin(true, spin_opts);
-    fetch('http://127.0.0.1:8000/mbc',fetchdata)
+    fetch( api_base_url + 'mbc',fetchdata)
     .then(function(response){
         return response.json();
     })

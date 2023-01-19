@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
  module.exports = {   
@@ -47,6 +48,7 @@ const path = require('path');
         new CompressionPlugin({
           test: /\.(js|css)(\?.*)?$/i,
         }),
+        new Dotenv(),
     ],
    module: {
     rules: [
