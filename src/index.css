@@ -37,6 +37,7 @@ div.info_box {
   border-style: solid;
   border-radius: 10px;
   background-color: wheat;
+  opacity: 0.90;
   width: 300px;
 }
 
@@ -47,6 +48,8 @@ div.info_box {
 #search{  
   position: absolute;
   margin-top: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
   left: 0; 
   right: 0;
   margin-left: auto;
@@ -58,6 +61,12 @@ div.info_box {
   border-style: solid;
   border-radius: 5px;
   background-color: wheat;
+  opacity: 0.90;
+}
+
+#place_search{  
+  border-width: 0px;
+ 
 }
 
 #search label{

@@ -1,88 +1,112 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="css/mystyles.css">
-  <title><%= title %></title>
+  <title>
+    <%= title %>
+  </title>
 </head>
+
 <body>
-    <div id="container">
-        <div id="search">            
-                <label for="place_search"><b>Locality search:</b> </label>
-                <input id="place_search">            
-        </div>
-        <div id="map"></div>        
-        </div>
-        <div id="info">
-            <div class="about">
-                <span class="is-size-4"><a href="/about.html" target="_blank">About</a></span>       
-            </div>           
-            <fieldset>
-                <div class="field">
-                    <div class="field-label">Centroid Longitude (decimal degrees)</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="centroid_x" class="input has-text-right" type="text" placeholder="">
-                            </p>
-                        </div>       
-                    </div>
-                    <div class="field-label">Centroid Latitude (decimal degrees)</div>                
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="centroid_y" class="input has-text-right" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>  
-                </div>                
-                <hr>
-                <div class="field">                    
-                    <div class="field-label">Coordinate uncertainty in meters</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="radius_m" class="input has-text-right" type="text" placeholder="">
-                            </p>
-                        </div>
-                    </div>
-                </div>                
-                <hr>
-                <div class="field">
-                    <div class="field-label">Georeferenced by:</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <input id="georeferencer_name" class="input" type="text" placeholder="Your name here...">
-                            </p>
-                        </div>
-                    </div>
-                </div>                
-                <div class="field">
-                    <div class="field-label">Georeference remarks:</div>
-                    <div class="field-body">
-                        <div class="field">
-                            <p class="control">
-                                <textarea class="textarea" id="georeference_remarks" name="story" rows="5" cols="33" placeholder="Any comments?"></textarea>
-                            </p>
-                        </div>
-                    </div>
-                </div>                
-            </fieldset>
-        
-            <hr>
-            <div class="field">
-                <p class="control">
-                    <a id="cpdata" class="button is-primary">
-                        Copy data to clipboard
-                    </a>
-                </p>
-            </div>
-            <input type="hidden" id="d_geojson">            
-        </div>        
+  <div id="container">
+    <div id="search">
+      <label for="place_search"><b>Location search:</b> </label>
+      <input id="place_search">
     </div>
-    
+    <!-- MAP -->
+    <div id="map"></div>
+    <!-- INFO BOX -->
+    <div id="info">
+      <!-- ABOUT -->
+      <div class="about has-text-left">
+        <span class="is-size-6 has-text-weight-bold"><a href="/about.html" target="_blank">About</a></span>
+      </div>
+      <!-- CENTROID -->
+      <div class="about has-text-right">
+        <span class="is-size-6 has-text-weight-bold is-uppercase">Centroid</span>
+      </div>
+      <!-- Longitude and Latitude -->
+      <fieldset>
+        <div class="field is-size-6">
+          <div class="field-label">Longitude (decimal degrees)</div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+                <input id="centroid_x" class="input has-text-right" type="text" placeholder="" size="11">
+              </p>
+            </div>
+          </div>
+          <div class="field-label">Latitude (decimal degrees)</div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+                <input id="centroid_y" class="input has-text-right" type="text" placeholder="">
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- COORDINATE UNCERTAINTY -->
+        <div class="field">
+          <div class="field-label is-size-6 has-text-right has-text-weight-bold is-uppercase">Coordinate uncertainty (m)</div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+                <input id="radius_m" class="input has-text-right" type="text" placeholder="">
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- GEOREFERENCED BY -->
+        <div class="field">
+          <div class="field-label is-size-6 has-text-right has-text-weight-bold is-uppercase">Georeferenced by</div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+                <input id="georeferencer_name" class="input" type="text" placeholder="Your name here...">
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- GEOREFERENCE REMARKS -->
+        <div class="field">
+          <div class="field-label is-size-6 has-text-right has-text-weight-bold is-uppercase">Georeference remarks</div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+                <textarea class="textarea" id="georeference_remarks" name="story" rows="5" cols="33" placeholder="Any comments?"></textarea>
+              </p>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- EXTRA INFO -->
+      <p class="has-text-weight-bold is-uppercase" style="margin-top: 10px;>Geodetic datum</p>
+      <p>EPSG: 4326 (WGS84)</p>
+      <p class=" has-text-weight-bold is-uppercase" style="margin-top: 5px;">Coordinate precision</p>
+      <p>0.0000001</p>
+      <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeferencing protocol</p>
+      <p>Georeferencing Quick Reference Guide</p>
+      <p>(Zermoglio et al. 2020)</p>
+      <p>https://doi.org/10.35035/e09p-h128</p>
+      <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeference sources</p>
+      <p>GeoPick (Marcer et al., version 2023.beta)</p>
+      <!-- COPY BUTTON -->
+      <div class="field" style="margin-top: 20px;">
+        <p class="control has-text-centered">
+          <a id="cpdata" class="button is-primary">
+            Copy data to clipboard
+          </a>
+        </p>
+      </div>
+      <input type="hidden" id="d_geojson">
+    </div>
+  </div>
+
 </body>
+
 </html>
