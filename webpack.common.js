@@ -28,7 +28,7 @@ const path = require('path');
             filename: 'index.html',
             template: 'src/index.html',
             templateParameters: {
-                title: 'Georeferencing tool'
+                title: 'Geopick'
             },
             favicon: 'src/favicon.ico',
             inject: 'body',
