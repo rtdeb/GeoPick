@@ -176,7 +176,3 @@ map.on(L.Draw.Event.DELETED, function (e) {
 });
 
 ui.init_autocomplete(map,"place_search");
-
-
-const version = require("../package.json").version;
-console.log(version);
