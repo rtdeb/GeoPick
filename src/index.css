@@ -22,6 +22,7 @@ div.info_box {
 .about{
   text-align: right;
   margin-right: 1.5rem;
+  margin-bottom: 5px;
 }
 
 #info{
@@ -79,4 +80,12 @@ div.info_box {
 
 .leaflet-control-coordinates .uiElement.label {
   font-size: 14px; 
+}
+
+.columns {
+  display: flex;
+}
+
+.column {
+  width: 50%;
 }

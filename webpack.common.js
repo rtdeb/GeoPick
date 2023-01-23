@@ -3,6 +3,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 const path = require('path');
+const version = require("./package.json").version;
 
  module.exports = {   
    entry: {
@@ -28,7 +29,8 @@ const path = require('path');
             filename: 'index.html',
             template: 'src/index.html',
             templateParameters: {
-                title: 'Geopick'
+                title: 'Geopick',
+                version: version
             },
             favicon: 'src/favicon.ico',
             inject: 'body',
