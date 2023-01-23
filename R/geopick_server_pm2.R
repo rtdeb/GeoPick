@@ -2,4 +2,9 @@
 
 library(dplyr)
 library(plumber)
-pr("geopick_api.R") %>% pr_run(port=8000)
+
+df.env <- read.table("../.env", sep = "=") %>% setNames(., c("var", "value"))
+port <- as.integer(df.env[df.env$var == "PORT", "value"])
+host <- df.env[df.env$var == "HOST", "value"]
+
+pr("geopick_api.R") %>% pr_run(port = port, host = host)

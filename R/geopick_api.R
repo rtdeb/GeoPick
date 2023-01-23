@@ -6,10 +6,16 @@ library(jsonlite)
 library(terra)
 library(stringr)
 
+
+df.env <- read.table("../.env", sep = "=") %>% setNames(., c("var","value"))
+
+allow_origin <- df.env[df.env$var == "ALLOW_ORIGIN", "value"]
+allow_methods <- df.env[df.env$var == "ALLOW_METHODS", "value"]
+
 #* @filter cors
 cors <- function(res) {
-  res$setHeader("Access-Control-Allow-Origin", "nhc.creaf.cat")
-  res$setHeader("Access-Control-Allow-Methods", "*")
+  res$setHeader("Access-Control-Allow-Origin", allow_origin)
+  res$setHeader("Access-Control-Allow-Methods", allow_methods)
   res$setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
   plumber::forward()
 }
@@ -23,7 +29,7 @@ options <- function() {}
 
 #* @get /version
 function() {
-  "GeoPick API version 1.0.0"
+  "GeoPick API 1.0.2023-Beta"
 }
 
 # NOTE: MULTILINESTRINGS do not work. 
@@ -92,5 +98,6 @@ function(req) {
   response <- toJSON(l)
   response
 }
+
 
 
