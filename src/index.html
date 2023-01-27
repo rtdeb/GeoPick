@@ -6,12 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="css/mystyles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css" integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
+    integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossorigin="anonymous"
+    referrerpolicy="no-referrer" />
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-20213878-3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'UA-20213878-3');
@@ -21,8 +23,8 @@
   </title>
 </head>
 
-<body>  
-  <div id="container">    
+<body>
+  <div id="container">
     <div class="columns">
       <div class="column is-four-fifths">
         <div id="search">
@@ -31,7 +33,7 @@
         </div>
         <!-- MAP -->
         <div id="map">
-          
+
         </div>
       </div>
       <div class="column" style="background-color: wheat;">
@@ -46,9 +48,23 @@
           <!-- ABOUT -->
           <!-- <div class="about"> -->
             <div class="columns">
-              <div class="column has-text-right"> <span class="is-size-7"><%= title %> v.<%= version %></span> </div>
-            </div>                
-          <!-- </div> -->
+              <div class="column has-text-left is-half">
+                <div class="columns">
+                  <div class="column has-text-left is-full"> <span class="is-size-6 has-text-weight-bold"><a href="/about.html"
+                        target="_blank">About</a></span>
+                    <div class="column has-text-left is-full">
+                      <span class="is-size-7 is-full">
+                        v.<%= version %>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="column has-text-right pt-2 pb-5">
+                <img src=<%=require("./geopick-logo.png")%> width = "250px" alt="MDN">
+              </div>
+            </div>
+          </div>
           <!-- CENTROID -->
           <div class="has-text-right">
             <span class="is-size-6 has-text-weight-bold is-uppercase">Centroid</span>
@@ -119,7 +135,7 @@
           <p>https://doi.org/10.35035/e09p-h128</p>
           <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeference sources</p>
           <p>GeoPick (Marcer et al., version 2023.beta)</p>
-          <!-- COPY BUTTON -->          
+          <!-- COPY BUTTON -->
           <div class="field" style="margin-top: 20px;">
             <p class="control has-text-centered">
               <a id="cpdata" class="button is-primary">

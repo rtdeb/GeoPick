@@ -1,4 +1,5 @@
 dist
+resources
 node_modules
 package-lock.json
 git_push.sh
