@@ -15,6 +15,7 @@ const version = require("./package.json").version;
     filename: 'js/[name].bundle.js',
     path: path.resolve(__dirname, 'dist'),
     clean: true,
+    assetModuleFilename: 'assets/images/[name][ext]'
    },   
    optimization: {
     runtimeChunk: 'single',
