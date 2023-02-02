@@ -55,6 +55,18 @@ map.addLayer(centroid_layer);
 var buffer_layer = new L.geoJSON();    
 map.addLayer(buffer_layer);
 
+var reference_layer = new L.geoJSON(null, {style: function(feature) {
+    return {
+        fillColor: 'blue',
+        weight: 3,
+        opacity: 0.3,
+        color: 'blue',
+        stroke: true,
+        fillOpacity: 0.3
+    };
+}});
+map.addLayer(reference_layer);
+
 var editableLayers = new L.FeatureGroup();
 //var editableLayers = new L.geoJSON();
 map.addLayer(editableLayers);
@@ -175,4 +187,4 @@ map.on(L.Draw.Event.DELETED, function (e) {
     }    
 });
 
-ui.init_autocomplete(map,"place_search");
+ui.init_autocomplete(map,"place_search", reference_layer);

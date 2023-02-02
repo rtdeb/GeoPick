@@ -116,21 +116,38 @@ const resetDrawControls = function(){
     $(".leaflet-draw-draw-polygon").show();
 }
 
-const init_autocomplete = function(map, input_id){
+const init_autocomplete = function(map, input_id, reference_layer){
     $( "#" + input_id ).autocomplete({
         source: function(request, response) {
-          $.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'json' }, response)
+          //$.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'geojson', polygon_geojson: 1 }, response)
+          //$.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'json' }, response)
+          $.ajax({
+            url: 'https://nominatim.openstreetmap.org/search',
+            data: {
+                q: request.term,
+                format: 'geojson',
+                polygon_geojson: 1
+            },
+            success: function(data) {
+                var results = $.map(data.features, function(item) {
+                    return item;
+                });
+                response(results);
+            }
+          });
         },      
-        minLength: 2,
+        minLength: 2,        
         select: function( event, ui ) {
-          const sw = [ ui.item.boundingbox[0], ui.item.boundingbox[2]  ];
-          const ne = [ ui.item.boundingbox[1], ui.item.boundingbox[3]  ];
+          const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
+          const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
           map.fitBounds( [ne,sw] );
+          reference_layer.clearLayers();
+          reference_layer.addData( ui.item.geometry );
         },
         create: function () {
           $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
               return $('<li>')
-                  .append('<a>' + item.display_name + '</a>')
+                  .append('<a>' + item.properties.display_name + '</a>')
                   .appendTo(ul);
           };
         }
