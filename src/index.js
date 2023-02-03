@@ -56,13 +56,12 @@ var buffer_layer = new L.geoJSON();
 map.addLayer(buffer_layer);
 
 var reference_layer = new L.geoJSON(null, {style: function(feature) {
-    return {
-        fillColor: 'blue',
+    return {        
         weight: 3,
-        opacity: 0.3,
-        color: 'blue',
+        opacity: 1,
+        color: 'orange',
         stroke: true,
-        fillOpacity: 0.3
+        fillOpacity: 0
     };
 }});
 map.addLayer(reference_layer);
