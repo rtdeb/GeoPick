@@ -57,7 +57,7 @@ map.addLayer(buffer_layer);
 
 var reference_layer = new L.geoJSON(null, {style: function(feature) {
     return {        
-        weight: 3,
+        weight: 2,
         opacity: 1,
         color: 'orange',
         stroke: true,
