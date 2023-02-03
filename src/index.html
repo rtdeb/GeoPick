@@ -137,13 +137,22 @@
           <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeference sources</p>
           <p>GeoPick (Marcer et al., version 2023.beta)</p>
           <!-- COPY BUTTON -->
-          <div class="field" style="margin-top: 20px;">
-            <p class="control has-text-centered">
-              <a id="cpdata" class="button is-primary">
-                Copy data to clipboard
-              </a>
-            </p>
+          <hr>
+          <div class="field">
+            <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Copy data</div>            
           </div>
+          <div class="button_container" style="margin-top: 20px;">
+            <div class="control has-text-centered">
+              <a title="Copy data to clipboard, including a row with headers" id="cpdata" class="button is-primary">
+                With headers
+              </a>
+            </div>
+            <div class="control has-text-centered">
+              <a title="Copy data to clipboard, without the headers" id="cpdatanh" class="button is-success">
+                Without headers
+              </a>
+            </div>
+          </div>          
           <input type="hidden" id="d_geojson">
         </div>
       </div>

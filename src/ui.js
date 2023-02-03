@@ -69,9 +69,9 @@ const clear_centroid_data = function(){
         $('#' + e).val("");
     });
     local_centroid_data = {};    
-}    
+}
 
-$("#cpdata").on("click", function(){
+const do_copy_data = function( yes_headers ){
     if( empty_controls() ){        
         toast_warning('Nothing to copy!');
         return;
@@ -99,8 +99,20 @@ $("#cpdata").on("click", function(){
     let georeference_remarks = $('#georeference_remarks').val();
 
     var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
-    navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);    
+    if( yes_headers ){
+        navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);    
+    }else{
+        navigator.clipboard.writeText(string_template);    
+    }
     toast_success('Data copied to clipboard!');
+};
+
+$("#cpdata").on("click", function(){
+    do_copy_data(true);
+});
+
+$("#cpdatanh").on("click", function(){
+    do_copy_data(false);
 });
 
 const hideLineDrawControl = function(){
@@ -119,8 +131,6 @@ const resetDrawControls = function(){
 const init_autocomplete = function(map, input_id, reference_layer){
     $( "#" + input_id ).autocomplete({
         source: function(request, response) {
-          //$.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'geojson', polygon_geojson: 1 }, response)
-          //$.getJSON('https://nominatim.openstreetmap.org/search', { q: request.term, format: 'json' }, response)
           $.ajax({
             url: 'https://nominatim.openstreetmap.org/search',
             data: {

@@ -85,3 +85,18 @@ div.info_box {
   padding: 0px;
   padding-top: .75rem;
 }
+
+.button_container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+#cpdatanh {
+  margin: 10px;
+}
+
+#cpdata {
+  margin: 10px;
+}
