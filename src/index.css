@@ -51,16 +51,11 @@ div.info_box {
 }
 
 #search{  
-  position: absolute;
-  margin-top: 10px;
-  padding-top: 2px;
-  padding-bottom: 2px;
-  left: 0; 
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  width: 350px;
-  z-index: 99999;
+  /* position: absolute; */
+  /* margin-top: 10px; */
+  /* margin-left: auto; */
+  /* margin-right: auto; */
+  /* width: 350px; */
   border-width: 1px;
   border-color: black;
   border-style: solid;

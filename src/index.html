@@ -26,23 +26,26 @@
 <body>
   <div id="container">
     <div class="columns">
+      <!-- MAP -->
       <div class="column is-four-fifths">
-        <div id="search">
-          <label for="place_search"><b>Location search:</b></label>
-          <input id="place_search">
-        </div>
-        <!-- MAP -->
         <div id="map">
-
+          <div class="columns is-centered">
+            <div class="column has-text-centered pt-4 is-one-quarter is-size-6" style="z-index: 999999;">
+              <div id="search" style="padding-top: 3px;padding-bottom: 3px;">
+                <label for="place_search"><b>Location search:</b></label>
+                <input id="place_search">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+      <!-- INFO BOX -->
       <div class="column" style="background-color: wheat;">
-        <!-- INFO BOX -->
         <div id="info">
           <!-- ABOUT -->
           <div class="about">
             <div class="columns">
-              <div class="column has-text-left is-half">
+              <div class="column has-text-left is-one-third pl-2">
                 <div class="columns">
                   <div class="column has-text-left is-full"> <span class="is-size-6 has-text-weight-bold"><a href="/about.html"
                         target="_blank">About</a></span>
@@ -54,38 +57,42 @@
                   </div>
                 </div>
               </div>
-              <div class="column has-text-right pt-2 pb-5">
+              <div class="column has-text-right pl-4 pt-3 pb-4">
                 <img src=<%=require("./geopick-logo.png")%> width = "250px" alt="MDN">
               </div>
             </div>
           </div>
           <!-- CENTROID -->
           <div class="has-text-right">
-            <span class="is-size-6 has-text-weight-bold is-uppercase">Centroid</span>
+            <span class="is-size-6 has-text-weight-bold is-uppercase pr-2">Centroid</span>
           </div>
           <!-- Longitude and Latitude -->
           <fieldset>
-            <div class="field is-size-6">
-              <div class="field-label">Longitude (decimal degrees)</div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <input id="centroid_x" class="input has-text-right" type="text" placeholder="" size="11">
-                  </p>
+            <div class="columns">
+              <div class="column is-half pl-3">
+                  <div class="has-text-right pr-2 pt-2 is-size-6">Longitude</div>
+                  <div class="field-body">
+                    <div class="field">
+                      <p class="control pr-1">
+                        <input id="centroid_x" class="input has-text-right" type="text" placeholder="" size="11">
+                      </p>
+                    </div>
                 </div>
               </div>
-              <div class="field-label">Latitude (decimal degrees)</div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <input id="centroid_y" class="input has-text-right" type="text" placeholder="">
-                  </p>
+              <div class="column is-half pr-3"">
+                <div class="has-text-right pr-2 pt-2 is-size-6">Latitude</div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control pl-1">
+                      <input id="centroid_y" class="input has-text-right" type="text" placeholder="">
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
             <!-- COORDINATE UNCERTAINTY -->
             <div class="field">
-              <div class="field-label is-size-6 has-text-right has-text-weight-bold is-uppercase">Coordinate uncertainty (m)</div>
+              <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Coordinate uncertainty (m)</div>
               <div class="field-body">
                 <div class="field">
                   <p class="control">
@@ -96,7 +103,7 @@
             </div>
             <!-- GEOREFERENCED BY -->
             <div class="field">
-              <div class="field-label is-size-6 has-text-right has-text-weight-bold is-uppercase">Georeferenced by</div>
+              <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Georeferenced by</div>
               <div class="field-body">
                 <div class="field">
                   <p class="control">
@@ -107,7 +114,7 @@
             </div>
             <!-- GEOREFERENCE REMARKS -->
             <div class="field">
-              <div class="field-label is-size-6 has-text-right has-text-weight-bold is-uppercase">Georeference remarks</div>
+              <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Georeference remarks</div>
               <div class="field-body">
                 <div class="field">
                   <p class="control">
