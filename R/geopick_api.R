@@ -110,6 +110,10 @@ function(req) {
   pw <- pw %>% st_transform(4326)
   ps <- ps %>% st_transform(4326)
   pn <- pn %>% st_transform(4326)
+  
+  site.sf <- st_transform(site.tr, 4326)
+  site.geojson <- sf_geojson(site.sf)
+  
   l <- list(mbc=mbc.json, site=site.geojson, centre=centre.json, uncertainty=radius,
             pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
   
