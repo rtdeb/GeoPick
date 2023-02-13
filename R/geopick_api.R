@@ -5,12 +5,23 @@ library(sf)
 library(jsonlite)
 library(terra)
 library(stringr)
+library(mapview)
 
 
 df.env <- read.table("../.env", sep = "=") %>% setNames(., c("var","value"))
 
 allow_origin <- df.env[df.env$var == "ALLOW_ORIGIN", "value"]
 allow_methods <- df.env[df.env$var == "ALLOW_METHODS", "value"]
+if(length(df.env[df.env$var == "MAX_PTS_PER_POLYGON", "value"]) == 0){
+  max_points_polygon <- 10000
+} else {
+  max_points_polygon <- as.integer(df.env[df.env$var == "MAX_PTS_PER_POLYGON", "value"])
+}
+if(length(df.env[df.env$var == "TOLERANCE", "value"]) == 0){
+  tolerance <- 500
+} else {
+  tolerance <- as.double(df.env[df.env$var == "TOLERANCE", "value"])
+}
 
 #* @filter cors
 cors <- function(res) {
@@ -42,10 +53,17 @@ function(req) {
   site.sf <- geojson_sf(site.geojson)
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
   epsg.tr <- 3857
-
+  
   # transform to a projection so that the mbc is done correctly, if not, lat/long
   # are used as planar coordinates and the mbc is not calculated correctly
   site.tr <- st_transform(site.sf, epsg.tr)
+
+  # Check if polygon is too large, if it has more than 10000 points. If so we 
+  # simplify with a tolerance of 500 meters
+  if(npts(site.tr) > as.integer(max_points_polygon)){
+    site.tr <- st_simplify(site.tr, preserveTopology = TRUE, dTolerance = tolerance)
+  }
+  # Finally, calculate the minimum bounding circle
   mbc.tr <- st_minimum_bounding_circle(site.tr, nQuadSegs = 30)
   
   # Determine center
