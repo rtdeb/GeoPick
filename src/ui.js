@@ -4,6 +4,8 @@ const  $ = require('jquery');
 const Toastr = require('toastr');
 const p = require('../package.json');
 
+const { convertFeatureCollection } = require('wkt-parser-helper');
+
 Toastr.options = {
     "positionClass": "toast-top-center",
     "timeOut": "3000",
@@ -140,7 +142,8 @@ const show_api_centroid_data = function(parsed_json){
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
     $('#spatial_fit').val( parsed_json.spatial_fit );
     //$('#d_geojson').val( stringify( parsed_json.site ) );
-    $('#d_geojson').val( '' );
+    $('#d_geojson').val( convertFeatureCollection( parsed_json.site ) );
+    //$('#d_geojson').val( '' );
 }
 
 const toast_error = function(message){
