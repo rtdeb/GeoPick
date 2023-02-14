@@ -49,6 +49,12 @@ div.info_box {
 .ui-autocomplete {
   z-index: 99999 !important;
 }
+.button.is-primary{
+  background-color:teal;
+}
+.button.is-success{
+  background-color: mediumseagreen;
+}
 
 #search{  
   /* position: absolute; */
