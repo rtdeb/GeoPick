@@ -76,7 +76,7 @@ L.control.scale().addTo(map);
 
 var baseMaps = {
     "OpenStreetMap": osm,    
-    "Google streets": googleStreets,    
+    "Google default view": googleStreets,    
     "Google terrain": googleTerrain,
     "Google satellite": googleSat,
     "Google hybrid": googleHybrid,
