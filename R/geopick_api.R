@@ -114,12 +114,17 @@ function(req) {
   ps <- ps %>% st_transform(4326)
   pn <- pn %>% st_transform(4326)
     
+  # Return not as multipolygon or multilinestring since leaflet does not support
+  # multipolygon or multilinestring for editing.
   site.sf <- st_transform(site.tr, 4326)
   if(st_geometry_type(site.sf) == "MULTIPOLYGON"){
     site.sf <- st_cast(site.sf, "POLYGON")
   } else if(st_geometry_type(site.sf) == "MULTILINESTRING"){
     site.sf <- st_cast(site.sf, "LINESTRING")
   }
+  
+  # if simplify is True, it returns a geojson with a FeatureCollection instead of
+  # just an array of polygons.
   site.geojson <- sf_geojson(site.sf, simplify = F)
   
   
