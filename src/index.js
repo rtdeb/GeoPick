@@ -141,7 +141,13 @@ var options = {
 var drawControl = new L.Control.Draw(options);
 map.addControl(drawControl);
 
-var coordControl = L.control.coordinates({ position:"bottomleft", enableUserInput:false });
+var coordControl = L.control.coordinates({ 
+    position:"bottomleft", 
+    enableUserInput:false, 
+    useLatLngOrder: true, 
+    labelTemplateLat:"Lat: {y}", 
+    labelTemplateLng:"Long: {x}" 
+});
 map.addControl(coordControl);
 
 
