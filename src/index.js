@@ -13,6 +13,8 @@ require('./mystyle.scss');
 const ui = require('./ui');
 const util = require('./util');
 
+const  $ = require('jquery');
+
 var osmUrl='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 var osmAttrib='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
 
@@ -146,11 +148,6 @@ map.addControl(coordControl);
 map.on(L.Draw.Event.CREATED, function (e) {    
     var type = e.layerType;    
 
-    if( type == 'polyline' && editableLayers.toGeoJSON().features.length > 0 ){
-        ui.toast_warning("Sorry, multi-lines are not supported yet.");
-        return false;
-    }        
-
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
@@ -178,6 +175,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
+    reference_layer.clearLayers();
     if(editableLayers.toGeoJSON().features.length > 0){
         util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);        
         editableLayers.bringToFront();
@@ -187,3 +185,11 @@ map.on(L.Draw.Event.DELETED, function (e) {
 });
 
 ui.init_autocomplete(map,"place_search", reference_layer);
+
+$('#capture').click(function(){
+    if( reference_layer.toGeoJSON().features.length == 0 ){
+        ui.toast_error('Nothing to capture! Please select a location.');
+    }else{        
+        util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
+    }
+});

@@ -30,11 +30,12 @@
       <div class="column is-four-fifths">
         <div id="map">
           <div class="columns is-centered">
-            <div class="column has-text-centered pt-4 is-one-quarter is-size-6" style="z-index: 999999;">
-              <div id="search" style="padding-top: 3px;padding-bottom: 3px;">
+            <div class="column has-text-centered pt-4 is-one-third is-size-6" style="z-index: 999999;">
+              <div id="search" style="padding-top: 3px;padding-bottom: 3px; display: flex;">
                 <label for="place_search"><b>Location search:</b></label>
                 <input id="place_search">
-              </div>
+                <button id="capture" title="" class="button is-small is-primary ml-3 mt-1">Capture location</button>
+              </div>                            
             </div>
           </div>
         </div>
@@ -64,13 +65,13 @@
           </div>
           <!-- CENTROID -->
           <div class="has-text-right">
-            <span class="is-size-6 has-text-weight-bold is-uppercase pr-2">Centroid</span>
+            <span class="is-size-12 has-text-weight-bold is-uppercase pr-2">Centroid</span>
           </div>
           <!-- Longitude and Latitude -->
           <fieldset>
             <div class="columns">
               <div class="column is-half pr-3"">
-                <div class="has-text-right pr-2 pt-2 is-size-6">Latitude</div>
+                <div class="has-text-right pr-2 pt-2 is-size-10">Latitude</div>
                 <div class="field-body">
                   <div class="field">
                     <p class="control pl-3">
@@ -80,7 +81,7 @@
                 </div>
               </div>
               <div class="column is-half pl-3">
-                <div class="has-text-right pr-4 pt-2 is-size-6">Longitude</div>
+                <div class="has-text-right pr-4 pt-2 is-size-10">Longitude</div>
                 <div class="field-body">
                   <div class="field">
                     <p class="control pr-3">
@@ -93,7 +94,7 @@
             </div>
             <!-- COORDINATE UNCERTAINTY -->
             <div class="field">
-              <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Coordinate uncertainty (m)</div>
+              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Coordinate uncertainty (m)</div>
               <div class="field-body">
                 <div class="field">
                   <p class="control">
@@ -102,9 +103,20 @@
                 </div>
               </div>
             </div>
+            <!-- COORDINATE UNCERTAINTY -->
+            <div class="field">
+              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Spatial fit</div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control">
+                    <input id="spatial_fit" class="input has-text-right" type="text" placeholder="">
+                  </p>
+                </div>
+              </div>
+            </div>
             <!-- GEOREFERENCED BY -->
             <div class="field">
-              <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Georeferenced by</div>
+              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Georeferenced by</div>
               <div class="field-body">
                 <div class="field">
                   <p class="control">
@@ -115,7 +127,7 @@
             </div>
             <!-- GEOREFERENCE REMARKS -->
             <div class="field">
-              <div class="is-size-6 has-text-right has-text-weight-bold is-uppercase pr-2">Georeference remarks</div>
+              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Georeference remarks</div>
               <div class="field-body">
                 <div class="field">
                   <p class="control">
@@ -140,9 +152,9 @@
           <!-- COPY BUTTON -->
           <hr>
           <div class="field">
-            <div class="is-size-6 has-text-centered has-text-weight-bold is-uppercase pr-2">Copy data to clipboard</div>
+            <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase pr-2">Copy data to clipboard</div>
           </div>
-          <div class="button_container" style="margin-top: 20px;">
+          <div class="button_container" style="margin-top: 10px;">
             <div class="control has-text-centered">
               <a title="Copy data to clipboard, including a row with headers" id="cpdata" class="button is-primary">
                 With headers

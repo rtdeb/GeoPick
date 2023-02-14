@@ -5,8 +5,6 @@ const Toastr = require('toastr');
 const { stringify } = require('wkt');
 const p = require('../package.json');
 
-var local_centroid_data = {};
-
 Toastr.options = {
     "positionClass": "toast-top-center",
     "timeOut": "3000",
@@ -32,14 +30,9 @@ const headers = [
 const controls = [
     'centroid_x',
     'centroid_y',
-    /*'s_centroid_x',
-    's_centroid_y',
-    'radius',*/
-    //'geometry_type',
-    //'inside',
-    //'radius',
     'radius_m',
-    'd_geojson'
+    'd_geojson',
+    'spatial_fit'
 ];
 
 const empty_controls = function() {
@@ -51,24 +44,10 @@ const empty_controls = function() {
     return true;
 }
 
-/*
-const show_centroid_data = function( data ){    
-    controls.forEach(function (e) {
-        if( e == 'centroid_x' || e == 'centroid_y' || e == 'radius_m' ){
-            $('#' + e).val(data[e].toFixed(7));
-        }else{
-            $('#' + e).val(data[e]);
-        }
-    });
-    local_centroid_data = data;
-}
-*/
-
 const clear_centroid_data = function(){
     controls.forEach(function (e) {
         $('#' + e).val("");
-    });
-    local_centroid_data = {};    
+    });    
 }
 
 const do_copy_data = function( yes_headers ){
@@ -80,6 +59,7 @@ const do_copy_data = function( yes_headers ){
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
     let geojson = $('#d_geojson').val();
+    let spatial_fit = $('#spatial_fit').val();
 
     let wkt = '';
 
@@ -92,7 +72,7 @@ const do_copy_data = function( yes_headers ){
 
     let date = new Date().toISOString();
 
-    let pointRadiusSpatialFit = local_centroid_data.pointRadiusSpatialFit;
+    let pointRadiusSpatialFit = spatial_fit;
     let source_string = p.name + ' v.' + p.version;
 
     let georeferencer_name = $('#georeferencer_name').val();
@@ -168,6 +148,7 @@ const show_api_centroid_data = function(parsed_json){
     $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
+    $('#spatial_fit').val( parsed_json.spatial_fit );
 }
 
 const toast_error = function(message){
