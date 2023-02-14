@@ -103,6 +103,9 @@ function(req) {
   # Radius/Uncertainty
   radius <- as.double(st_distance(pc.tr.sf, pw))
   
+  # Spatial fit
+  spatial.fit <- round(radius^2 * pi / as.double(st_area(site.tr)), 3)
+  
   # Centre
   centre <- st_as_sf(pc.tr.sf) %>% st_transform(4326)
   centre.json <- sf_geojson(centre)
@@ -110,11 +113,18 @@ function(req) {
   pw <- pw %>% st_transform(4326)
   ps <- ps %>% st_transform(4326)
   pn <- pn %>% st_transform(4326)
-  
+    
   site.sf <- st_transform(site.tr, 4326)
+  if(st_geometry_type(site.sf) == "MULTIPOLYGON"){
+    site.sf <- st_cast(site.sf, "POLYGON")
+  } else if(st_geometry_type(site.sf) == "MULTILINESTRING"){
+    site.sf <- st_cast(site.sf, "LINESTRING")
+  }
   site.geojson <- sf_geojson(site.sf)
   
-  l <- list(mbc=mbc.json, site=site.geojson, centre=centre.json, uncertainty=radius,
+  
+  l <- list(mbc=mbc.json, site=site.geojson, spatial_fit=spatial.fit,
+            centre=centre.json, uncertainty=radius,
             pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
   
   response <- toJSON(l)
