@@ -14,6 +14,7 @@ const spin_opts = {
     color: '#ffffff'
 }
 
+/*
 const geojson_to_wkt = function(geojson){    
     if(geojson.type == 'Polygon'){
         const coords = geojson.coordinates[0];
@@ -30,6 +31,7 @@ const geojson_to_wkt = function(geojson){
     }
     return 'KO ()';
 }
+*/
 
 const parse_api_data = function(data){
     const all_data = JSON.parse(data[0]);
@@ -47,8 +49,7 @@ const parse_api_data = function(data){
         mbc: { type: 'Feature', 'geometry': mbc },
         site: site,
         spatial_fit: spatial_fit,
-        uncertainty: all_data.uncertainty[0],
-        footprintwkt: geojson_to_wkt(site)
+        uncertainty: all_data.uncertainty[0]
     };
 }
 
@@ -94,7 +95,8 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         function(l){
             editableLayers.addLayer(l);
         });
-        editableLayers.bringToFront(); 
+        editableLayers.bringToFront();
+        reference_layer.clearLayers();
     })
     .catch(function(error){
         //console.log(error);

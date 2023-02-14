@@ -2,7 +2,6 @@ require('jquery-ui/ui/widgets/autocomplete');
 const  $ = require('jquery');
 
 const Toastr = require('toastr');
-const { stringify } = require('wkt');
 const p = require('../package.json');
 
 Toastr.options = {
@@ -59,7 +58,7 @@ const do_copy_data = function( yes_headers ){
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
     let wkt = $('#d_geojson').val();
-    let spatial_fit = $('#spatial_fit').val();    
+    let spatial_fit = $('#spatial_fit').val();
 
     let date = new Date().toISOString();
 
@@ -140,7 +139,8 @@ const show_api_centroid_data = function(parsed_json){
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
     $('#spatial_fit').val( parsed_json.spatial_fit );
-    $('#d_geojson').val( parsed_json.footprintwkt );
+    //$('#d_geojson').val( stringify( parsed_json.site ) );
+    $('#d_geojson').val( '' );
 }
 
 const toast_error = function(message){
