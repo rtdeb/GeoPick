@@ -58,17 +58,8 @@ const do_copy_data = function( yes_headers ){
     let centroid_x = $('#centroid_x').val();
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
-    let geojson = $('#d_geojson').val();
-    let spatial_fit = $('#spatial_fit').val();
-
-    let wkt = '';
-
-    try{
-        const geojson_obj = JSON.parse(geojson);
-        wkt = stringify(geojson_obj);
-    }catch(error){
-        console.log("Error parsing geomettry or empty geometry");
-    }
+    let wkt = $('#d_geojson').val();
+    let spatial_fit = $('#spatial_fit').val();    
 
     let date = new Date().toISOString();
 
@@ -149,6 +140,7 @@ const show_api_centroid_data = function(parsed_json){
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
     $('#spatial_fit').val( parsed_json.spatial_fit );
+    $('#d_geojson').val( parsed_json.footprintwkt );
 }
 
 const toast_error = function(message){

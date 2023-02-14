@@ -14,6 +14,23 @@ const spin_opts = {
     color: '#ffffff'
 }
 
+const geojson_to_wkt = function(geojson){    
+    if(geojson.type == 'Polygon'){
+        const coords = geojson.coordinates[0];
+        const body = coords.map(function(pair){
+            return pair[0] + ' ' + pair[1];
+        });
+        return 'POLYGON((' + body.join(',') + '))';
+    }else if(geojson.type == 'LineString'){
+        const coords = geojson.coordinates;
+        const body = coords.map(function(pair){
+            return pair[0] + ' ' + pair[1];
+        });
+        return 'LINESTRING(' + body + ')';
+    }
+    return 'KO ()';
+}
+
 const parse_api_data = function(data){
     const all_data = JSON.parse(data[0]);
     const mbc = JSON.parse(all_data.mbc[0]);
@@ -30,7 +47,8 @@ const parse_api_data = function(data){
         mbc: { type: 'Feature', 'geometry': mbc },
         site: site,
         spatial_fit: spatial_fit,
-        uncertainty: all_data.uncertainty[0]
+        uncertainty: all_data.uncertainty[0],
+        footprintwkt: geojson_to_wkt(site)
     };
 }
 
