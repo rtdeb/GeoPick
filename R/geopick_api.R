@@ -120,7 +120,7 @@ function(req) {
   } else if(st_geometry_type(site.sf) == "MULTILINESTRING"){
     site.sf <- st_cast(site.sf, "LINESTRING")
   }
-  site.geojson <- sf_geojson(site.sf)
+  site.geojson <- sf_geojson(site.sf, simplify = F)
   
   
   l <- list(mbc=mbc.json, site=site.geojson, spatial_fit=spatial.fit,
