@@ -47,7 +47,7 @@ const version = require("./package.json").version;
             favicon: 'src/favicon.ico',
             inject: 'body'
         }),     
-        new MiniCssExtractPlugin({
+      new MiniCssExtractPlugin({
             filename: 'css/mystyles.css'
         }),
         new CompressionPlugin({
