@@ -41,9 +41,11 @@ const version = require("./package.json").version;
             filename: 'about.html',
             template: 'src/about.html',            
             templateParameters: {
-              title: 'About'
+              title: 'About',
+              version: version
             },
-            favicon: 'src/favicon.ico'
+            favicon: 'src/favicon.ico',
+            inject: 'body'
         }),     
         new MiniCssExtractPlugin({
             filename: 'css/mystyles.css'
