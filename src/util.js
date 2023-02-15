@@ -82,21 +82,25 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         return response.json();
     })
     .then(function(data){        
+        editableLayers.clearLayers();
+        buffer_layer.clearLayers();
+        centroid_layer.clearLayers();
+        reference_layer.clearLayers();
+
         const parsed_json = parse_api_data(data);
+        
         map.spin(false);
         buffer_layer.addData( parsed_json.mbc );
         centroid_layer.addData( parsed_json.center );
         map.fitBounds(buffer_layer.getBounds());
-        ui.show_api_centroid_data( parsed_json );
-        editableLayers.clearLayers();
+        ui.show_api_centroid_data( parsed_json );        
         var layer = L.geoJSON(parsed_json.site);
         console.log(JSON.stringify(parsed_json.site));
         layer.eachLayer(
         function(l){
             editableLayers.addLayer(l);
         });
-        editableLayers.bringToFront();
-        reference_layer.clearLayers();
+        editableLayers.bringToFront();        
     })
     .catch(function(error){
         //console.log(error);
