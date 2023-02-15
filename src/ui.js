@@ -140,10 +140,8 @@ const show_api_centroid_data = function(parsed_json){
     $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
-    $('#spatial_fit').val( parsed_json.spatial_fit );
-    //$('#d_geojson').val( stringify( parsed_json.site ) );
-    $('#d_geojson').val( convertFeatureCollection( parsed_json.site ) );
-    //$('#d_geojson').val( '' );
+    $('#spatial_fit').val( parsed_json.spatial_fit );    
+    $('#d_geojson').val( convertFeatureCollection( parsed_json.site ) );    
 }
 
 const toast_error = function(message){
