@@ -34,6 +34,8 @@ div.info_box {
 }
 
 #info{
+  display: flex;
+  flex-direction: column;
   padding: 10px;
   padding-right: 20px;  
   z-index: 9999;
@@ -42,8 +44,13 @@ div.info_box {
   border-style: solid;
   border-radius: 10px;*/  
   opacity: 0.90;    
-  height: 100vh;
-  min-height: 700px;
+  /*height: 100vh;
+  min-height: 700px;*/
+}
+
+.fields_container{
+  display: flex;
+  flex-direction: column;
 }
 
 .ui-autocomplete {
@@ -57,24 +64,23 @@ div.info_box {
 }
 
 #search{  
-  /* position: absolute; */
-  /* margin-top: 10px; */
-  /* margin-left: auto; */
-  /* margin-right: auto; */
-  /* width: 350px; */
   border-width: 1px;
   border-color: black;
   border-style: solid;
   border-radius: 5px;
   background-color: wheat;
   opacity: 0.90;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: fit-content;
 }
 
 #place_search{  
-  border-width: 0px;
- 
+  border-width: 0px; 
 }
 
+/*
 #search label{
   padding: 5px;
 }
@@ -82,6 +88,7 @@ div.info_box {
 #search input{
   padding: 5px;
 }
+*/
 
 .leaflet-control-coordinates .uiElement.label {
   font-size: 14px; 
@@ -105,4 +112,17 @@ div.info_box {
 
 #cpdata {
   margin: 10px;
+}
+
+.leaflet-verticalcenter {
+  position: absolute;
+  z-index: 1000;  
+  top: 40px; /* possible because the placeholder's parent is the map */
+  left: 30%;
+  transform: translateY(-50%); /* using the CSS3 Transform technique */
+  padding-top: 10px;
+}
+
+.search_element {
+  padding: 3px 0;
 }
