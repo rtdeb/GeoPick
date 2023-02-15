@@ -24,24 +24,20 @@
 </head>
 
 <body>
-  <div id="container">
+  <div id="container">    
     <div class="columns">
       <!-- MAP -->
-      <div class="column is-four-fifths">
+      <div class="column is-four-fifths">                    
         <div id="map">
-          <div class="columns is-centered">
-            <div class="column has-text-centered pt-4 is-one-third is-size-6" style="z-index: 999999;">
-              <div id="search" style="padding-top: 3px;padding-bottom: 3px; display: flex;">
-                <label for="place_search"><b>Location search:</b></label>
-                <input id="place_search" style="width: 275px;" placeholder="through OpenStreetMap Nominatim">
-                <button id="capture" title="" class="button is-small is-primary ml-2 mt-1 mr-1 has-text-weight-semibold">Capture location</button>
-              </div>                            
-            </div>
+          <div id="search" class="leaflet-control leaflet-verticalcenter">
+            <div class="search_element"><label class="ml-2" for="place_search"><b>Location search:</b></label></div>
+            <div class="search_element"><input id="place_search" class="ml-2" style="width: 275px;" placeholder="through OpenStreetMap Nominatim"></div>
+            <div class="search_element"><button id="capture" title="" class="button is-small is-primary ml-2 mr-1 has-text-weight-semibold">Capture location</button></div>
           </div>
         </div>
       </div>
       <!-- INFO BOX -->
-      <div class="column" style="background-color: wheat;">
+      <div class="column is-one-fifth" style="background-color: wheat;">
         <div id="info">
           <!-- ABOUT -->
           <div class="about">
@@ -68,104 +64,109 @@
             <span class="is-size-12 has-text-weight-bold is-uppercase pr-2">Centroid</span>
           </div>
           <!-- Longitude and Latitude -->
-          <fieldset>
-            <div class="columns">
-              <div class="column is-half pr-3"">
-                <div class="has-text-right pr-2 pt-2 is-size-10">Latitude</div>
-                <div class="field-body">
-                  <div class="field">
-                    <p class="control pl-3">
-                      <input id="centroid_y" class="input has-text-right" type="text" placeholder="">
-                    </p>
+          <div class="fields_container">
+            
+              <div class="columns">
+                <div class="column is-half pr-3"">
+                  <div class="has-text-right pr-2 pt-2 is-size-10">Latitude</div>
+                  <div class="field-body">
+                    <div class="field">
+                      <p class="control pl-3">
+                        <input id="centroid_y" class="input has-text-right" type="text" placeholder="">
+                      </p>
+                    </div>
                   </div>
                 </div>
+                <div class="column is-half pl-3">
+                  <div class="has-text-right pr-4 pt-2 is-size-10">Longitude</div>
+                  <div class="field-body">
+                    <div class="field">
+                      <p class="control pr-3">
+                        <input id="centroid_x" class="input has-text-right" type="text" placeholder="" size="11">
+                      </p>
+                    </div>
+                </div>
               </div>
-              <div class="column is-half pl-3">
-                <div class="has-text-right pr-4 pt-2 is-size-10">Longitude</div>
-                <div class="field-body">
-                  <div class="field">
-                    <p class="control pr-3">
-                      <input id="centroid_x" class="input has-text-right" type="text" placeholder="" size="11">
-                    </p>
-                  </div>
-              </div>
-            </div>
 
-            </div>
-            <!-- COORDINATE UNCERTAINTY -->
-            <div class="field">
-              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Coordinate uncertainty (m)</div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <input id="radius_m" class="input has-text-right" type="text" placeholder="">
-                  </p>
+              </div>
+              <!-- COORDINATE UNCERTAINTY -->
+              <div class="field">
+                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Coordinate uncertainty (m)</div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control">
+                      <input id="radius_m" class="input has-text-right" type="text" placeholder="">
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- COORDINATE UNCERTAINTY -->
-            <div class="field">
-              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Spatial fit</div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <input id="spatial_fit" class="input has-text-right" type="text" placeholder="">
-                  </p>
+              <!-- COORDINATE UNCERTAINTY -->
+              <div class="field">
+                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Spatial fit</div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control">
+                      <input id="spatial_fit" class="input has-text-right" type="text" placeholder="">
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- GEOREFERENCED BY -->
-            <div class="field">
-              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Georeferenced by</div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <input id="georeferencer_name" class="input" type="text" placeholder="Your name here...">
-                  </p>
+              <!-- GEOREFERENCED BY -->
+              <div class="field">
+                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Georeferenced by</div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control">
+                      <input id="georeferencer_name" class="input" type="text" placeholder="Your name here...">
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- GEOREFERENCE REMARKS -->
-            <div class="field">
-              <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Georeference remarks</div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control">
-                    <textarea class="textarea" id="georeference_remarks" name="story" rows="5" cols="33" placeholder="Any comments?"></textarea>
-                  </p>
+              <!-- GEOREFERENCE REMARKS -->
+              <div class="field">
+                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">Georeference remarks</div>
+                <div class="field-body">
+                  <div class="field">
+                    <p class="control">
+                      <textarea class="textarea" id="georeference_remarks" name="story" rows="5" cols="33" placeholder="Any comments?"></textarea>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </div>
-          </fieldset>
+              </div>            
+          </div>
 
           <!-- EXTRA INFO -->
-          <p class="has-text-weight-bold is-uppercase" style="margin-top: 10px;"">Geodetic datum</p>
-          <p>EPSG: 4326 (WGS84)</p>
-          <p class=" has-text-weight-bold is-uppercase" style="margin-top: 5px;">Coordinate precision</p>
-          <p>0.0000001</p>
-          <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeferencing protocol</p>
-          <p>Georeferencing Quick Reference Guide</p>
-          <p>(Zermoglio et al. 2020)</p>
-          <p>https://doi.org/10.35035/e09p-h128</p>
-          <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeference sources</p>
-          <p>GeoPick (Marcer et al., v.<%= version %>)</p>
+          <div>
+            <p class="has-text-weight-bold is-uppercase" style="margin-top: 10px;"">Geodetic datum</p>
+            <p>EPSG: 4326 (WGS84)</p>
+            <p class=" has-text-weight-bold is-uppercase" style="margin-top: 5px;">Coordinate precision</p>
+            <p>0.0000001</p>
+            <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeferencing protocol</p>
+            <p>Georeferencing Quick Reference Guide</p>
+            <p>(Zermoglio et al. 2020)</p>
+            <p>https://doi.org/10.35035/e09p-h128</p>
+            <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">Georeference sources</p>
+            <p>GeoPick (Marcer et al., v.<%= version %>)</p>
+          </div>
           <!-- COPY BUTTON -->
           <hr>
-          <div class="field">
-            <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase pr-2">Copy data to clipboard</div>
+          <div>
+            <div class="field">
+              <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase pr-2">Copy data to clipboard</div>
+            </div>
+            <div class="button_container" style="margin-top: 10px;">
+              <div class="control has-text-centered">
+                <a title="Copy data to clipboard, including a row with headers" id="cpdata" class="button is-primary">
+                  With headers
+                </a>
+              </div>
+              <div class="control has-text-centered">
+                <a title="Copy data to clipboard, without the headers" id="cpdatanh" class="button is-success">
+                  Without headers
+                </a>
+              </div>
+            </div>          
           </div>
-          <div class="button_container" style="margin-top: 10px;">
-            <div class="control has-text-centered">
-              <a title="Copy data to clipboard, including a row with headers" id="cpdata" class="button is-primary">
-                With headers
-              </a>
-            </div>
-            <div class="control has-text-centered">
-              <a title="Copy data to clipboard, without the headers" id="cpdatanh" class="button is-success">
-                Without headers
-              </a>
-            </div>
-          </div>          
           <input type="hidden" id="d_geojson">
         </div>
       </div>
