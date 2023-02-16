@@ -29,11 +29,11 @@
       <!-- MAP -->
       <div class="column is-four-fifths">                    
         <div id="map">
-          <div id="search" class="leaflet-control leaflet-verticalcenter">
-            <div class="search_element"><label class="ml-2" for="place_search"><b>Location search:</b></label></div>
-            <div class="search_element"><input id="place_search" class="ml-2" style="width: 275px;" placeholder="through OpenStreetMap Nominatim"></div>
-            <div class="search_element"><button id="capture" title="" class="button is-small is-primary ml-2 mr-1 has-text-weight-semibold">Capture location</button></div>
-          </div>
+          <div class="search">
+            <div class="search-element"><label id="search_label">Location search:&nbsp;</label></div>
+            <div class="search-element"><input id="place_search" placeholder="through OpenStreetMap Nominatim" /></div>
+            <div class="search-element"><button id="capture_button" class="button">Capture location</button></div>
+          </div>        
         </div>
       </div>
       <!-- INFO BOX -->

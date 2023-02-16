@@ -14,10 +14,10 @@ body {
 }
 */
 
-#map {    
+/* #map {    
   height: 100vh;
   min-height: 500px;
-}
+} */
 
 div.info_box {
   background: red;    
@@ -63,32 +63,24 @@ div.info_box {
   background-color: mediumseagreen;
 }
 
-#search{  
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
-  border-radius: 5px;
-  background-color: wheat;
-  opacity: 0.90;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: fit-content;
-}
-
 #place_search{  
   border-width: 0px; 
+  min-width: 265px;
+  font-size: 1.3em;
 }
 
-/*
-#search label{
-  padding: 5px;
+
+#search_label{
+  font-size: 1.3em;
 }
 
-#search input{
-  padding: 5px;
+#capture_button{
+  font-size: 1.2em;
+  background-color: teal;
+  color: white;
+  border: 1px;
+  border-color: black;
 }
-*/
 
 .leaflet-control-coordinates .uiElement.label {
   font-size: 14px; 
@@ -123,6 +115,59 @@ div.info_box {
   padding-top: 10px;
 }
 
-.search_element {
-  padding: 3px 0;
+#map {
+  height: 100vh; /* Set map height to a specific value */
+}
+
+/* search styles */
+/* #search{  
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+  background-color: wheat;
+  opacity: 0.90;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: fit-content;
+}
+ */
+
+.search {
+  z-index: 1000;
+  position: absolute;
+  top: 0;
+  left: 50%; /* Center the search horizontally */
+  transform: translateX(-50%); /* Center the search precisely */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  margin-top: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  min-width: 550px;
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+  background-color: wheat;
+  opacity: 0.90;
+}
+.search-element {
+  flex: 1;
+  text-align: center;
+}
+
+/* Media query to adjust search styles on mobile devices */
+@media (max-width: 600px) {
+  .search {
+    flex-direction: column;
+  }
+  .search-element {
+    flex:none;
+    margin: 5px 0;
+  }
 }
