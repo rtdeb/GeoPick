@@ -182,7 +182,7 @@ div.info_box {
 }
 
 /* Media query to adjust search styles on mobile devices */
-@media (max-width: 600px) {
+@media (max-width: 850px) {
   .search {
     flex-direction: column;
   }

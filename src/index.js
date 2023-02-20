@@ -48,8 +48,8 @@ var map = L.map('map', {
     center: [51.505, -0.09],
     zoom: 3,
     layers: [osm, googleHybrid],
-    zoomControl: false,
-    dragging: !L.Browser.mobile //, tap: L.Browser.mobile
+    zoomControl: false
+    // dragging: !L.Browser.mobile //, tap: L.Browser.mobile
 });
 
 var centroid_layer = new L.geoJSON();    
