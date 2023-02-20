@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
     integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossorigin="anonymous"
     referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-20213878-3"></script>
   <script>
@@ -24,7 +24,7 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-DCWF9FCVFW"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-DCWF9FCVFW');
@@ -35,20 +35,20 @@
 </head>
 
 <body>
-  <div id="container">    
+  <div id="container">
     <div class="columns">
       <!-- MAP -->
-      <div class="column is-four-fifths">                    
+      <div class="column is-10">
         <div id="map">
           <div class="search">
             <div class="search-element"><label id="search_label">Location search:&nbsp;</label></div>
             <div class="search-element"><input id="place_search" placeholder="through OpenStreetMap Nominatim" /></div>
             <div class="search-element"><button id="capture" class="button">Capture location</button></div>
-          </div>        
+          </div>
         </div>
       </div>
       <!-- INFO BOX -->
-      <div class="column is-one-fifth" style="background-color: wheat;">
+      <div class="column is-2" style="background-color: wheat;">
         <div id="info">
           <!-- ABOUT -->
           <div class="about">
@@ -69,141 +69,109 @@
                 <img src=<%=require("./geopick-logo.png")%> width = "250px" alt="MDN">
               </div>
             </div>
-          </div> 
-          <!-- CORRECTED CENTER -->
-          <div class="has-text-right">
-            <span class="is-size-12 has-text-weight-bold is-uppercase pr-2">
-              <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center" target="_blank" title="Go to Georeferencing Best Practices definition">Corrected center</a>                            
-            </span>
           </div>
-          <!-- Longitude and Latitude -->
-          <div class="fields_container">            
-              <div class="columns">
-                <div class="column is-half pr-3"">
-                  <div class="has-text-right pr-2 pt-2 is-size-10">
-                    <a href="https://dwc.tdwg.org/terms/#dwc:decimalLatitude" target="_blank" title="Go to Darwin Core definition">Latitude</a>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <p class="control pl-3">
-                        <input id="centroid_y" class="input has-text-right" type="text" placeholder="" style="">
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="column is-half pl-3">
-                  <div class="has-text-right pr-4 pt-2 is-size-10">
-                    <a href="https://dwc.tdwg.org/terms/#dwc:decimalLongitude" target="_blank" title="Go to Darwin Core definition">Longitude</a>
-                  </div>
-                  <div class="field-body">
-                    <div class="field">
-                      <p class="control pr-3">
-                        <input id="centroid_x" class="input has-text-right" type="text" placeholder="" size="11">
-                      </p>
-                    </div>
-                </div>
-              </div>
-
-              </div>
-              <!-- COORDINATE UNCERTAINTY -->
-              <div class="field">
-                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">
-                  <a href="http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters" target="_blank" title="Go to Darwin Core definition">Coordinate Uncertainty (meters)</a>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <p class="control">
-                      <input id="radius_m" class="input has-text-right" type="text" placeholder="">
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- SPATIAL FIT -->
-              <div class="field">
-                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">
-                  <a href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank" title="Go to Darwin Core definition">Point-Radius Spatial Fit</a>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <p class="control">
-                      <input id="spatial_fit" class="input has-text-right" type="text" placeholder="">
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- GEOREFERENCED BY -->
-              <div class="field">
-                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">
-                  <a href="http://rs.tdwg.org/dwc/terms/georeferencedBy" target="_blank" title="Go to Darwin Core definition">Georeferenced by</a>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <p class="control">
-                      <input id="georeferencer_name" class="input" type="text" placeholder="e.g. Kristina Yamamoto | Janet Fang">
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- GEOREFERENCE REMARKS -->
-              <div class="field">
-                <div class="is-size-12 has-text-right has-text-weight-bold is-uppercase pr-2">                                    
-                  <a href="http://rs.tdwg.org/dwc/terms/georeferenceRemarks" target="_blank" title="Go to Darwin Core definition">Georeference remarks</a>
-                </div>
-                <div class="field-body">
-                  <div class="field">
-                    <p class="control">
-                      <textarea class="textarea" id="georeference_remarks" name="story" rows="4" cols="33" placeholder="Notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to the those formalized in the method referred to in georeferenceProtocol."></textarea>
-                    </p>
-                  </div>
-                </div>
-              </div>            
-          </div>
-
-          <!-- EXTRA INFO -->
-          <div>
-            <p class="has-text-weight-bold is-uppercase" style="margin-top: 10px;"">
-              <a href="http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank" title="Go to Darwin Core definition">Geodetic datum</a>
-            </p>
-            <p>EPSG: 4326 (WGS84)</p>
-            <p class=" has-text-weight-bold is-uppercase" style="margin-top: 5px;">
-              <a href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank" title="Go to Darwin Core definition">Coordinate precision</a>
-            </p>
-            <p>0.0000001</p>
-            <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">
-              <a href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank" title="Go to Darwin Core definition">Georeference protocol</a>
-            </p>
-            <p>Georeferencing Quick Reference Guide</p>
-            <p>(Zermoglio et al. 2020)</p>
-            <p>https://doi.org/10.35035/e09p-h128</p>
-            <p class="has-text-weight-bold is-uppercase" style="margin-top: 5px;">                            
-              <a href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank" title="Go to Darwin Core definition">Georeference sources</a>
-            </p>
-            <p>GeoPick (Marcer et al., v.<%= version %>)</p>
-          </div>
-          <!-- COPY BUTTON -->
-          <hr>
-          <div>
-            <div class="field">
-              <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase pr-2">Copy data to clipboard</div>
+          <!-- CORRECTED CENTER: LATITUDE/LONGITUDE -->
+          <div class="pair">
+            <div class="key">DECIMAL LATITUDE, DECIMAL LONGITUDE<BR>
+              <!-- <span style="font-size: 0.8em; padding-top: -5px;">(<a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center" target="_blank"
+              title="Go to Georeferencing Best Practices definition">Corrected center</a>)</span> -->
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLatitude" target="_blank" title="Go to Darwin Core definition">[dwc:decimalLatitude]</a>,
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLongitude" target="_blank" title="Go to Darwin Core definition">[dwc:decimalLongitude]</a>
+              <br>
+      
             </div>
-            <div class="button_container" style="margin-top: 10px;">
-              <div class="control has-text-centered">
-                <a title="Copy data to clipboard, including a row with headers" id="cpdata" class="button is-primary">
-                  With headers
-                </a>
-              </div>
-              <div class="control has-text-centered">
-                <a title="Copy data to clipboard, without the headers" id="cpdatanh" class="button is-success">
-                  Without headers
-                </a>
-              </div>
-            </div>          
+            <div class="value">
+              <input class="non-editable" id="centroid_y" type="text" placeholder="" size="11">
+              <input class="non-editable" id="centroid_x" type="text" placeholder="" size="11">
+            </div>
           </div>
-          <input type="hidden" id="d_geojson">
+          <!-- COORDINATE UNCERTAINTY -->
+          <div class="pair">
+            <div class="key">COORDINATE UNCERTAINTY IN METERS<br>
+              <a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters" target="_blank"
+                title="Go to Darwin Core definition"> [dwc:coordinateUncertaintyInMeters]</span></a>
+              </div>
+            
+            <div class="value">
+              <input class="non-editable" id="radius_m" type="text" placeholder="" size="15">
+            </div>
+          </div>
+          <!-- GEODETIC DATUM -->
+          <div class="pair">
+            <div class="key">GEODETIC DATUM<br> 
+              <a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank" title="Go to Darwin Core definition"> [dwc:geodeticDatum]</a>
+            </div>
+            <div class="value">
+              <input class="non-editable" id="geodetic_datum" type="text" placeholder="" value="EPSG: 4326 (WGS84)">
+            </div>
+          </div>
+          <!-- POINT-RADIUS SPATIAL FIT -->
+          <div class="pair">
+            <div class="key">POINT RADIUS SPATIAL FIT<br>
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank"
+                title="Go to Darwin Core definition"> [dwc:pointRadiusSpatialFit]</a></div>
+            <div class="value">
+              <input class="non-editable" id="spatial_fit" type="text" placeholder="" size="8">
+            </div>
+          </div>
+          <!-- COORDINATE PRECISION -->
+          <div class="pair">
+            <div class="key">COORDINATE PRECISION<br>
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank"
+                title="Go to Darwin Core definition"> [dwc:coordinatePrecision]</a></div>
+            <div class="value">
+              <input class="non-editable" id="coordinate_precision" type="text" placeholder="" value="0.0000001">
+            </div>
+          </div>
+          <!-- GEOREFERENCE PROTOCOL -->
+          <div class="pair">
+            <div class="key">GEOREFERENCE PROTOCOL<br>
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank" title="Go to Darwin Core definition"> [dwc:georeferenceProtocol]</a>
+            </div>
+            <div class="value non-editable">
+              Georeferencing Quick Reference Guide (Zermoglio et al. 2020)
+            </div>
+          </div>
+          <!-- GEOREFERENCE SOURCES -->
+          <div class="pair">
+            <div class="key">GEOREFERENCE SOURCES<br>
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank"
+                title="Go to Darwin Core definition"> [dwc:georeferenceSources]</a></div>
+            <div class="value">
+              GeoPick (Marcer et al., v.<%= version %>)
+            </div>
+          </div>
+          <!-- GEOREFERENCED BY -->
+          <div class="pair">
+            <div class="key">GEOREFERENCED BY<br>
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferencedBy" target="_blank" title="Go to Darwin Core definition">
+                 [dwc:georeferencedBy]</a></div>
+            <div class="value">
+              <input class="editable" id="georeferencer_name" class="input" type="text" placeholder="e.g. Kristina Yamamoto | Janet Fang">
+            </div>
+          </div>
+          <!-- GEOREFERENCE REMARKS -->
+          <div class="pair">
+            <div class="key">GEOREFERENCE REMARKS<br>
+              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceRemarks" target="_blank" title="Go to Darwin Core definition"> [dwc:georeferenceRemarks]</a>
+            </div>
+            <div class="value">
+              <textarea class="editable" id="georeference_remarks" name="story" rows="6" cols="33"
+                placeholder="Notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to the those formalized in the method referred to in georeferenceProtocol."></textarea>
+            </div>
+
+            <!-- COPY BUTTON -->
+            <div class="separator"></div>
+            <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase pr-2">Copy data to clipboard</div>
+            <div class="button-container">
+              <button class="button button-headers" id="cpdata">With headers</button>
+              <button class="button button-noheaders" id="cpdatanh">Without headers</button>
+            </div>
+            <input type="hidden" id="d_geojson">
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
 </body>
 
