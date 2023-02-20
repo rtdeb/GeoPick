@@ -73,7 +73,7 @@ var editableLayers = new L.FeatureGroup();
 //var editableLayers = new L.geoJSON();
 map.addLayer(editableLayers);
 
-L.control.scale().addTo(map);
+L.control.scale({ position: 'bottomleft' }).addTo(map);
 
 var baseMaps = {
     "OpenStreetMap": osm,    
@@ -85,7 +85,7 @@ var baseMaps = {
 
 L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
 
-L.control.zoom({ position: 'topleft'}).addTo(map);
+L.control.zoom({ position: 'topleft' }).addTo(map);
 
 var options = {
     position: 'topleft',

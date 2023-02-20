@@ -103,7 +103,7 @@ div.info_box {
 
 }
 .leaflet-bar{
-  margin-left: 10px;
+  margin-left: 9px;
   border-width: 0px !important;
 }
 .leaflet-control{
@@ -111,14 +111,18 @@ div.info_box {
 }
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out{  
-  margin-left: 10px;
+  margin-left: 9px;
   
 }
-.leaflet-bottom{
-  margin-left: 5px;
+.leaflet-bottom {
+  margin-left: 7px;
+  margin-bottom: 10px;
+  border-width: 0px;
 }
 .leaflet-control-scale-line{
- margin-left: 5px;
+  margin-left: 5px;
+  margin-bottom: 10px;
+  border-width: 0px;
 }
   .button_container {
   display: flex;
