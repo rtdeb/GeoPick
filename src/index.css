@@ -64,25 +64,6 @@ div.info_box {
   background-color: mediumseagreen;
 }
 
-#place_search{  
-  border-width: 0px; 
-  min-width: 265px;
-  font-size: 1.3em;
-}
-
-
-#search_label{
-  font-size: 1.3em;
-}
-
-#capture{
-  font-size: 1.2em;
-  background-color: teal;
-  color: white;
-  border: 1px;
-  border-color: black;
-}
-
 .leaflet-control-coordinates .uiElement.label {
   font-size: 14px; 
 }
@@ -153,21 +134,6 @@ div.info_box {
   height: 100vh; /* Set map height to a specific value */
 }
 
-/* search styles */
-/* #search{  
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
-  border-radius: 5px;
-  background-color: wheat;
-  opacity: 0.90;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: fit-content;
-}
- */
-
 .search {
   z-index: 1000;
   position: absolute;
@@ -182,7 +148,7 @@ div.info_box {
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  min-width: 550px;
+  /* min-width: 500px; */
   border-width: 1px;
   border-color: black;
   border-style: solid;
@@ -190,6 +156,26 @@ div.info_box {
   background-color: wheat;
   opacity: 0.90;
 }
+
+#place_search{  
+  border-width: 0px; 
+  min-width: 225px;
+  margin-right: 5px;
+  font-size: 1.2em;
+}
+
+#search_label{
+  font-size: 1.2em;
+}
+
+#capture{
+  font-size: 1.1em;
+  background-color: teal;
+  color: white;
+  border: 1px;
+  border-color: black;
+}
+
 .search-element {
   flex: 1;
   text-align: center;
