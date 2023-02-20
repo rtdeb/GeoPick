@@ -85,7 +85,7 @@ var baseMaps = {
 
 L.control.layers(baseMaps,null,{position: 'topleft'}).addTo(map);
 
-L.control.zoom({ position: 'topleft' }).addTo(map);
+L.control.zoom({ position: 'topleft'}).addTo(map);
 
 var options = {
     position: 'topleft',

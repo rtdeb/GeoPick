@@ -92,8 +92,37 @@ div.info_box {
   padding-top: .75rem;
 }
 
-.button_container {
+.leaflet-top{
+  margin-left: 5px;
+}
+.leaflet-control{
+  border-width: 0px;
+}
+.leaflet-touch{
+  border-width: 0px !important;
+
+}
+.leaflet-bar{
+  margin-left: 10px;
+  border-width: 0px !important;
+}
+.leaflet-control{
+  border-width: 0px;
+}
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out{  
+  margin-left: 10px;
+  
+}
+.leaflet-bottom{
+  margin-left: 5px;
+}
+.leaflet-control-scale-line{
+ margin-left: 5px;
+}
+  .button_container {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   justify-content: center;
