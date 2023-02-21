@@ -21,7 +21,7 @@ div.info_box {
 #info{
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 20px;
   padding-right: 20px;  
   z-index: 9999;
   opacity: 0.90;    
@@ -115,7 +115,7 @@ div.info_box {
 .search {
   z-index: 1000;
   position: absolute;
-  top: 0;
+  top: 10px;
   left: 50%; /* Center the search horizontally */
   transform: translateX(-50%); /* Center the search precisely */
   display: flex;
@@ -169,6 +169,7 @@ div.info_box {
   font-weight: bold;
   flex-basis: 0px;
   color: #a94b08;
+  /* color:black; */
   /* text-transform: uppercase; */
 }
 
@@ -181,11 +182,11 @@ div.info_box {
 .non-editable {
   border: 0px;
   border-color: #a94b08;
-  background-color: transparent;
+  /* background-color: transparent; */
   box-shadow: none;
   outline: none;
   color:black;
-  pointer-events:none;
+  /* pointer-events:none; */
   font-weight: bold;
 }
 
@@ -196,9 +197,25 @@ div.info_box {
   background-color: #f2f2f2;
   box-shadow: none;
   outline: none;
-  width: 295px;  
+  width: 95%;  
   resize: none;
   font-weight: bold;
+}
+
+#centroid_x, #centroid_y{  
+  width: 19%;
+  margin-right: 5px;
+  text-align: left;
+}
+#radius_m, #geodetic_datum, #spatial_fit, #coordinate_precision{
+  text-align: left;
+  width: 40%;
+}
+#georeference_protocol, #georeference_sources{
+  width: 95%;
+  text-align: left;
+  resize: none;
+  /* padding-top: 5px; */
 }
 
 .dwc{
@@ -226,11 +243,11 @@ div.info_box {
   border: none;
   text-align: center;
   display: inline-block;
-  font-size: 1.1em;
+  font-size: 1em;
   cursor: pointer;  
 }
 .button-headers{
-  background-color: #297c82
+  background-color: #297c82;
 }
 .button-noheaders{
   background-color: 

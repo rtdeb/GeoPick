@@ -38,7 +38,7 @@
   <div id="container">
     <div class="columns">
       <!-- MAP -->
-      <div class="column is-10">
+      <div class="column is-9">
         <div id="map">
           <div class="search">
             <div class="search-element"><label id="search_label">Location search:&nbsp;</label></div>
@@ -48,7 +48,7 @@
         </div>
       </div>
       <!-- INFO BOX -->
-      <div class="column is-2" style="background-color: wheat;">
+      <div class="column is-3" style="background-color: wheat;">
         <div id="info">
           <!-- ABOUT -->
           <div class="about">
@@ -81,8 +81,8 @@
       
             </div>
             <div class="value">
-              <input class="non-editable" id="centroid_y" type="text" placeholder="" size="11">
-              <input class="non-editable" id="centroid_x" type="text" placeholder="" size="11">
+              <input class="non-editable" readonly id="centroid_y" type="text" placeholder="" size="11">
+              <input class="non-editable" readonly id="centroid_x" type="text" placeholder="" size="11">
             </div>
           </div>
           <!-- COORDINATE UNCERTAINTY -->
@@ -93,7 +93,7 @@
               </div>
             
             <div class="value">
-              <input class="non-editable" id="radius_m" type="text" placeholder="" size="15">
+              <input class="non-editable" readonly id="radius_m" type="text" placeholder="" size="15">
             </div>
           </div>
           <!-- GEODETIC DATUM -->
@@ -102,7 +102,7 @@
               <a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank" title="Go to Darwin Core definition"> [dwc:geodeticDatum]</a>
             </div>
             <div class="value">
-              <input class="non-editable" id="geodetic_datum" type="text" placeholder="" value="EPSG: 4326 (WGS84)">
+              <input class="non-editable" readonly id="geodetic_datum" type="text" placeholder="" value="EPSG: 4326 (WGS84)">
             </div>
           </div>
           <!-- POINT-RADIUS SPATIAL FIT -->
@@ -111,7 +111,7 @@
               <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank"
                 title="Go to Darwin Core definition"> [dwc:pointRadiusSpatialFit]</a></div>
             <div class="value">
-              <input class="non-editable" id="spatial_fit" type="text" placeholder="" size="8">
+              <input class="non-editable" readonly id="spatial_fit" type="text" placeholder="" size="8">
             </div>
           </div>
           <!-- COORDINATE PRECISION -->
@@ -120,7 +120,7 @@
               <a class="dwc" href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank"
                 title="Go to Darwin Core definition"> [dwc:coordinatePrecision]</a></div>
             <div class="value">
-              <input class="non-editable" id="coordinate_precision" type="text" placeholder="" value="0.0000001">
+              <input class="non-editable" readonly id="coordinate_precision" type="text" placeholder="" value="0.0000001">
             </div>
           </div>
           <!-- GEOREFERENCE PROTOCOL -->
@@ -128,8 +128,9 @@
             <div class="key">GEOREFERENCE PROTOCOL<br>
               <a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank" title="Go to Darwin Core definition"> [dwc:georeferenceProtocol]</a>
             </div>
-            <div class="value non-editable">
-              Georeferencing Quick Reference Guide (Zermoglio et al. 2020)
+            <div class="value">
+              <textarea readonly class="non-editable" id="georeference_protocol" type="text" placeholder="" 
+              value="" rows="2">Georeferencing Quick Reference Guide (Zermoglio et al. 2020)</textarea>
             </div>
           </div>
           <!-- GEOREFERENCE SOURCES -->
@@ -138,7 +139,8 @@
               <a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank"
                 title="Go to Darwin Core definition"> [dwc:georeferenceSources]</a></div>
             <div class="value">
-              GeoPick (Marcer et al., v.<%= version %>)
+              <textarea readonly class="non-editable" id="georeference_sources" type="text" placeholder="" 
+              value="" rows="2">GeoPick (Marcer et al., v.<%= version %>)</textarea>
             </div>
           </div>
           <!-- GEOREFERENCED BY -->
