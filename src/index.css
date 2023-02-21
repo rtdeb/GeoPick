@@ -118,7 +118,8 @@ div.info_box {
   top: 0;
   left: 50%; /* Center the search horizontally */
   transform: translateX(-50%); /* Center the search precisely */
-  display: inline-flex;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   padding: 3px;
@@ -137,7 +138,7 @@ div.info_box {
 #place_search{  
   border-width: 0px; 
   min-width: 225px;
-  margin-right: 5px;
+  margin: 5px;
   font-size: 1.2em;
 }
 
@@ -261,10 +262,10 @@ div.info_box {
   .button {
     width: 100%;
   }
-    .search-element {
-    flex:none;
-    margin: 5px 0;
-  }
 
+  .search{
+    flex-direction: column;
+  }
+  
   }
   
