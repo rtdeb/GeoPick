@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <title>
+    <%= title %>
+  </title>
+</head>
+
+<body class="has-background-grey-lighter">
+  <div class="container is-max-desktop has-background-white p-4">
+    <div class="box" style="background-color:rgb(245, 222, 179);">
+      <div class="columns">
+        <div class="column is-three-quarters">
+          <h1 class="title is-1 pl-3">
+            GeoPick
+          </h1>
+          <p class="title is-4 is-uppercase pl-3">
+            Implementing best practices for georeferencing<br>
+          </p>
+        </div>
+        <div class="column is-one-quarter pt-5 pr-4">
+          <img src=<%=require("./geopick-logo.png")%> width = "350px" alt="MDN">
+        </div>
+      </div>
+    </div>
+    <div class="help_container">
+      <!-- MOVING AND KNOWING AROUND -->
+      <div class="help_unit">
+        <div class="help_unit_title">Move around</div>
+        <div class="help_unit_explanation">
+          You can use the controls detailed below to move around the map.
+        </div>
+        <!-- LAYER CONTROL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./layers-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Allows to select among different map layers.</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+        <!-- ZOOM CONTROL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./zoom-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Allows to zoom in and out of a map.</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+        <!-- COORDINATES AND SCALE INFO -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./coordinates-scale-control.png")%> width = "185px"></div>
+          <div class="help_unit_control_text">Gives information on the coordinates where the cursos is placed and the graphical scape of the map (in
+            meters and in miles)</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+      </div>
+    </div>
+    <div class="help_container">
+      <!-- CREATE AND EDIT GEOREFERENCES -->
+      <div class="help_unit">
+        <div class="help_unit_title">Create and edit georeferences</div>
+        <div class="help_unit_explanation">
+          You can create lines or polygons representing
+        </div>
+        <!-- LINE TOOL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./line-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Allows to create ....</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+        <!-- POLYGON TOOL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./polygon-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Allows to create ....</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+        <!-- EDIT TOOL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./edit-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Allows to edit ....</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+        <!-- BIN TOOL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./bin-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Allows to delete ....</div>
+          <div class="help_unit_control_explanation">With this tool ...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

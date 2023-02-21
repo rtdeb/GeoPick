@@ -1,16 +1,14 @@
-
 html,
 body {
   font-size: 0.9em;
 }
 
-
-div.info_box {  
+div.info_box {
   width: 100px;
-  height: 100px;  
+  height: 100px;
 }
 
-.about{
+.about {
   text-align: right;
   margin-right: 1.5rem;
   margin-bottom: 15px;
@@ -18,16 +16,16 @@ div.info_box {
   padding-bottom: 15px;
 }
 
-#info{
+#info {
   display: flex;
   flex-direction: column;
   padding: 20px;
-  padding-right: 20px;  
+  padding-right: 20px;
   z-index: 9999;
-  opacity: 0.90;    
+  opacity: 0.9;
 }
 
-.fields_container{
+.fields_container {
   display: flex;
   flex-direction: column;
 }
@@ -35,55 +33,53 @@ div.info_box {
 .ui-autocomplete {
   z-index: 99999 !important;
 }
-.button.is-primary{
-  background-color:teal;
+.button.is-primary {
+  background-color: teal;
 }
-.button.is-success{
+.button.is-success {
   background-color: mediumseagreen;
 }
 
 .leaflet-control-coordinates .uiElement.label {
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 .column {
   padding: 0px;
-  padding-top: .75rem;
+  padding-top: 0.75rem;
 }
 
-.leaflet-top{
+.leaflet-top {
   margin-left: 5px;
 }
-.leaflet-control{
+.leaflet-control {
   border-width: 0px;
 }
-.leaflet-touch{
+.leaflet-touch {
   border-width: 0px !important;
-
 }
-.leaflet-bar{
+.leaflet-bar {
   margin-left: 9px;
   border-width: 0px !important;
 }
-.leaflet-control{
+.leaflet-control {
   border-width: 0px;
 }
 .leaflet-control-zoom-in,
-.leaflet-control-zoom-out{  
+.leaflet-control-zoom-out {
   margin-left: 9px;
-  
 }
 .leaflet-bottom {
   margin-left: 7px;
   margin-bottom: 10px;
   border-width: 0px;
 }
-.leaflet-control-scale-line{
+.leaflet-control-scale-line {
   margin-left: 5px;
   margin-bottom: 10px;
   border-width: 0px;
 }
-  .button_container {
+.button_container {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -101,7 +97,7 @@ div.info_box {
 
 .leaflet-verticalcenter {
   position: absolute;
-  z-index: 1000;  
+  z-index: 1000;
   top: 40px; /* possible because the placeholder's parent is the map */
   left: 30%;
   transform: translateY(-50%); /* using the CSS3 Transform technique */
@@ -132,21 +128,21 @@ div.info_box {
   border-style: solid;
   border-radius: 5px;
   background-color: wheat;
-  opacity: 1.0;
+  opacity: 1;
 }
 
-#place_search{  
-  border-width: 0px; 
+#place_search {
+  border-width: 0px;
   min-width: 225px;
   margin: 5px;
   font-size: 1.2em;
 }
 
-#search_label{
+#search_label {
   font-size: 1.2em;
 }
 
-#capture{
+#capture {
   font-size: 1.1em;
   background-color: #297c82;
   color: white;
@@ -185,7 +181,7 @@ div.info_box {
   /* background-color: transparent; */
   box-shadow: none;
   outline: none;
-  color:black;
+  color: black;
   /* pointer-events:none; */
   font-weight: bold;
 }
@@ -197,39 +193,44 @@ div.info_box {
   background-color: #f2f2f2;
   box-shadow: none;
   outline: none;
-  width: 95%;  
+  width: 95%;
   resize: none;
   font-weight: bold;
 }
 
-#centroid_x, #centroid_y{  
+#centroid_x,
+#centroid_y {
   width: 19%;
   margin-right: 5px;
   text-align: left;
 }
-#radius_m, #geodetic_datum, #spatial_fit, #coordinate_precision{
+#radius_m,
+#geodetic_datum,
+#spatial_fit,
+#coordinate_precision {
   text-align: left;
   width: 40%;
 }
-#georeference_protocol, #georeference_sources{
+#georeference_protocol,
+#georeference_sources {
   width: 95%;
   text-align: left;
   resize: none;
   /* padding-top: 5px; */
 }
 
-.dwc{
+.dwc {
   font-size: 0.9em;
   font-weight: 400;
 }
 
 .separator {
-  background-color:#a26a43;
+  background-color: #a26a43;
   height: 1px;
   margin-bottom: 20px;
 }
 
- .button-container {
+.button-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -238,19 +239,19 @@ div.info_box {
 }
 
 .button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   text-align: center;
   display: inline-block;
   font-size: 1em;
-  cursor: pointer;  
+  cursor: pointer;
 }
-.button-headers{
+.button-headers {
   background-color: #297c82;
 }
-.button-noheaders{
-  background-color: 
+.button-noheaders {
+  background-color: ;
 }
 .button:hover {
   background-color: #3e8e41;
@@ -261,15 +262,15 @@ div.info_box {
   .pair {
     flex-direction: column;
   }
-  
+
   .key {
     width: 100%;
     margin-right: 0px;
   }
-  
+
   .value {
     width: 100%;
-    margin-top: 0px;    
+    margin-top: 0px;
   }
   .button-container {
     flex-direction: column;
@@ -280,9 +281,21 @@ div.info_box {
     width: 100%;
   }
 
-  .search{
+  .search {
     flex-direction: column;
   }
-  
-  }
-  
+}
+
+/* HELP */
+.help_container {
+  background-color: aliceblue;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+.help_unit_title{
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.help_unit_controls{
+  display: flex;
+}
