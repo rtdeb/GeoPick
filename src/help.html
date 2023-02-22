@@ -38,8 +38,8 @@
       <!-- GENERAL PHILOSOPHY -->
       <div class="help_intro">
         <p class="help_paragraph"><span class="geopick_name">GeoPick</span> is intended to be easy to use. You can move around the map and create and
-          edit georeferences with the controls as explained below. To create a georeference is as simple as locating the place where the specimen was
-          collected and digitising the geometry (line or polygon) that represents the collection location. You can also use the search box to find a
+          edit georeferences with the controls as explained below. Creating a georeference is as simple as locating the place where the specimen was
+          collected and drawing the geometry (line or polygon) that represents the collection location. You can also use the search box to find a
           given location (e.g. a town, county, or state) from <a href="https://nominatim.openstreetmap.org/ui/about.html">Nominatim</a>, the search
           engine for <a href="https://www.openstreetmap.org/#map=6/40.007/-2.488">OpenStreetMap</a> data, and retrieve its corresponding geometry.
           Once displayed you may capture the geometry and use it as your georeference.</p>
@@ -49,10 +49,10 @@
           calculate its <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center">corrected center</a>, the <a
             href="https://dwc.tdwg.org/terms/#dwc:coordinateUncertaintyInMeters">coordinate uncertainty</a> and the <a
             href="https://dwc.tdwg.org/terms/#dwc:pointRadiusSpatialFit">point radius spatial fit</a>. The results will be shown in the right info
-          column, along with the other georeferencing metadata. You will only need to fill-in your name as <a
+          column, along with the other georeferencing metadata. You will only need to fill in your name as <a
             href="https://dwc.tdwg.org/terms/#dwc:georeferencedBy">georeferencer</a> and any <a
             href="https://dwc.tdwg.org/terms/#dwc:georeferenceRemarks">georeferencing remarks</a> you may consider worth mentioning. Finally, you just
-          need to click on the button to copy the data to the clipboard and paste them into a spreadsheet, with or without headers, and you are done.
+          need to click on the button to copy the data to the clipboard and paste it into a spreadsheet, with or without headers, and you are done.
         </p>
       </div>
     </div>
@@ -67,14 +67,14 @@
         <!-- LAYER CONTROL -->
         <div class="help_unit_controls">
           <div class="help_unit_control_icon"><img src=<%=require("./layers-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Allows to select among different map layers. Just hover with the mouse on top of the icon and a list of
+          <div class="help_unit_control_text">Select among different map layers. Just hover with the mouse on top of the icon and a list of
             available layers will be displayed. Select the one you need.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
         <!-- ZOOM CONTROL -->
         <div class="help_unit_controls">
           <div class="help_unit_control_icon"><img src=<%=require("./zoom-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Allows to zoom in and out of a map maintaining the center of the map at its current position.</div>
+          <div class="help_unit_control_text">Zoom in and out of a map maintaining the center of the map at its current position.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
         <!-- COORDINATES AND SCALE INFO -->
@@ -119,7 +119,7 @@
         <!-- LINE TOOL -->
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./line-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">This tool allows to draw a line composed of multiple segments. Select it and start creating the line
+          <div class="help_unit_control_text">Draw a line composed of multiple segments. Select it and start creating the line
             node by node. To finish the line click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the last
             entered node click on the <i>Delete last point</i> option and to cancel click on the <i>Cancel</i> option.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
@@ -127,7 +127,7 @@
         <!-- POLYGON TOOL -->
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./polygon-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">This tool allows to draw a polygon. Just select it and start digitising the polygon. To finish the
+          <div class="help_unit_control_text">Draw a polygon. Just select it and start digitising the polygon. To finish the
             polygon you need to close the polygon by clicking again on the starting node or by clicking on the <i>Finish</i> option offered by the
             tool. To delete the last entered node click on the <i>Delete last point</i> option and to cancel click on the <i>Cancel</i> option.
           </div>
@@ -146,7 +146,7 @@
         <!-- EDIT TOOL -->
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./edit-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">This tool allows to edit line and polygon geometries. When selecting it the nodes of the geometry will
+          <div class="help_unit_control_text">Edit line and polygon geometries. When selecting it the nodes of the geometry will
             appear as small white squares. You can click on them and drag them around. Each time a node is dragged a new node will appear between it
             and each adjacent nodes. When done editing the shape of the line or polygon, just click <i>Save</i> to finish. <span
               class="geopick_name">GeoPick</span> will recalculate the georeferencing parameters and refill the info box with the new data. Click
@@ -156,7 +156,7 @@
         <!-- BIN TOOL -->
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./bin-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">This tool allows to clear all geometries drawn on the map. Just click on the <i>Clear All</i> option, or
+          <div class="help_unit_control_text">Clear all geometries drawn on the map. Just click on the <i>Clear All</i> option, or
             click on <i>Cancel</i> if you decide not to clear anything.</div>
         </div>
       </div>
