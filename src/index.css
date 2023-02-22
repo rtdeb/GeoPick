@@ -3,6 +3,11 @@ body {
   font-size: 0.9em;
 }
 
+.geopick_name {
+  font-weight: bold;
+  color: #a94b08;  
+}
+
 div.info_box {
   width: 100px;
   height: 100px;
@@ -292,10 +297,47 @@ div.info_box {
   margin-bottom: 10px;
   border-radius: 5px;
 }
+.help_unit{
+  padding-bottom: 10px;
+}
 .help_unit_title{
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.4em;
+}
+.help_unit_explanation{
+  font-size: 1.4em;
+  margin-bottom: 1em;
 }
 .help_unit_controls{
-  display: flex;
+  display:flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px; 
+  align-items:flex-start;
+}
+.help_unit_control_icon{
+  text-align: center;
+  flex-basis: 20%;
+}
+.help_unit_control_text{
+  flex-basis: 80%;
+  padding-left: 10px;
+}
+.help_intro{
+  font-size: 1.4em;
+}
+.help_paragraph{
+  margin-bottom: 1em;
+}
+.help_unit_export{
+  display:flex;
+  flex-wrap:nowrap;
+  margin-bottom: 10px; 
+}
+.help_unit_export_item{
+  text-align: right;
+  flex-basis: 25%;
+}
+.help_unit_export_item_text{
+  flex-basis: 75%;
+  padding-left: 10px; 
 }
