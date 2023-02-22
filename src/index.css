@@ -176,8 +176,9 @@ div.info_box {
 }
 .dwc_name {
   flex: 1;
-  font-size: 0.9em;
-  font-weight: bold;
+  font-size: 1em;
+  font-weight:bolder;
+  color: #833904;
 }
 .dwc_url {    
   font-size: 0.9em;
@@ -186,7 +187,7 @@ div.info_box {
 }
 
 .value {
-  margin-top: 0px;
+  margin-bottom: 2px;
   /* margin-bottom: 10px; */
   font-weight: bold;
 }
@@ -206,7 +207,7 @@ div.info_box {
   border: 1px solid #ccc;
   border-radius: 0;
   padding: 5px;
-  background-color: #f2f2f2;
+  background-color: white;
   box-shadow: none;
   outline: none;
   width: 95%;
