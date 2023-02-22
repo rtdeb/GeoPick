@@ -1,6 +1,7 @@
 html,
 body {
   font-size: 0.9em;
+  background-color: wheat;
 }
 
 .geopick_name {
@@ -161,21 +162,31 @@ div.info_box {
 }
 
 .pair {
-  display: flex;
+  display: flex;  
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: 10px;  
 }
 
 .key {
+  width: 95%;
+  display: flex;    
+  margin-right: 0px;    
+  margin-bottom: 0px;   
+  
+}
+.dwc_name {
+  flex: 1;
+  font-size: 0.9em;
   font-weight: bold;
-  flex-basis: 0px;
-  color: #a94b08;
-  /* color:black; */
-  /* text-transform: uppercase; */
+}
+.dwc_url {    
+  font-size: 0.9em;
+  font-weight: 400;
+  text-align: right;
 }
 
 .value {
-  margin-top: 1px;
+  margin-top: 0px;
   /* margin-bottom: 10px; */
   font-weight: bold;
 }
@@ -224,11 +235,6 @@ div.info_box {
   /* padding-top: 5px; */
 }
 
-.dwc {
-  font-size: 0.9em;
-  font-weight: 400;
-}
-
 .separator {
   background-color: #a26a43;
   height: 1px;
@@ -269,14 +275,25 @@ div.info_box {
   }
 
   .key {
-    width: 100%;
-    margin-right: 0px;
+    display: flex;    
+    margin-right: 0px;    
+    margin-bottom: 10px; 
+    
   }
-
+  .dwc_name {
+    flex: 1;
+    font-size: 0.9em;
+    font-weight: 400;
+  }
+  .dwc_url {    
+    font-size: 0.9em;
+    font-weight: 400;
+    text-align: right;
+  }
   .value {
     width: 100%;
     margin-top: 0px;
-  }
+  }  
   .button-container {
     flex-direction: column;
     align-items: center;
