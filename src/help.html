@@ -38,20 +38,21 @@
       <!-- GENERAL PHILOSOPHY -->
       <div class="help_intro">
         <p class="help_paragraph"><span class="geopick_name">GeoPick</span> is intended to be easy to use. You can move around the map and create and
-          edit georeferences with the controls as explained below. Creating a georeference is as simple as locating the place where the specimen was
-          collected and drawing the geometry (line or polygon) that represents the collection location. You can also use the search box to find a
-          given location (e.g. a town, county, or state) from <a href="https://nominatim.openstreetmap.org/ui/about.html">Nominatim</a>, the search
-          engine for <a href="https://www.openstreetmap.org/#map=6/40.007/-2.488">OpenStreetMap</a> data, and retrieve its corresponding geometry.
+          edit georeferences with the controls as explained below. Creating a georeference is as simple as locating the place of interest and drawing the geometry (line or polygon) that represents it. You can also use the search box to find a
+          given location (e.g. a town, county, or state) from <a href="https://nominatim.openstreetmap.org/ui/about.html" target="_blank">Nominatim</a>, the search
+          engine for <a href="https://www.openstreetmap.org/#map=6/40.007/-2.488" target="_blank">OpenStreetMap</a> data, and retrieve its corresponding geometry.
           Once displayed you may capture the geometry and use it as your georeference. </p>
 
         <p class="help_paragraph">Once you have the geometry on the map, either created by you or retrieved and captured from <a
-            href="https://nominatim.openstreetmap.org/ui/about.html">Nominatim</a>, <span class="geopick_name">GeoPick</span> will automatically
-          calculate its <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center">corrected center</a>, the <a
-            href="https://dwc.tdwg.org/terms/#dwc:coordinateUncertaintyInMeters">coordinate uncertainty</a> and the <a
-            href="https://dwc.tdwg.org/terms/#dwc:pointRadiusSpatialFit">point radius spatial fit</a>. The results will be shown in the right info
+            href="https://nominatim.openstreetmap.org/ui/about.html" target="_blank">Nominatim</a>, <span class="geopick_name">GeoPick</span> will automatically
+          calculate its <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center" target="_blank">corrected center</a>, the coordinate <a
+            href="https://dwc.tdwg.org/terms/#dwc:coordinateUncertaintyInMeters" target="_blank">uncertainty</a> and <a
+            href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">precision</a>, and the <a
+            href="https://dwc.tdwg.org/terms/#dwc:pointRadiusSpatialFit" target="_blank">point radius spatial fit</a>. The <a
+            href="https://dwc.tdwg.org/terms/#dwc:geodeticDatum" target="_blank">geodetic datum</a> will be set to EPSG:4326 by <span class="geopick_name">GeoPick</span>. The results will be shown in the right info
           column, along with the other georeferencing metadata. You will only need to fill in your name as <a
-            href="https://dwc.tdwg.org/terms/#dwc:georeferencedBy">georeferencer</a> and any <a
-            href="https://dwc.tdwg.org/terms/#dwc:georeferenceRemarks">georeferencing remarks</a> you may consider worth mentioning. Finally, you just
+            href="https://dwc.tdwg.org/terms/#dwc:georeferencedBy" target="_blank">georeferencer</a> and any <a
+            href="https://dwc.tdwg.org/terms/#dwc:georeferenceRemarks" target="_blank">georeferencing remarks</a> you may consider worth mentioning. Finally, you just
           need to click on the button to copy the data to the clipboard and paste them into a spreadsheet, with or without headers, and you are done.
         </p>
       </div>
@@ -74,7 +75,7 @@
         <!-- ZOOM CONTROL -->
         <div class="help_unit_controls">
           <div class="help_unit_control_icon"><img src=<%=require("./zoom-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Zoom in and out of a map maintaining the center of the map at its current position.</div>
+          <div class="help_unit_control_text">Zoom in and out of a map; maintaining the center of the map at its current position.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
         <!-- COORDINATES AND SCALE INFO -->
@@ -99,7 +100,7 @@
             <img src=<%=require("./nominatim-search-bar.png")%>>
           </div>
           <div class="help_unit_control_text" style="flex-basis: 40%;">Just type the name of a place and when the
-            list of places found appears select one. Its representing geometry, if available, will be shown. You can then click on the <i>Capture
+            list of places found appears, select one. Its representing geometry, if available, will be shown. You can then click on the <i>Capture
               location button</i> to use it as your georeference.
           </div>
         </div>
@@ -111,8 +112,8 @@
       <div class="help_unit">
         <div class="help_unit_title">Creating georeferences</div>
         <div class="help_unit_explanation">
-          You can use the controls detailed below to create lines or polygons representing the collection location of your specimen. Please note that
-          you can create georeferences with multiple lines or polygons (e.g. a specimen is said to be collected in a forest composed of two patches).
+          You can use the controls detailed below to create lines or polygons representing the location of interest. Please note that
+          you can create georeferences with multiple lines or polygons (<i>e.g.</i>, a specimen is said to be collected in a forest composed of two patches).
           You just need to create a new line or polygon after the first is created and <span class="geopick_name">GeoPick</span> will automatically
           recalculate the georeference parameters for the whole set of geometries.
         </div>
@@ -120,8 +121,8 @@
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./line-control.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Draw a line composed of multiple segments. Select it and start creating the line
-            node by node. To finish the line click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the last
-            entered node click on the <i>Delete last point</i> option and to cancel click on the <i>Cancel</i> option.</div>
+            node by node. To finish the line, click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the last
+            entered node click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
         <!-- POLYGON TOOL -->
@@ -129,7 +130,7 @@
           <div class="help_unit_control_icon"><img src=<%=require("./polygon-control.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Draw a polygon. Just select it and start digitising the polygon. To finish the
             polygon you need to close the polygon by clicking again on the starting node or by clicking on the <i>Finish</i> option offered by the
-            tool. To delete the last entered node click on the <i>Delete last point</i> option and to cancel click on the <i>Cancel</i> option.
+            tool. To delete the last entered node, click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.
           </div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
@@ -146,11 +147,10 @@
         <!-- EDIT TOOL -->
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./edit-control.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Edit line and polygon geometries. When selecting it the nodes of the geometry will
-            appear as small white squares. You can click on them and drag them around. Each time a node is dragged a new node will appear between it
-            and each adjacent nodes. When done editing the shape of the line or polygon, just click <i>Save</i> to finish. <span
+          <div class="help_unit_control_text">Edit line and polygon geometries. When selecting this option the nodes of the geometry will
+            appear as small white squares. You can click on them and drag them around. Each time an existing node is selected, one node appears on each side of it at the midpoint to the to the next node. These nodes can also be clicked and dragged to make the geometry more detailed. You can also double-click on a node to delete it. When done editing the shape of the line or polygon, just click <i>Save</i> to finish. <span
               class="geopick_name">GeoPick</span> will recalculate the georeferencing parameters and refill the info box with the new data. Click
-            <i>Cancel</i> if you want to discard your changes.
+            <i>Cancel</i> if you want to discard your changes. Please note that <span class="geopick_name">GeoPick</span> may not work with some very complex geometries from Nominatim, with hundreds or thousands of nodes; depending on your computer capacities, the browser may not be responsive to dragging them.
           </div>
         </div>
         <!-- BIN TOOL -->
@@ -175,11 +175,11 @@
             <img src=<%=require("./copy-data-to-clipboard.png")%>>
           </div>
           <div class="help_unit_control_text" style="flex-basis: 60%;">
-            Once you have the georeference representing the location where the specimen was collected, all georeference data and metadata will be
+            Once you have the georeference representing the location of interest, all georeference data and metadata will be
             shown on the right info column. To export it, you just need to click on the <i>With headers</i> or <i>Without headers</i> button and all
-            data will be copied to the clipboard. If you choose <i>With headers</i>, the headers (field names) of each georeference parameter will
+            data will be copied to the clipboard. If you choose <i>With headers</i>, the headers (field names) of each georeference field will
             also be copied. On the contrary, if you choose <i>Without headers</i>, only the data will be copied. You may be georeferencing more than
-            one specimen and this will serve you to copy the headers only for the first one. From the second on, you will be able to paste them in
+            one location and this will serve you to copy the headers only for the first one. From the second on, you will be able to paste them in
             each following row of a spreadsheet without repeating column names.
           </div>
         </div>
