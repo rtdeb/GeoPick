@@ -36,7 +36,8 @@
         done in the <a href="https://museuciencies.cat">Museu de Ciències Naturals de Barcelona
           (MCNB)</a> and the <a href="https://www.mobilise-action.eu" target="_blank">MOBILISE Cost Action</a>. It is
         meant to provide georeferencers with a simple, easy-to-use yet powerful tool that helps them
-        to follow best georeferencing practices and data standards (<i>i.e., </i><a href="https://dwc.tdwg.org" target="_blank">Darwin Core</a>). The guiding principle behind its design is to remain as simple and user-friendly as possible.
+        to follow best georeferencing practices and data standards (<i>i.e., </i><a href="https://dwc.tdwg.org" target="_blank">Darwin Core</a>). The
+        guiding principle behind its design is to remain as simple and user-friendly as possible.
       </p>
       <!-- Features -->
       <p class="mt-5 has-text-weight-bold">FEATURES</p>
@@ -79,10 +80,13 @@
         graphical objects can be edited and moved around.</p>
       <!-- Layers -->
       <p class="mt-3 has-text-weight-bold">Layers</p>
-      <p class="mt-3">Georeferencing can be done using <i>OpenStreetMap</i>, or any of the following Google views: <i>Default, Terrain, Satellite</i>, or <i>Hybrid</i>.</p>
+      <p class="mt-3">Georeferencing can be done using <i>OpenStreetMap</i>, or any of the following Google views: <i>Default, Terrain, Satellite</i>,
+        or <i>Hybrid</i>.</p>
       <!-- Site search -->
       <p class="mt-3 has-text-weight-bold">Site search</p>
-      <p class="mt-3">The tool uses the <a href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API to help do a first approximation to the location of the site to be georeferenced. The polygon returned by the <a href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API can be easily captured and used.</p>
+      <p class="mt-3">The tool uses the <a href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API to help do a first
+        approximation to the location of the site to be georeferenced. The polygon returned by the <a
+          href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API can be easily captured and used.</p>
       <!-- Coordinates and scale -->
       <p class="mt-3 has-text-weight-bold">Coordinates and scale</p>
       <p class="mt-3">The map coordinates are shown when moving the cursor around, and the scale
@@ -90,13 +94,22 @@
         also shown when zooming in and out. Coordinates are in decimal degrees and the scale is shown
         in
         either kilometres and miles, or metres and feet, depending on the zoom level.</p>
-
     </div>
+    <!-- A final note on uncertainty -->
+    <div class="box">
+      <p class="mt-5 is-size-5 has-text-weight-bold">A FINAL NOTE ON UNCERTAINTY:</p>
+      <p class="mt-3 is-size-5"><span class="geopick_name">GeoPick</span> gives coordinates with seven decimal places following Georeferencing Best Practices (<a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#coordinates-geographic-coordinates" target="_blank">Chapman and Wieczorek, 2020</a>). This allows preservation of the correct coordinates in all formats regardless of how many transformations are done (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>). Accordingly, <span class="geopick_name">GeoPick</span> sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of the number of decimals given with the coordinates (<a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">Darwin Core Maintenance Group, 2021</a>). Please also note that as in this
+        version of <span class="geopick_name">GeoPick</span>, 1.0, coordinate uncertainty refers only to the radius of the bounding circle of the geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of the underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator (<a href="http://georeferencing.org/georefcalculator/gc.html" target="_blank">Wieczorek C and Wieczorek J.R., 2021)</a> and its manual (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>).
+      </p>
+    </div>
+
     <!-- Citation -->
     <div class="box">
       <p class="is-size-5">How to cite:</p>
       <p class="is-size-6">
-        Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version <%= version %>). GeoPick: an online companion tool for easy georeferencing following best practices[web application], URL: https://nhc.creaf.cat/geopick, GitHub: https://github.com/aescobarr/GeoPick</p>
+        Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version <%= version %>). GeoPick: an online companion tool for easy
+          georeferencing following best practices[web application], URL: https://nhc.creaf.cat/geopick, GitHub: https://github.com/aescobarr/GeoPick
+      </p>
     </div>
     <div class="box">
       <p class="is-size-5">GitHub repository</p>
@@ -105,7 +118,12 @@
     <div class="box">
       <p class="is-size-5">Disclaimer</p>
       <p class="is-size-6">
-        <span class="geopick_name">GeoPick</span> is provided "as is" without warranty or liability for any purpose. Though developed with all the good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their best to correct errors, but can not guarantee their quick resolution. The <span class="geopick_name">GeoPick</span> application is publicly accessible on a server that can not guarantee efficient performance under high traffic conditions. The open source code is hosted on <a href="https://github.com/aescobarr/GeoPick">GitHub</a> with the license <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>. The code can be downloaded and installed free of charge.
+        <span class="geopick_name">GeoPick</span> is provided "as is" without warranty or liability for any purpose. Though developed with all the
+        good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their
+        best to correct errors, but can not guarantee their quick resolution. The <span class="geopick_name">GeoPick</span> application is publicly
+        accessible on a server that can not guarantee efficient performance under high traffic conditions. The open source code is hosted on <a
+          href="https://github.com/aescobarr/GeoPick">GitHub</a> with the license <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+          BY-NC-SA</a>. The code can be downloaded and installed free of charge.
     </div>
   </div>
 </body>
