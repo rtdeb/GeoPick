@@ -30,12 +30,19 @@ div.info_box {
   z-index: 9999;
   opacity: 0.9;
 }
-
-.fields_container {
+.logos {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  vertical-align: middle;
 }
-
+#creaf {
+  float: left;
+  width: 400px;
+}
+#mobilise {
+  float: right;
+}
 .ui-autocomplete {
   z-index: 99999 !important;
 }
