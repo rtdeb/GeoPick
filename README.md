@@ -1,6 +1,6 @@
 # GeoPick
 
-To run:
+To run: 
 
 <code>
 
