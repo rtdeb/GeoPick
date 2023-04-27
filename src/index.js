@@ -174,9 +174,10 @@ map.on(L.Draw.Event.CREATED, function (e) {
     editableLayers.addLayer(layer);    
     editableLayers.bringToFront();
     if(type != 'circle'){
-        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);        
     }else{
         ui.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
+        centroid_layer.addData( editableLayers.toGeoJSON() );
     }
     
 });
@@ -187,11 +188,12 @@ map.on(L.Draw.Event.EDITED, function (e) {
     buffer_layer.clearLayers();
     if(editableLayers.toGeoJSON().features.length == 1 && editableLayers.toGeoJSON().features[0].geometry.type == 'Point'){
         for(var l in e.layers._layers){            
-            var maybe_circle = e.layers._layers[l];            
+            var maybe_circle = e.layers._layers[l];
+            centroid_layer.addData( editableLayers.toGeoJSON() );
             ui.show_centroid_data(maybe_circle._latlng.lat, maybe_circle._latlng.lng, maybe_circle._mRadius);
         }
     }else{
-        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);        
     }
     
 });
