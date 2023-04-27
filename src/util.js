@@ -309,7 +309,7 @@ var compute_centroid_data = function(containing_geometry, buffer_layer, centroid
 
 module.exports = {
     //compute_centroid_data: compute_centroid_data,
-    parse_api_data: parse_api_data,
-    load_api_data: load_api_data,
-    promote_reference_to_editable: promote_reference_to_editable
+    parse_api_data,
+    load_api_data,
+    promote_reference_to_editable
 }

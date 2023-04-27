@@ -118,7 +118,7 @@ var options = {
                 className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
             }),
         },
-        circle: false,
+        circle: true,
         circlemarker: false,
         rectangle: false,
         marker: false        
@@ -158,23 +158,42 @@ map.on(L.Draw.Event.CREATED, function (e) {
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-        
+       
     if(type=='polygon'){
         ui.hideLineDrawControl();
+        ui.hideCircleDrawControl();
+    }else if(type=='circle'){
+        ui.hideLineDrawControl();
+        ui.hidePolyDrawControl();
+        ui.hideCircleDrawControl();
     }else{
-        ui.hidePolyDrawControl();        
+        ui.hidePolyDrawControl();
+        ui.hideCircleDrawControl();
     }
     var layer = e.layer;    
     editableLayers.addLayer(layer);    
     editableLayers.bringToFront();
-    util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
+    if(type != 'circle'){
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
+    }else{
+        ui.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
+    }
+    
 });
 
 map.on(L.Draw.Event.EDITED, function (e) {
     ui.clear_centroid_data();
     centroid_layer.clearLayers();
     buffer_layer.clearLayers();
-    util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
+    if(editableLayers.toGeoJSON().features.length == 1 && editableLayers.toGeoJSON().features[0].geometry.type == 'Point'){
+        for(var l in e.layers._layers){            
+            var maybe_circle = e.layers._layers[l];            
+            ui.show_centroid_data(maybe_circle._latlng.lat, maybe_circle._latlng.lng, maybe_circle._mRadius);
+        }
+    }else{
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);
+    }
+    
 });
 
 
