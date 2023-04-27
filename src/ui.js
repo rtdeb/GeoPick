@@ -91,6 +91,10 @@ const hideLineDrawControl = function(){
     $(".leaflet-draw-draw-polyline").hide();
 }
 
+const hideCircleDrawControl = function(){
+    $(".leaflet-draw-draw-circle").hide();
+}
+
 const hidePolyDrawControl = function(){
     $(".leaflet-draw-draw-polygon").hide();
 }
@@ -98,6 +102,7 @@ const hidePolyDrawControl = function(){
 const resetDrawControls = function(){
     $(".leaflet-draw-draw-polyline").show();
     $(".leaflet-draw-draw-polygon").show();
+    $(".leaflet-draw-draw-circle").show();
 }
 
 const init_autocomplete = function(map, input_id, reference_layer){
@@ -144,6 +149,12 @@ const show_api_centroid_data = function(parsed_json){
     $('#d_geojson').val( convertFeatureCollection( parsed_json.site ) );    
 }
 
+const show_centroid_data = function(lat,lng,radius){
+    $('#centroid_x').val( lng.toFixed(7) );
+    $('#centroid_y').val( lat.toFixed(7) );
+    $('#radius_m').val( radius.toFixed(0) );
+}
+
 const toast_error = function(message){
     Toastr.error(message);
 }
@@ -159,13 +170,15 @@ const toast_warning = function(message){
 clear_centroid_data();
 
 module.exports = {
-    toast_error: toast_error,
-    toast_success: toast_success,
-    toast_warning: toast_warning,
-    clear_centroid_data: clear_centroid_data,
-    init_autocomplete: init_autocomplete,
-    hideLineDrawControl: hideLineDrawControl,
-    hidePolyDrawControl: hidePolyDrawControl,
-    resetDrawControls: resetDrawControls,
-    show_api_centroid_data: show_api_centroid_data 
+    toast_error,
+    toast_success,
+    toast_warning,
+    clear_centroid_data,
+    init_autocomplete,
+    hideLineDrawControl,
+    hidePolyDrawControl,
+    hideCircleDrawControl,
+    resetDrawControls,
+    show_api_centroid_data,
+    show_centroid_data
 }
