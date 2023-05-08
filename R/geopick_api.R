@@ -50,7 +50,9 @@ function() {
 #* @post /mbc
 function(req) {
   site.geojson <- toJSON(req$body, digits = NA)
+  
   site.sf <- geojson_sf(site.geojson)
+  
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
   epsg.tr <- 3857
   
@@ -124,17 +126,22 @@ function(req) {
     site.sf <- st_cast(site.sf, "LINESTRING")
   }
   
+  # We return the geojson as we have received it as a WKT
+  # print(site.geojson)
+  # site.wkt <- as.character(geojson_wkt(site.geojson))
+  
   # if simplify is True, it returns a geojson with a FeatureCollection instead of
   # just an array of polygons.
-  site.geojson <- sf_geojson(site.sf, simplify = F)
+  site.gj <- sf_geojson(site.sf, simplify = F)
   
-  
-  l <- list(mbc=mbc.json, site=site.geojson, spatial_fit=spatial.fit,
+  l <- list(mbc=mbc.json, site=site.gj, spatial_fit=spatial.fit,
             centre=centre.json, uncertainty=radius,
             pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
   
-  response <- toJSON(l)
+  response <- toJSON(l, digits = NA)
+  # print(response)
   response
+  
 }
 
 # comment

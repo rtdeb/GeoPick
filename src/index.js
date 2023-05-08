@@ -175,9 +175,9 @@ map.on(L.Draw.Event.CREATED, function (e) {
     editableLayers.addLayer(layer);    
     editableLayers.bringToFront();
     if(type != 'circle'){
-        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);        
+        util.load_api_data(editableLayers,buffer_layer,centroid_layer,map);                
     }else{
-        ui.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
+        ui.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);        
         centroid_layer.addData( editableLayers.toGeoJSON() );
     }
     
@@ -235,12 +235,8 @@ $('#cancelWKT').click(function(){
 $('#okWKT').click(function(){
     wkt = $("#textareaWKT").val();
     geojson = parseFromWK(wkt);
-    console.log(geojson);
-    // jsonLayer = new L.GeoJSON(geojson);
-    // console.log(jsonLayer);
     reference_layer.clearLayers();
     reference_layer.addData( geojson );
     util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
-    // util.load_api_data(editableLayers,buffer_layer,centroid_layer,map); 
     $("#controlTextWKT").hide();
 });

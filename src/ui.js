@@ -4,7 +4,7 @@ const  $ = require('jquery');
 const Toastr = require('toastr');
 const p = require('../package.json');
 
-const { convertFeatureCollection } = require('wkt-parser-helper');
+const { convertToWK } = require('wkt-parser-helper');
 
 Toastr.options = {
     "positionClass": "toast-top-center",
@@ -59,7 +59,7 @@ const do_copy_data = function( yes_headers ){
     let centroid_x = $('#centroid_x').val();
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
-    let wkt = $('#d_geojson').val();
+    let wkt = $('#d_geojson').val();    
     let spatial_fit = $('#spatial_fit').val();
 
     let date = new Date().toISOString();
@@ -141,12 +141,24 @@ const init_autocomplete = function(map, input_id, reference_layer){
     });
 }
 
-const show_api_centroid_data = function(parsed_json){
+const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
-    $('#spatial_fit').val( parsed_json.spatial_fit );    
-    $('#d_geojson').val( convertFeatureCollection( parsed_json.site ) );    
+    $('#spatial_fit').val( parsed_json.spatial_fit );   
+     
+    if(geom.length == 1){
+        wkt=convertToWK( geom[0])
+    } else {
+        console.log( geom  );    
+        alert(geom.length)
+    
+        wkt=convertToWK( geom )        
+    }
+    $('#d_geojson').val( wkt );    
+    // console.log(geom);
+    // console.log(convertToWK(geom[0]));
+    
 }
 
 const show_centroid_data = function(lat,lng,radius){

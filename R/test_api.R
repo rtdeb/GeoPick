@@ -19,9 +19,9 @@ source("R/test_data.R")
 # site.name <- points2_pnt2_ncd
 # site.name <- europe_1_ncd
 # site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
-# site.name <- antarctica_2_cd
+site.name <- antarctica_2_cd
 # site.name <- cardedeu_1_ncd
-site.name <- cardedeu3_1_ncd
+# site.name <- cardedeu3_1_ncd
 crop.dif <- 1 # Air around mbc
 
 site <- site.name %>%
@@ -60,6 +60,8 @@ ymin <- st_coordinates(ps)[2]
 ymax <- st_coordinates(pn)[2]
 centre <- geojson_sf(response$centre)
 
+print(site)
+print(sf_geojson(site))
 # Plot
 r <- rast("tmp/wc2.1_10m_elev.tif")
 rc <- crop(r, ext(xmin - crop.dif, xmax + crop.dif, ymin - crop.dif, ymax + crop.dif))
@@ -118,4 +120,6 @@ map <-
   # addRasterImage(rc)
 map
 
-
+k1 <- sf_geojson(site)
+geojson_wkt(k1)
+print(site)
