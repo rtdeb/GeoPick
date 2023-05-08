@@ -41,7 +41,21 @@
             <div class="search-element"><input id="place_search" placeholder="through OpenStreetMap Nominatim" /></div>
             <div class="search-element"><button id="capture" class="button">Capture location</button></div>
           </div>
+          
+          <div class="wkt">
+            <!-- <button id="#importWKT" class="button" src=<%=require("./wkt.png")%>></button> -->
+            <input type="image" id="importWKT" src="<%=require("./wkt.png")%>" />            
+          </div>
+          <div id="controlTextWKT"  style="display: none;">
+            <span>Please paste your WKT geometry here</span>
+            <textarea id="textareaWKT" name="text"></textarea>
+            <div id="buttonsWKT"  style="display: none;">
+              <button id="cancelWKT">Cancel</button>
+              <button id="okWKT">OK</button>
+          </div>
+          </div>          
         </div>
+        
       </div>
       <!-- INFO BOX -->
       <div class="column is-3">

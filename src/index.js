@@ -9,6 +9,7 @@ require('leaflet-draw/dist/leaflet.draw.css');
 require('leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css')
 require('./index.css');
 require('./mystyle.scss');
+const { parseFromWK } = require('wkt-parser-helper');
 
 const ui = require('./ui');
 const util = require('./util');
@@ -220,4 +221,25 @@ $('#capture').click(function(){
     }else{        
         util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
     }
+});
+
+$('#importWKT').click(function(){
+        $("#controlTextWKT").show();
+        $("#buttonsWKT").show();
+});
+
+$('#cancelWKT').click(function(){
+    $("#controlTextWKT").hide();
+});
+
+$('#okWKT').click(function(){
+    wkt = $("#textareaWKT").val();
+    geojson = parseFromWK(wkt);
+    // alert(geojson.features);
+    jsonLayer = new L.GeoJSON(geojson);
+    reference_layer.addLayer(jsonLayer); 
+    reference_layer.bringToFront();   
+    util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
+    // util.load_api_data(editableLayers,buffer_layer,centroid_layer,map); 
+    $("#controlTextWKT").hide();
 });
