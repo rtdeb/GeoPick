@@ -235,10 +235,11 @@ $('#cancelWKT').click(function(){
 $('#okWKT').click(function(){
     wkt = $("#textareaWKT").val();
     geojson = parseFromWK(wkt);
-    // alert(geojson.features);
-    jsonLayer = new L.GeoJSON(geojson);
-    reference_layer.addLayer(jsonLayer); 
-    reference_layer.bringToFront();   
+    console.log(geojson);
+    // jsonLayer = new L.GeoJSON(geojson);
+    // console.log(jsonLayer);
+    reference_layer.clearLayers();
+    reference_layer.addData( geojson );
     util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
     // util.load_api_data(editableLayers,buffer_layer,centroid_layer,map); 
     $("#controlTextWKT").hide();
