@@ -8,18 +8,20 @@ library(jsonlite)
 library(leaflet)
 
 source("R/test_data.R")
-site.name <- china_1_ncd
-site.name <- north_america_1_cd
-site.name <- transect1_lin1_cd
-site.name <- madagascar_2_cd
-site.name <- cap_norfeu_1_cd
-site.name <- africa_1_ncd
-site.name <- points1_pnt3_cd
-site.name <- greenland_pol1_ncd
-site.name <- points2_pnt2_ncd
-site.name <- europe_1_ncd
-site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
-site.name <- antarctica_2_cd
+# site.name <- china_1_ncd
+# site.name <- north_america_1_cd
+# site.name <- transect1_lin1_cd
+# site.name <- madagascar_2_cd
+# site.name <- cap_norfeu_1_cd
+# site.name <- africa_1_ncd
+# site.name <- points1_pnt3_cd
+# site.name <- greenland_pol1_ncd
+# site.name <- points2_pnt2_ncd
+# site.name <- europe_1_ncd
+# site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
+# site.name <- antarctica_2_cd
+# site.name <- cardedeu_1_ncd
+site.name <- cardedeu3_1_ncd
 crop.dif <- 1 # Air around mbc
 
 site <- site.name %>%
@@ -61,8 +63,9 @@ centre <- geojson_sf(response$centre)
 # Plot
 r <- rast("tmp/wc2.1_10m_elev.tif")
 rc <- crop(r, ext(xmin - crop.dif, xmax + crop.dif, ymin - crop.dif, ymax + crop.dif))
-plot(rc)
-plot(mbc, add=T)
+# plot(rc)
+# plot(mbc, add=T)
+plot(mbc)
 plot(site, add=T)
 plot(pw, add=T)
 plot(pe, add=T)
@@ -70,4 +73,49 @@ plot(pn, add=T)
 plot(ps, add=T)
 plot(centre, add=T)
 print(response$uncertainty)
+# zoom(rc)
+
+
+# Orto, cardedeu, test for cardedeu_1_ncd
+rc <- rast("docs/ortos/of5mtif1683476493971.tif")
+
+# rc <- crop(rc, ext(446600, 446750, 4610770, 4610870))
+rc <- crop(rc, ext(446636, 446750, 4610056, 4610204))
+r <- terra::project(rc, "EPSG:4326")
+
+plot(r)
+plot(site, add=T, colour = "red")
+plot(mbc, color = "red", add = T)
+plot(centre, add = T)
+# zoom(r)
+
+r2 <- terra::project(r, "EPSG:3857")
+site2 <- st_transform(site, 3857)
+mbc2 <- st_transform(mbc, 3857)
+centre2 <- st_transform(centre, 3857)
+plot(r2)
+plot(site2, add=T, colour = "red")
+plot(mbc2, color = "red", add = T)
+# zoom(r)
+
+library(raster)
+rc <- raster("docs/ortos/of5mtif1683477350081.tif")
+rc <- raster::crop(rc, extent(446600, 446750, 4610770, 4610870))
+rc <- projectRaster(rc, crs="+init=epsg:3857")
+plot(rc)
+plot(mbc %>% st_transform(3857), add = T)
+plot(site %>% st_transform(3857), add = T)
+plot(centre %>% st_transform(3857), add = T)
+
+
+site.l <- rbind(site,mbc)
+site.l <- leaflet(site.l)
+site.l <- addTiles(site.l)
+map <- 
+  addPolygons(site.l) %>%
+  addTiles() 
+  # addTiles(urlTemplate = "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", attribution = 'Google')
+  # addRasterImage(rc)
+map
+
 

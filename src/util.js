@@ -112,6 +112,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
 const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
     //const geom = editableLayers.toGeoJSON().features[0];
     var geom = editableLayers.toGeoJSON().features;
+    
     if(geom.length > 1){
         var geom_type = '';
         var coords = [];
@@ -121,9 +122,9 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
         }
         if( geom_type == 'Polygon'){
             geom = turf.multiPolygon(coords);
-        }        
+        }                
     }
-
+    console.log(JSON.stringify(geom));
     const fetchdata = {
         method: 'POST',
         body: JSON.stringify(geom),

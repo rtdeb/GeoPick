@@ -49,7 +49,7 @@ function() {
 # Until we can resolve this issue, sites as multiple lines are not supported
 #* @post /mbc
 function(req) {
-  site.geojson <- toJSON(req$body)
+  site.geojson <- toJSON(req$body, digits = NA)
   site.sf <- geojson_sf(site.geojson)
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
   epsg.tr <- 3857
@@ -83,8 +83,9 @@ function(req) {
     radius <- as.double(distances[idx.furthest])
     p.furthest <- site.p[idx.furthest,]
     mbc.tr <- st_as_sf(terra::buffer(vect(pc.tr.sf), radius))
-  } 
-  
+  }
+  # mbc.tr <- st_as_sf(terra::buffer(vect(pc.tr.sf), radius.tr))
+  # print(radius.tr)
   # Determine four cardinal points in circle (just for testing purposes)
   x1.tr <- st_bbox(mbc.tr)$xmin
   x2.tr <- st_bbox(mbc.tr)$xmax

@@ -1,4 +1,91 @@
-  #### africa_pol1_ncd ####
+#### local_catalonia ####
+cardedeu_1_ncd <- '{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              2.3593, 
+              41.6473
+            ],
+            [
+              2.3596,
+              41.64759999999999
+            ],
+            [
+              2.3593999999999995, 
+              41.6473
+            ],
+            [
+              2.3596,
+              41.647200000000005
+            ],
+            [
+              2.3593, 
+              41.6473
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    }
+  ]
+}'
+
+cardedeu2_1_ncd <- '{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              2.3603,
+              41.6416
+            ],
+            [
+              2.3594999999999997,
+               41.64059999999999
+            ],
+            [
+              2.3603,
+              41.64089999999999
+            ],
+            [
+              2.36,
+              41.64079999999999
+            ],
+            [
+              2.3603,
+              41.6416
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    }
+  ]
+}'
+cardedeu3_1_ncd <- '{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [[[2.360339,41.641646],[2.35948,41.640592],[2.360328,41.640948],[2.359968,41.640844],[2.360339,41.641646]]],
+        "type": "Polygon"
+      }
+    }
+  ]
+}'
+#### africa_pol1_ncd ####
 africa_1_ncd <- '{
   "type": "FeatureCollection",
   "features": [
