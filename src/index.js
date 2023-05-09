@@ -91,12 +91,12 @@ L.control.zoom({ position: 'topleft' }).addTo(map);
 var options = {
     position: 'topleft',
     draw: {
-        polyline: {
-            allowIntersection: false,
+        polygon: {
+            allowIntersection: false,            
             shapeOptions: {
-                color: '#f357a1'                
-            },            
-		    icon: new L.DivIcon({
+                color: '#eb4936'
+            },
+            icon: new L.DivIcon({
                 iconSize: new L.Point(10, 10),
                 className: 'leaflet-div-icon leaflet-editing-icon'
             }),
@@ -105,12 +105,12 @@ var options = {
                 className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
             }),
         },
-        polygon: {
-            allowIntersection: false,            
+        polyline: {
+            allowIntersection: false,
             shapeOptions: {
-                color: '#eb4936'
-            },
-            icon: new L.DivIcon({
+                color: '#f357a1'                
+            },            
+		    icon: new L.DivIcon({
                 iconSize: new L.Point(10, 10),
                 className: 'leaflet-div-icon leaflet-editing-icon'
             }),
@@ -238,6 +238,9 @@ $('#okWKT').click(function(){
     if(geojson === null){ /* using === because checking for null 
                              in javascript is  a special case */
         alert("ERROR: Malformed WKT. Please check and try again.");
+    }
+    else if(geojson.type == "MultiPoint") {
+            alert("MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported.")    
     } else {
         reference_layer.clearLayers();
         reference_layer.addData( geojson );

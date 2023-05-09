@@ -54,7 +54,7 @@
       <div class="help_intro">
         <p class="help_paragraph"><span class="geopick_name">GeoPick</span> is intended to be easy to use. You can move around the map and create and
           edit georeferences with the controls as explained below. Creating a georeference is as simple as locating the place of interest and drawing
-          the geometry (line or polygon) that represents it. You can also use the search box to find a
+          the geometry (point, line or polygon) that represents it. You can also use the search box to find a
           given location (e.g. a town, county, or state) from <a href="https://nominatim.openstreetmap.org/ui/about.html"
             target="_blank">Nominatim</a>, the search
           engine for <a href="https://www.openstreetmap.org/#map=6/40.007/-2.488" target="_blank">OpenStreetMap</a> data, and retrieve its
@@ -88,14 +88,14 @@
         </div>
         <!-- LAYER CONTROL -->
         <div class="help_unit_controls">
-          <div class="help_unit_control_icon"><img src=<%=require("./layers-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_icon"><img src=<%=require("./control-layers.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Select among different map layers. Just hover with the mouse on top of the icon and a list of
             available layers will be displayed. Select the one you need.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
         <!-- ZOOM CONTROL -->
         <div class="help_unit_controls">
-          <div class="help_unit_control_icon"><img src=<%=require("./zoom-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_icon"><img src=<%=require("./control-zoom.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Zoom in and out of a map; maintaining the center of the map at its current position.</div>
           <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
         </div>
@@ -139,9 +139,13 @@
           You just need to create a new line or polygon after the first is created and <span class="geopick_name">GeoPick</span> will automatically
           recalculate the georeference parameters for the whole set of geometries.
         </div>
+        <!-- POINT TOOL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./control-circle.png")%> width = "36px"></div>
+          <div class="help_unit_control_text">Draw a point with a circle of uncertainty. Click at a location and drag to obtain the uncertainty circle.</div>
         <!-- LINE TOOL -->
         <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./line-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_icon"><img src=<%=require("./control-line.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Draw a line composed of multiple segments. Select it and start creating the line
             node by node. To finish the line, click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the
             last
@@ -150,7 +154,7 @@
         </div>
         <!-- POLYGON TOOL -->
         <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./polygon-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_icon"><img src=<%=require("./control-polygon.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Draw a polygon. Just select it and start digitising the polygon. To finish the
             polygon you need to close the polygon by clicking again on the starting node or by clicking on the <i>Finish</i> option offered by the
             tool. To delete the last entered node, click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.
@@ -169,7 +173,7 @@
         </div>
         <!-- EDIT TOOL -->
         <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./edit-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_icon"><img src=<%=require("./control-edit.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Edit line and polygon geometries. When selecting this option the nodes of the geometry will
             appear as small white squares. You can click on them and drag them around. Each time an existing node is selected, one node appears on
             each side of it at the midpoint to the to the next node. These nodes can also be clicked and dragged to make the geometry more detailed.
@@ -182,13 +186,39 @@
         </div>
         <!-- BIN TOOL -->
         <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./bin-control.png")%> width = "36px"></div>
+          <div class="help_unit_control_icon"><img src=<%=require("./control-bin.png")%> width = "36px"></div>
           <div class="help_unit_control_text">Clear all geometries drawn on the map. Just click on the <i>Clear All</i> option, or
             click on <i>Cancel</i> if you decide not to clear anything.</div>
         </div>
       </div>
     </div>
 
+    <!-- IMPORT WKT -->
+    <div class="help_container">
+      <div class="help_unit">
+        <div class="help_unit_title">Importing geometries in Well-known text (WKT) format</div>
+        <div class="help_unit_explanation">
+          You can use the controls detailed below to edit and delete geometries.
+        </div>
+        <!-- EDIT TOOL -->
+        <div class="help_unit_controls" style="display: flex;">
+          <div class="help_unit_control_icon"><img src=<%=require("./wkt.png")%> width = "36px"></div>
+          <div class="help_unit_control_text" style="text-align: center;">
+            <div style="text-align: justify"> geometries in the 
+            <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-Known Text (WKT)</a> 
+            format as used in the <a href="https://dwc.tdwg.org/list/#dwc_footprintWKT">Darwin Core footprintWKT</a> term.
+            Click on the button and paste your WKT geometry in the text area box that will appear (see example image below). Then click 
+            the OK button and you are done. <span class="geopick_name">GeoPick</span> will calculate the minimum bounding circle 
+            and uncertainty as if the geometry had been on-screen digitized. You can then also edit the geometry if you need to. 
+            Please note that MULTIPOINT and GEOMETRYCOLLECTION 
+            objects are not supported.<br></div>
+             
+            <img src=<%=require("./textarea-wkt.png")%> width="400px">
+          </div>
+        </div>
+      </div>
+    </div>
+    
     <!-- COPY DATA TO CLIPBOARD -->
     <div class="help_container">
       <div class="help_unit">
