@@ -43,11 +43,10 @@
           </div>
           
           <div class="wkt">
-            <!-- <button id="#importWKT" class="button" src=<%=require("./wkt.png")%>></button> -->
-            <input type="image" id="importWKT" src="<%=require("./wkt.png")%>" />            
+            <input id="importWKT" src=<%=require("./wkt.png")%> type="image" title="Import from Well Known Text" >                                  
           </div>
           <div id="controlTextWKT"  style="display: none;">
-            <span>Please paste your WKT geometry here</span>
+            <span>Please paste your 'Well Known Text' (WKT) geometry here</span>
             <textarea id="textareaWKT" name="text"></textarea>
             <div id="buttonsWKT"  style="display: none;">
               <button id="cancelWKT">Cancel</button>

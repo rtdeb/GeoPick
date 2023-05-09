@@ -1,10 +1,11 @@
 require('jquery-ui/ui/widgets/autocomplete');
 const  $ = require('jquery');
-
+const turf = require('@turf/turf');
 const Toastr = require('toastr');
 const p = require('../package.json');
 
 const { convertToWK } = require('wkt-parser-helper');
+const { LineString } = require('terraformer');
 
 Toastr.options = {
     "positionClass": "toast-top-center",
@@ -59,7 +60,12 @@ const do_copy_data = function( yes_headers ){
     let centroid_x = $('#centroid_x').val();
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
-    let wkt = $('#d_geojson').val();    
+    let wkt = "";
+    if($('#d_geojson').val() == ""){
+        wkt = "POINT (" + centroid_x + " " + centroid_y + ")";
+    } else {
+        wkt = $('#d_geojson').val();   
+    }
     let spatial_fit = $('#spatial_fit').val();
 
     let date = new Date().toISOString();
@@ -146,19 +152,26 @@ const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
     $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
     $('#spatial_fit').val( parsed_json.spatial_fit );   
-     
+    
+    /* The following if code is cumbersome in order to deal with inconsistencies in the geom variable between lines and polygons. For lines we needed to build the MULTILINESTRING wkt ourselves beacause the convertToWK did not like. When lines, geom arrives as an array of LINESTRINGs instead of a MULTILINESTRING, while for polygons, geom already arrives as MULTIPOLYGON, and, in this latter case, convertToWK works.
+    */
     if(geom.length == 1){
         wkt=convertToWK( geom[0])
-    } else {
-        console.log( geom  );    
-        alert(geom.length)
-    
-        wkt=convertToWK( geom )        
+    } else {        
+        if( typeof geom.type == "undefined"){
+            if( geom[0].geometry.type  == "LineString" ){   
+                const coordinates = geom         
+                    .map(geom => "(" + geom.geometry.coordinates.map(pair => pair.join(" ")).join(", ") + ")")
+                    .join(", ");
+              wkt = "MULTILINESTRING (" + coordinates + ")";              
+            }               
+        } else {
+            if(geom.geometry.type == "MultiPolygon"){
+                wkt=convertToWK( geom );        
+            }            
+        }
     }
-    $('#d_geojson').val( wkt );    
-    // console.log(geom);
-    // console.log(convertToWK(geom[0]));
-    
+    $('#d_geojson').val( wkt );        
 }
 
 const show_centroid_data = function(lat,lng,radius){

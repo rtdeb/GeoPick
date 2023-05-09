@@ -225,7 +225,7 @@ $('#capture').click(function(){
 
 $('#importWKT').click(function(){
         $("#controlTextWKT").show();
-        $("#buttonsWKT").show();
+        $("#buttonsWKT").show();        
 });
 
 $('#cancelWKT').click(function(){
@@ -237,6 +237,13 @@ $('#okWKT').click(function(){
     geojson = parseFromWK(wkt);
     reference_layer.clearLayers();
     reference_layer.addData( geojson );
-    util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
+    console.log(reference_layer);
+    if(geojson.type == "Point"){ //No need to go to the API, just show the point as editable so it can be cleared.
+        editableLayers.addLayer(reference_layer);
+    } else {
+        util.promote_reference_to_editable(editableLayers, reference_layer, buffer_layer, centroid_layer, map);
+    }
     $("#controlTextWKT").hide();
 });
+
+

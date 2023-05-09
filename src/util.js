@@ -78,12 +78,12 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         })        
     }
 
-    map.spin(true, spin_opts);
+    map.spin(true, spin_opts);    
     fetch( api_base_url + 'mbc',fetchdata)
     .then(function(response){
         return response.json();
     })
-    .then(function(data){        
+    .then(function(data){     
         editableLayers.clearLayers();
         buffer_layer.clearLayers();
         centroid_layer.clearLayers();
