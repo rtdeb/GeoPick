@@ -177,7 +177,11 @@ const show_api_centroid_data = function(parsed_json, geom){
 const show_centroid_data = function(lat,lng,radius){
     $('#centroid_x').val( lng.toFixed(7) );
     $('#centroid_y').val( lat.toFixed(7) );
-    $('#radius_m').val( radius.toFixed(0) );
+    if(radius === null){
+        $('#radius_m').val = "";
+    } else {
+        $('#radius_m').val( radius.toFixed(0) );
+    }
 }
 
 const toast_error = function(message){

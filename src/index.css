@@ -146,13 +146,48 @@ div.info_box {
 .wkt {
   position: absolute;
   top: 300px;
-  left: 13px;
+  left: 14px;
   padding: 10px;
   z-index: 1000;
 }
+.control-keyboard {
+  position: absolute;
+  top: 335px;
+  left: 14px;
+  padding: 10px;
+  z-index: 1000;
+}
+#controlKeyboard{
+  display:block;
+  width: 300px;
+  height: 210px;
+  z-index: 1000;
+  position: relative;
+  top: 200px;
+  left: 50%; /* Center the search horizontally */
+  transform: translateX(-50%); /* Center the search precisely */
+  padding: 10px;
+  z-index: 1000;
+  background-color: wheat;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+}
+#controlKeyBoard{
+  width: 100%;
+  height:85%;
+  margin-top: 5px;
+}
+#buttonsKeyboard{
+  position: absolute;
+  bottom: 2%;
+  right: 5%;
+}
 #controlTextWKT{
   display:block;
-  width: 400px;
+  width: 300px;
   height: 300px;
   z-index: 1000;
   position: relative;
@@ -177,6 +212,34 @@ div.info_box {
   position: absolute;
   bottom: 2%;
   right: 5%;
+}
+#uncertaintyBox{
+  display:block;
+  width: 350px;
+  height: 140px;
+  z-index: 1000;
+  position: relative;
+  top: 300px;
+  left: 50%; /* Center the search horizontally */
+  transform: translateX(-50%); /* Center the search precisely */
+  padding: 10px;
+  z-index: 1000;
+  background-color: wheat;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+}
+#uncertaintyButtons{
+  position: absolute;
+  bottom: 2%;
+  right: 5%;
+}
+#uncertaintyField{
+  width: 100%;
+  height:25px;
+  margin-top: 5px;
 }
 #okWKT, #cancelWKT {
   margin-left: 0px;
