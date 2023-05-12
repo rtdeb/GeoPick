@@ -145,14 +145,14 @@ div.info_box {
 }
 .wkt {
   position: absolute;
-  top: 300px;
+  top: 245px;
   left: 14px;
   padding: 10px;
   z-index: 1000;
 }
 .control-keyboard {
   position: absolute;
-  top: 335px;
+  top: 280px;
   left: 14px;
   padding: 10px;
   z-index: 1000;

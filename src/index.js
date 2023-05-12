@@ -99,7 +99,7 @@ var baseMaps = {
   "Google hybrid": googleHybrid,
 };
 
-L.control.layers(baseMaps, null, { position: "topleft" }).addTo(map);
+L.control.layers(baseMaps, null, { position: "topright" }).addTo(map);
 
 L.control.zoom({ position: "topleft" }).addTo(map);
 
@@ -167,6 +167,16 @@ var coordControl = L.control.coordinates({
 });
 map.addControl(coordControl);
 
+map.on(L.Draw.Event.DRAWSTART, function(e) {
+  // var type = e.layerType;
+  // if(type == 'circle'){
+  //   $("#importWKT").hide();
+  // } else {
+    $("#importWKT").hide();
+    $("#keyboardEdit").hide();  
+  // }
+});
+
 map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
   // console.log(e);
@@ -180,7 +190,8 @@ map.on(L.Draw.Event.CREATED, function (e) {
   } else if (type == "circle") {
     ui.hideLineDrawControl();
     ui.hidePolyDrawControl();
-    ui.hideCircleDrawControl();
+    ui.hideCircleDrawControl();    
+    $("#keyboardEdit").show();  
   } else {
     ui.hidePolyDrawControl();
     ui.hideCircleDrawControl();
@@ -233,6 +244,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
   } else {
     ui.resetDrawControls();
     $("#importWKT").show();
+    $("#keyboardEdit").show();
   }
 });
 
@@ -307,13 +319,17 @@ $("#importWKT").click(function () {
   ui.hideLineDrawControl();
   ui.hidePolyDrawControl();
   ui.hideCircleDrawControl();
+  $("#keyboardEdit").hide();
   $("#controlTextWKT").show();
-  $("#buttonsWKT").show();
+  $("#importWKT").hide();
 });
 
 $("#cancelWKT").click(function () {
   ui.resetDrawControls();
   $("#controlTextWKT").hide();
+  $("#keyboardEdit").show();
+  $("#importWKT").show();
+
 });
 
 $("#okWKT").click(function () {
@@ -334,6 +350,8 @@ $("#okWKT").click(function () {
     if (geojson.type == "Point") {
       //No need to go to the API, just show the point as editable so it can be cleared.
       addPointCircleToMap(geojson.coordinates[1], geojson.coordinates[0], null);
+      
+      $("#keyboardEdit").show();  
     } else {
       util.promote_reference_to_editable(
         editableLayers,
@@ -345,7 +363,6 @@ $("#okWKT").click(function () {
     }
     $("#controlTextWKT").hide();
     $("#importWKT").hide();
-    // $("#uncertaintyBox").show();
   }
 });
 
@@ -362,10 +379,29 @@ $("#uncertaintyOK").click(function () {
   $("#uncertaintyBox").hide();
 });
 
+
+$("#keyboardEdit").click(function () {
+  ui.hideLineDrawControl();
+  ui.hidePolyDrawControl();
+  ui.hideCircleDrawControl();
+  $('#keyboardLatitude').val($('#centroid_y').val());
+  $('#keyboardLongitude').val($('#centroid_x').val());
+  $('#keyboardUncertainty').val($('#radius_m').val());
+  $("#controlKeyboard").show();
+  $("#importWKT").hide();
+});
+
 $('#keyboardOK').click(function(){
   lat = parseFloat($('#keyboardLatitude').val());
   lng = parseFloat($('#keyboardLongitude').val());
   unc = parseFloat($('#keyboardUncertainty').val());
   addPointCircleToMap(lat, lng, unc);
+  // ui.resetDrawControls();
   $("#controlKeyboard").hide();
+});
+
+$("#keyboardCancel").click(function () {
+  // ui.resetDrawControls();
+  $("#controlKeyboard").hide();
+  // $("#importWKT").show();  
 });
