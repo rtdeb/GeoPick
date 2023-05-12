@@ -321,6 +321,7 @@ $("#importWKT").click(function () {
   ui.hideCircleDrawControl();
   $("#keyboardEdit").hide();
   $("#controlTextWKT").show();
+  $("#infoDivBox").hide();
   $("#importWKT").hide();
 });
 
@@ -338,7 +339,9 @@ $("#okWKT").click(function () {
   if (geojson === null) {
     /* using === because checking for null 
                              in javascript is  a special case */
-    alert("ERROR: Malformed WKT. Please check and try again.");
+    $('#infoDivBox').show();
+    $('#errorWKT').val("ERROR: Malformed WKT. Please check and try again.");
+    // alert("ERROR: Malformed WKT. Please check and try again.");
   } else if (geojson.type == "MultiPoint") {
     alert(
       "MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported."
@@ -365,20 +368,6 @@ $("#okWKT").click(function () {
     $("#importWKT").hide();
   }
 });
-
-$("#uncertaintyOK").click(function () {
-  lat = editableLayers.getLayers()[0]._latlng.lat;
-  lng = editableLayers.getLayers()[0]._latlng.lng;
-  radius = $("#uncertaintyField").val();
-  if (radius == "") {
-    radius = null;
-  } else {
-    radius = parseFloat(radius);
-  }
-  addPointCircleToMap(lat, lng, radius);
-  $("#uncertaintyBox").hide();
-});
-
 
 $("#keyboardEdit").click(function () {
   ui.hideLineDrawControl();
@@ -417,3 +406,7 @@ $("#keyboardCancel").click(function () {
   // $("#importWKT").show();  
 });
 
+$("#infoDivOK").click(function () {
+    $("#infoDivBox").hide();
+    $("#infoDivBox").bringToFront();
+});

@@ -51,23 +51,27 @@
             <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via keyboard" width = "30px">
           </div>          
 
-          <!-- HIDDEN DIALOG BOX CONTROLS -->
-          <!-- <div id="uncertaintyBox" style="display: none;">
-            <div style="text-align: justify; font-size: 1.1em;">Uncertainty is undefined. The grey circle is only for easily grasping when editing the
-              uncertainty interactively.<br><br>Enter an uncertainty value, or if unknown, just press OK.</div>
-            <input id="uncertaintyField" class="input is-small" type="text" placeholder="Undefined">
-            <div id="uncertaintyButtons">
-              <button id="uncertaintyOK">OK</button>
+          <!-- INFO BOX -->
+          <!-- <div id="infoDivBox" style="display: none;">             -->
+            <!-- <div id="infoDivBox">           
+            <textarea id="infoDivTextarea" name="text"></textarea>
+            <div id="infoDivButtons">
+              <button id="infoDivOK">OK</button>
             </div>
           </div> -->
-
+          
+          <!-- HIDDEN DIALOG BOX CONTROLS -->
           <div id="controlTextWKT" style="display: none;">
             <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
-            <textarea id="textareaWKT" name="text"></textarea>
+            <textarea id="textareaWKT" rows="9" name="text"></textarea>  
             <div id="buttonsWKT">
               <button id="cancelWKT">Cancel</button>
               <button id="okWKT">OK</button>
             </div>
+            <div id="infoDivBox" style="display: none;">           
+              <textarea id="errorWKT" name="text"></textarea>
+            </div>
+
           </div>
 
           <div id="controlKeyboard" style="display: none;">
