@@ -402,6 +402,15 @@ $('#keyboardOK').click(function(){
 
 $("#keyboardCancel").click(function () {
   // ui.resetDrawControls();
-  $("#controlKeyboard").hide();
+  if(editableLayers.getLayers().length == 0){
+    ui.resetDrawControls();    
+    $("#importWKT").show();
+  }
+    $("#controlKeyboard").hide();
+
   // $("#importWKT").show();  
 });
+
+$( "#keyboardEdit" ).on( "keypress", function() {
+  alert( "Handler for `keypress` called." );
+} );
