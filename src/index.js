@@ -394,7 +394,13 @@ $("#keyboardEdit").click(function () {
 $('#keyboardOK').click(function(){
   lat = parseFloat($('#keyboardLatitude').val());
   lng = parseFloat($('#keyboardLongitude').val());
-  unc = parseFloat($('#keyboardUncertainty').val());
+  unc = $("#keyboardUncertainty").val();
+  if (unc == "") {
+    unc = null;
+  } else {
+    unc = parseFloat(unc);
+  }
+
   addPointCircleToMap(lat, lng, unc);
   // ui.resetDrawControls();
   $("#controlKeyboard").hide();
@@ -411,6 +417,3 @@ $("#keyboardCancel").click(function () {
   // $("#importWKT").show();  
 });
 
-$( "#keyboardEdit" ).on( "keypress", function() {
-  alert( "Handler for `keypress` called." );
-} );

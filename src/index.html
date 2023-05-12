@@ -36,29 +36,30 @@
       <!-- MAP -->
       <div class="column is-9">
         <div id="map">
+          <!-- SEARCH BOX -->
           <div class="search">
             <div class="search-element"><label id="search_label">Location search:&nbsp;</label></div>
             <div class="search-element"><input id="place_search" placeholder="through OpenStreetMap Nominatim" /></div>
             <div class="search-element"><button id="capture" class="button">Capture location</button></div>
           </div>
+
           <!-- ADDITIONAL EDITING CONTROLS -->
           <div class="wkt">
             <input id="importWKT" src=<%=require("./wkt.png")%> type="image" title="Import from Well Known Text" width = "30px">
           </div>
           <div class="control-keyboard">
             <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via keyboard" width = "30px">
-          </div>
-          <!-- END OF ADDITIONAL EDITING CONTROLS -->
+          </div>          
 
           <!-- HIDDEN DIALOG BOX CONTROLS -->
-          <div id="uncertaintyBox" style="display: none;">
+          <!-- <div id="uncertaintyBox" style="display: none;">
             <div style="text-align: justify; font-size: 1.1em;">Uncertainty is undefined. The grey circle is only for easily grasping when editing the
               uncertainty interactively.<br><br>Enter an uncertainty value, or if unknown, just press OK.</div>
             <input id="uncertaintyField" class="input is-small" type="text" placeholder="Undefined">
             <div id="uncertaintyButtons">
               <button id="uncertaintyOK">OK</button>
             </div>
-          </div>
+          </div> -->
 
           <div id="controlTextWKT" style="display: none;">
             <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
@@ -86,7 +87,7 @@
               <button id="keyboardOK">OK</button>
             </div>
           </div>
-          <!-- END OF DIALOG BOX CONTROLS -->
+          
         </div>
       </div>
       <!-- INFO BOX -->
