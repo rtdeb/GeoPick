@@ -531,7 +531,10 @@ $(document).keydown(function (event) {
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
-    clearAllGeometries();
+    if (confirm('Are you sure you want to clear all geometries?')) {
+      clearAllGeometries();
+  } 
   }
 
 });
+
