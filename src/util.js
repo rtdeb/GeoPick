@@ -15,30 +15,10 @@ const spin_opts = {
     color: '#ffffff'
 }
 
-/*
-const geojson_to_wkt = function(geojson){    
-    if(geojson.type == 'Polygon'){
-        const coords = geojson.coordinates[0];
-        const body = coords.map(function(pair){
-            return pair[0] + ' ' + pair[1];
-        });
-        return 'POLYGON((' + body.join(',') + '))';
-    }else if(geojson.type == 'LineString'){
-        const coords = geojson.coordinates;
-        const body = coords.map(function(pair){
-            return pair[0] + ' ' + pair[1];
-        });
-        return 'LINESTRING(' + body + ')';
-    }
-    return 'KO ()';
-}
-*/
-
 const parse_api_data = function(data){    
     const all_data = JSON.parse(data[0]);
     const mbc = JSON.parse(all_data.mbc[0]);
     const site = JSON.parse(all_data.site[0]);
-    // console.log(site);
     const center = JSON.parse(all_data.centre[0]);
     var spatial_fit;
     if( all_data.spatial_fit[0] == 'Inf' ){
@@ -103,14 +83,12 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         editableLayers.bringToFront();        
     })
     .catch(function(error){
-        //console.log(error);
         ui.toast_error(error);
         map.spin(false);
     });        
 }
 
 const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
-    //const geom = editableLayers.toGeoJSON().features[0];
     var geom = editableLayers.toGeoJSON().features;
     if(geom.length > 1){
         var geom_type = '';
@@ -148,7 +126,6 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
         ui.show_api_centroid_data( parsed_json, geom );
     })
     .catch(function(error){
-        //console.log(error);
         ui.toast_error(error);
         map.spin(false);
     });
@@ -156,7 +133,6 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
 
 
 module.exports = {
-    //compute_centroid_data: compute_centroid_data,
     parse_api_data,
     load_api_data,
     promote_reference_to_editable

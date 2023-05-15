@@ -168,24 +168,9 @@ map.addControl(coordControl);
 
 map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
-  // console.log(e);
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
-
-  // if (type == "polygon") {
-  //   ui.hideLineDrawControl();
-  //   ui.hideCircleDrawControl();
-  // } else if (type == "circle") {
-  //   ui.hideLineDrawControl();
-  //   ui.hidePolyDrawControl();
-  //   ui.hideCircleDrawControl();
-  //   $("#keyboardEdit").show();
-  // } else {
-  //   ui.hidePolyDrawControl();
-  //   ui.hideCircleDrawControl();
-  // }
-  // $("#importWKT").hide();
   var layer = e.layer;
   editableLayers.addLayer(layer);
   editableLayers.bringToFront();
@@ -244,9 +229,7 @@ const clearAllGeometries = function () {
 };
 map.on(L.Draw.Event.DRAWSTART, function (e) {
   var type = e.layerType;
-  // alert(type);
   if (editableLayers.toGeoJSON().features.length != 0) {
-    // alert(editableLayers.toGeoJSON().features[0].geometry.type);
     if (
       type == "polygon" &&
       editableLayers.toGeoJSON().features[0].geometry.type == "Polygon"
@@ -341,7 +324,6 @@ const importNominatim = function () {
   }
 };
 addPointCircleToMap = function (lat, long, radius) {
-  // console.log(map);
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
@@ -357,8 +339,7 @@ addPointCircleToMap = function (lat, long, radius) {
       fillOpacity: 0.5,
       color: "#e7e7e7",
       opacity: 0.5,
-    });
-    // alert("The point has no uncertainty. Circle represents just a resource for you to grab and resize. If uncertainty is unknown, just cancel editing.");
+    });    
   }
   map.addLayer(circle);
   editableLayers.clearLayers();
@@ -454,19 +435,15 @@ $("#keyboardOK").click(function () {
   }
 
   addPointCircleToMap(lat, lng, unc);
-  // ui.resetDrawControls();
   $("#controlKeyboard").hide();
 });
 
 $("#keyboardCancel").click(function () {
-  // ui.resetDrawControls();
   if (editableLayers.getLayers().length == 0) {
     ui.resetDrawControls();
     $("#importWKT").show();
   }
   $("#controlKeyboard").hide();
-
-  // $("#importWKT").show();
 });
 
 $("#infoDivOK").click(function () {
@@ -530,10 +507,10 @@ $(document).keydown(function (event) {
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
-    if(editableLayers.toGeoJSON().features.length > 0){
+    if (editableLayers.toGeoJSON().features.length > 0) {
       if (confirm("Are you sure you want to clear all geometries?")) {
         clearAllGeometries();
-      }  
+      }
     }
   }
 });

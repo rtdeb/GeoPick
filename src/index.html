@@ -49,33 +49,22 @@
           </div>
           <div class="control-keyboard">
             <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via keyboard" width = "30px">
-          </div>          
+          </div>
 
-          <!-- INFO BOX -->
-          <!-- <div id="infoDivBox" style="display: none;">             -->
-            <!-- <div id="infoDivBox">           
-            <textarea id="infoDivTextarea" name="text"></textarea>
-            <div id="infoDivButtons">
-              <button id="infoDivOK">OK</button>
-            </div>
-          </div> -->
-          
           <!-- HIDDEN DIALOG BOX CONTROLS -->
           <div id="controlTextWKT" style="display: none;">
             <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
-            <textarea id="textareaWKT" rows="9" name="text"></textarea>  
+            <textarea id="textareaWKT" rows="9" name="text"></textarea>
             <div id="buttonsWKT">
               <button id="cancelWKT">Cancel</button>
               <button id="okWKT">OK</button>
             </div>
-            <div id="infoDivBox" style="display: none;">           
+            <div id="infoDivBox" style="display: none;">
               <textarea id="errorWKT" name="text"></textarea>
             </div>
-
           </div>
 
           <div id="controlKeyboard" style="display: none;">
-          <!-- <div id="controlKeyboard"> -->
             <div style="text-align: justify; font-size: 1.2em; margin-bottom: 10px;">Please enter latitude, longitude and uncertainty
             </div>
             <div>
@@ -91,9 +80,9 @@
               <button id="keyboardOK">OK</button>
             </div>
           </div>
-          
         </div>
       </div>
+      
       <!-- INFO BOX -->
       <div class="column is-3">
         <div id="info">
@@ -231,7 +220,7 @@
                   [dwc:georeferencedBy]</a></div>
             </div>
             <div class="value">
-              <input class="editable" id="georeferencer_name" class="input" type="text" placeholder="Please enter your name(s)"/>
+              <input class="editable" id="georeferencer_name" class="input" type="text" placeholder="Please enter your name(s)" />
             </div>
           </div>
           <!-- GEOREFERENCE REMARKS -->

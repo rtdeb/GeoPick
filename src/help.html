@@ -12,12 +12,12 @@
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
-    (function() {
-      var u="//matomo.creaf.cat/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
+    (function () {
+      var u = "//matomo.creaf.cat/";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
       _paq.push(['setSiteId', '5']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
     })();
   </script>
   <!-- End Matomo Code -->
@@ -40,15 +40,11 @@
         </div>
         <div class="column is-one-quarter pt-5 pr-4">
           <img src=<%=require("./geopick-logo.png")%> width = "350px" alt="MDN">
-      
+
         </div>
       </div>
     </div>
-    <!-- <div class="help_toc">
-      <ul>
-        <li ><a href="#move_around">How to move around the map</a></li>
-      </ul>
-    </div> -->
+
     <div class="help_container">
       <!-- GENERAL PHILOSOPHY -->
       <div class="help_intro">
@@ -118,7 +114,7 @@
         </div>
         <div class="help_unit_controls">
           <div class="help_unit_control_icon" style="flex-basis: 60%;"">
-            <img src=<%=require("./nominatim-search-bar.png")%>>
+            <img src=<%=require(" ./nominatim-search-bar.png")%>>
           </div>
           <div class="help_unit_control_text" style="flex-basis: 40%;">Just type the name of a place and when the
             list of places found appears, select one. Its representing geometry, if available, will be shown. You can then click on the <i>Import
@@ -142,339 +138,368 @@
         <!-- POINT TOOL -->
         <div class="help_unit_controls" style="display: flex;">
           <div class="help_unit_control_icon"><img src=<%=require("./control-circle.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Draw a point with a circle of uncertainty. Click at a location and drag to obtain the uncertainty circle.</div>
-        <!-- LINE TOOL -->
-        <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./control-line.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Draw a line composed of multiple segments. Select it and start creating the line
-            node by node. To finish the line, click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the
-            last
-            entered node click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.</div>
-          <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
-        </div>
-        <!-- POLYGON TOOL -->
-        <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./control-polygon.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Draw a polygon. Just select it and start digitising the polygon. To finish the
-            polygon you need to close the polygon by clicking again on the starting node or by clicking on the <i>Finish</i> option offered by the
-            tool. To delete the last entered node, click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.
+          <div class="help_unit_control_text">Draw a point with a circle of uncertainty. Click at a location and drag to obtain the uncertainty
+            circle.</div>
+          <!-- LINE TOOL -->
+          <div class="help_unit_controls" style="display: flex;">
+            <div class="help_unit_control_icon"><img src=<%=require("./control-line.png")%> width = "36px"></div>
+            <div class="help_unit_control_text">Draw a line composed of multiple segments. Select it and start creating the line
+              node by node. To finish the line, click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the
+              last
+              entered node click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.</div>
+            <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
           </div>
-          <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
-        </div>
-      </div>
-    </div>
-
-    <!-- EDIT GEOREFERENCES -->
-    <div class="help_container">
-      <div class="help_unit">
-        <div class="help_unit_title">Editing georeferences</div>
-        <div class="help_unit_explanation">
-          You can use the controls detailed below to edit and delete geometries.
-        </div>
-        <!-- EDIT TOOL -->
-        <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./control-edit.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Edit line and polygon geometries. When selecting this option the nodes of the geometry will
-            appear as small white squares. You can click on them and drag them around. Each time an existing node is selected, one node appears on
-            each side of it at the midpoint to the to the next node. These nodes can also be clicked and dragged to make the geometry more detailed.
-            You can also double-click on a node to delete it. When done editing the shape of the line or polygon, just click <i>Save</i> to finish.
-            <span class="geopick_name">GeoPick</span> will recalculate the georeferencing parameters and refill the info box with the new data. Click
-            <i>Cancel</i> if you want to discard your changes. Please note that <span class="geopick_name">GeoPick</span> may not work with some very
-            complex geometries from <a href="https://nominatim.openstreetmap.org/ui/about.html" target="_blank">Nominatim</a>, with hundreds or
-            thousands of nodes; depending on your computer capacities, the browser may not be responsive to dragging them.
-          </div>
-        </div>
-        <!-- BIN TOOL -->
-        <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./control-bin.png")%> width = "36px"></div>
-          <div class="help_unit_control_text">Clear all geometries drawn on the map. Just click on the <i>Clear All</i> option, or
-            click on <i>Cancel</i> if you decide not to clear anything.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- IMPORT WKT -->
-    <div class="help_container">
-      <div class="help_unit">
-        <div class="help_unit_title">Importing geometries in Well-known text (WKT) format</div>
-        <div class="help_unit_explanation">
-          You can use the controls detailed below to edit and delete geometries.
-        </div>
-        <!-- EDIT TOOL -->
-        <div class="help_unit_controls" style="display: flex;">
-          <div class="help_unit_control_icon"><img src=<%=require("./wkt.png")%> width = "36px"></div>
-          <div class="help_unit_control_text" style="text-align: center;">
-            <div style="text-align: justify"> geometries in the 
-            <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-Known Text (WKT)</a> 
-            format as used in the <a href="https://dwc.tdwg.org/list/#dwc_footprintWKT">Darwin Core footprintWKT</a> term.
-            Click on the button and paste your WKT geometry in the text area box that will appear (see example image below). Then click 
-            the OK button and you are done. <span class="geopick_name">GeoPick</span> will calculate the minimum bounding circle 
-            and uncertainty as if the geometry had been on-screen digitized. You can then also edit the geometry if you need to. 
-            Please note that MULTIPOINT and GEOMETRYCOLLECTION 
-            objects are not supported.<br></div>
-             
-            <img src=<%=require("./textarea-wkt.png")%> width="400px">
+          <!-- POLYGON TOOL -->
+          <div class="help_unit_controls" style="display: flex;">
+            <div class="help_unit_control_icon"><img src=<%=require("./control-polygon.png")%> width = "36px"></div>
+            <div class="help_unit_control_text">Draw a polygon. Just select it and start digitising the polygon. To finish the
+              polygon you need to close the polygon by clicking again on the starting node or by clicking on the <i>Finish</i> option offered by the
+              tool. To delete the last entered node, click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.
+            </div>
+            <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
           </div>
         </div>
       </div>
-    </div>
-    
-    <!-- COPY DATA TO CLIPBOARD -->
-    <div class="help_container">
-      <div class="help_unit">
-        <div class="help_unit_title">Getting georeference results</div>
-        <div class="help_unit_explanation">
-          You can use either of these two buttons to export data to the clipboard in a spreadsheet-friendly tab-delimited format.
-        </div>
-        <!-- EDIT TOOL -->
-        <div class="help_unit_controls">
-          <div class="help_unit_control_icon" style="flex-basis: 40%;">
-            <img src=<%=require("./copy-data-to-clipboard.png")%>>
+
+      <!-- EDIT GEOREFERENCES -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">Editing georeferences</div>
+          <div class="help_unit_explanation">
+            You can use the controls detailed below to edit and delete geometries.
           </div>
-          <div class="help_unit_control_text" style="flex-basis: 60%;">
-            Once you have the georeference representing the location of interest, all georeference data and metadata will be
-            shown on the right info column. To export it, you just need to click on the <i>With headers</i> or <i>Without headers</i> button and all
-            data will be copied to the clipboard. If you choose <i>With headers</i>, the headers (field names) of each georeference field will
-            also be copied. On the contrary, if you choose <i>Without headers</i>, only the data will be copied. You may be georeferencing more than
-            one location and this will serve you to copy the headers only for the first one. From the second on, you will be able to paste them in
-            each following row of a spreadsheet without repeating column names.
+          <!-- EDIT TOOL -->
+          <div class="help_unit_controls" style="display: flex;">
+            <div class="help_unit_control_icon"><img src=<%=require("./control-edit.png")%> width = "36px"></div>
+            <div class="help_unit_control_text">Edit line and polygon geometries. When selecting this option the nodes of the geometry will
+              appear as small white squares. You can click on them and drag them around. Each time an existing node is selected, one node appears on
+              each side of it at the midpoint to the to the next node. These nodes can also be clicked and dragged to make the geometry more detailed.
+              You can also double-click on a node to delete it. When done editing the shape of the line or polygon, just click <i>Save</i> to finish.
+              <span class="geopick_name">GeoPick</span> will recalculate the georeferencing parameters and refill the info box with the new data.
+              Click
+              <i>Cancel</i> if you want to discard your changes. Please note that <span class="geopick_name">GeoPick</span> may not work with some
+              very
+              complex geometries from <a href="https://nominatim.openstreetmap.org/ui/about.html" target="_blank">Nominatim</a>, with hundreds or
+              thousands of nodes; depending on your computer capacities, the browser may not be responsive to dragging them.
+            </div>
+          </div>
+          <!-- BIN TOOL -->
+          <div class="help_unit_controls" style="display: flex;">
+            <div class="help_unit_control_icon"><img src=<%=require("./control-bin.png")%> width = "36px"></div>
+            <div class="help_unit_control_text">Clear all geometries drawn on the map. Just click on the <i>Clear All</i> option, or
+              click on <i>Cancel</i> if you decide not to clear anything.</div>
           </div>
         </div>
       </div>
+
+      <!-- IMPORT WKT -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">Importing geometries in Well-known text (WKT) format</div>
+          <div class="help_unit_explanation">
+            You can use the controls detailed below to edit and delete geometries.
+          </div>
+          <!-- EDIT TOOL -->
+          <div class="help_unit_controls" style="display: flex;">
+            <div class="help_unit_control_icon"><img src=<%=require("./wkt.png")%> width = "36px"></div>
+            <div class="help_unit_control_text" style="text-align: center;">
+              <div style="text-align: justify"> geometries in the
+                <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-Known Text (WKT)</a>
+                format as used in the <a href="https://dwc.tdwg.org/list/#dwc_footprintWKT">Darwin Core footprintWKT</a> term.
+                Click on the button and paste your WKT geometry in the text area box that will appear (see example image below). Then click
+                the OK button and you are done. <span class="geopick_name">GeoPick</span> will calculate the minimum bounding circle
+                and uncertainty as if the geometry had been on-screen digitized. You can then also edit the geometry if you need to.
+                Please note that MULTIPOINT and GEOMETRYCOLLECTION
+                objects are not supported.<br>
+              </div>
+
+              <img src=<%=require("./textarea-wkt.png")%> width="400px">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COPY DATA TO CLIPBOARD -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">Getting georeference results</div>
+          <div class="help_unit_explanation">
+            You can use either of these two buttons to export data to the clipboard in a spreadsheet-friendly tab-delimited format.
+          </div>
+          <!-- EDIT TOOL -->
+          <div class="help_unit_controls">
+            <div class="help_unit_control_icon" style="flex-basis: 40%;">
+              <img src=<%=require("./copy-data-to-clipboard.png")%>>
+            </div>
+            <div class="help_unit_control_text" style="flex-basis: 60%;">
+              Once you have the georeference representing the location of interest, all georeference data and metadata will be
+              shown on the right info column. To export it, you just need to click on the <i>With headers</i> or <i>Without headers</i> button and all
+              data will be copied to the clipboard. If you choose <i>With headers</i>, the headers (field names) of each georeference field will
+              also be copied. On the contrary, if you choose <i>Without headers</i>, only the data will be copied. You may be georeferencing more than
+              one location and this will serve you to copy the headers only for the first one. From the second on, you will be able to paste them in
+              each following row of a spreadsheet without repeating column names.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTE ON UNCERTAINTY -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">A final note on uncertainty:</div>
+          <p class="mt-3 is-size-5"><span class="geopick_name">GeoPick</span> gives coordinates with seven decimal places following Georeferencing
+            Best Practices (<a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision"
+              target="_blank">Chapman and Wieczorek, 2022</a>) and Georeferencing Quick Reference Guide (<a
+              href="https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format" target="_blank">Zermoglio et al.,
+              2022</a>). This allows preservation of the correct coordinates in all formats regardless of how many transformations are
+            done (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>; <a
+              href="https://doi.org/10.1080/13658810412331280211" target="_blank">Wiezorek et al., 2010</a>). Accordingly,
+            <span class="geopick_name">GeoPick</span> sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of
+            the
+            number of decimals given with the coordinates (<a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">Darwin Core
+              Maintenance Group, 2021</a>). Please also note that as in this
+            version of <span class="geopick_name">GeoPick</span>, 1.0, coordinate uncertainty refers only to the radius of the bounding circle of the
+            geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of
+            the
+            underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator (<a
+              href="http://georeferencing.org/georefcalculator/gc.html" target="_blank">Wieczorek C and Wieczorek J.R., 2021)</a> and its manual (<a
+              href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>).
+          </p>
+        </div>
+      </div>
+      
+      <!-- KEYBOARD SHORTCUTS -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">Keyboard shortcuts</div>
+          <div class="content">
+            <p class="mt-3 is-size-5">You can use the following keyboard shortcuts to interact with <span class="geopick_name">GeoPick</span>:
+            <ul>
+              <li><b>CTRL-T, CTRL-t</b>: Start drawing a point.</li>
+              <li><b>CTRL-L, CTRL-l</b>: Start drawing a line.</li>
+              <li><b>CTRL-P, CTRL-p</b>: Start drawing a polygon.</li>
+              <li><b>CTRL-D, CTRL-d</b>: Clear all geometries.</li>
+              <li><b>CTRL-K</b>: Open point/uncertainty dialog box.</li>
+              <li><b>CTRL-W</b>: Open WKT import dialog box.</li>
+              <li><b>CTRL-K</b>: Set focus on <i>Georeferenced by</i> field.</li>
+              <li><b>CTRL-M</b>: Set focus on <i>Georeference remarks</i> field.</li>
+              <li><b>CTRL-H</b>: Copy data with headers.</li>
+              <li><b>CTRL-C</b>: Copy data without headers.</li>
+              <li><b>CTRL-S, CTRL-s</b>: Set focus on Nominatim search field.</li>
+              <li><b>CTRL-I, CTRL-i</b>: Import geometry from Nominatim.</li>
+              <li><b>ESC</b>: Close dialog box.</li>
+            </ul>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- EXPORTED DATA -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">Exported data</div>
+          <div class="help_unit_explanation">
+            The following are the <a href="https://dwc.tdwg.org">Darwin Core standard</a> fields exported in tab-delimited format by <span
+              class="geopick_name">GeoPick</span>.
+          </div>
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:decimalLatitude" target="_blank">decimalLatitude</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The geographic latitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a
+              Location. Positive values are north of the Equator, negative values are south of it. Legal values lie between -90 and 90, inclusive.
+            </div>
+          </div>
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:decimalLongitude" target="_blank">decimalLongitude</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The geographic longitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a
+              Location. Positive values are east of the Greenwich Meridian, negative values are west of it. Legal values lie between -180 and 180,
+              inclusive.
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class=" help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:geodeticDatum" target="_blank">geodeticDatum</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geographic coordinates given in decimalLatitude and
+              decimalLongitude as based.
+              <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use the EPSG code of the SRS, if known. Otherwise use a
+                controlled vocabulary for the name or code of the geodetic datum, if known. Otherwise use a controlled vocabulary for the name or code
+                of the ellipsoid, if known. If none of these is known, use the value unknown.</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:coordinateUncertaintyInMeters" target="_blank">coordinateUncertaintyInMeters</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The horizontal distance (in meters) from the given decimalLatitude and decimalLongitude describing the smallest circle containing the
+              whole of the Location. Leave the value empty if the uncertainty is unknown, cannot be estimated, or is not applicable (because there are
+              no coordinates). Zero is not a valid value for this term.
+              <p style="font-style: italic; padding-top: 1em;">30 (reasonable lower limit on or after 2020-05-01 of a GPS reading under good
+                conditions
+                if the actual precision was not recorded at the time). 100 (reasonable lower limit before 2020-05-01 of a GPS reading under good
+                conditions if the actual precision was not recorded at the time). 71 (uncertainty for a UTM coordinate having 100 meter precision and
+                a
+                known spatial reference system).</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">coordinatePrecision</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude.
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:geodeticDatum" target="_blank">geodeticDatum</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geographic coordinates given in decimalLatitude and
+              decimalLongitude as based.
+              <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use the EPSG code of the SRS, if known. Otherwise use a
+                controlled vocabulary for the name or code of the geodetic datum, if known. Otherwise use a controlled vocabulary for the name or code
+                of
+                the ellipsoid, if known. If none of these is known, use the value unknown.</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:pointRadiusSpatialFit" target="_blank">pointRadiusSpatialFit</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The ratio of the area of the point-radius (decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) to the area of the true
+              (original, or most specific) spatial representation of the Location. Legal values are 0, greater than or equal to 1, or undefined. A
+              value
+              of 1 is an exact match or 100% overlap. A value of 0 should be used if the given point-radius does not completely contain the original
+              representation. The pointRadiusSpatialFit is undefined (and should be left empty) if the original representation is a point without
+              uncertainty and the given georeference is not that same point (without uncertainty). If both the original and the given georeference are
+              the
+              same point, the pointRadiusSpatialFit is 1.
+              <p style="font-style: italic; padding-top: 1em;">Detailed explanations with graphical examples can be found in the Georeferencing Best
+                Practices, Chapman and Wieczorek, 2020 (<a href="https://doi.org/10.15468/doc-gg7h-s853">https://doi.org/10.15468/doc-gg7h-s853</a>).
+              </p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:footprintWKT" target="_blank">footprintWKT</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              A Well-Known Text (WKT) representation of the shape (footprint, geometry) that defines the Location. A Location may have both a
+              point-radius
+              representation (see decimalLatitude) and a footprint representation, and they may differ from each other.
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:footprintSRS" target="_blank">footprintSRS</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geometry given in footprintWKT is based.
+              <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use the EPSG code of the SRS, if known. Otherwise use a
+                controlled vocabulary for the name or code of the geodetic datum, if known. Otherwise use a controlled vocabulary for the name or code
+                of
+                the ellipsoid, if known. If none of these is known, use the value unknown. It is also permitted to provide the SRS in Well-Known-Text,
+                especially if no EPSG code provides the necessary values for the attributes of the SRS. Do not use this term to describe the SRS of
+                the
+                decimalLatitude and decimalLongitude, nor of any verbatim coordinates - use the geodeticDatum and verbatimSRS instead.</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:footprintSpatailFit" target="_blank">footprintSpatailFit</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The ratio of the area of the footprint (footprintWKT) to the area of the true (original, or most specific) spatial representation of the
+              Location. Legal values are 0, greater than or equal to 1, or undefined. A value of 1 is an exact match or 100% overlap. A value of 0
+              should
+              be used if the given footprint does not completely contain the original representation. The footprintSpatialFit is undefined (and should
+              be
+              left empty) if the original representation is a point without uncertainty and the given georeference is not that same point (without
+              uncertainty). If both the original and the given georeference are the same point, the footprintSpatialFit is 1.
+              <p style="font-style: italic; padding-top: 1em;">Detailed explanations with graphical examples can be found in the Georeferencing Best
+                Practices, Chapman and Wieczorek, 2020 (<a href="https://doi.org/10.15468/doc-gg7h-s853">https://doi.org/10.15468/doc-gg7h-s853</a>).
+              </p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:georeferencedBy" target="_blank">georeferencedBy</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              A list (concatenated and separated) of names of people, groups, or organizations who determined the georeference (spatial
+              representation)
+              for the Location.
+              <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to separate the values in a list with space vertical bar
+                space
+                ( | ).</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:georeferencedDate" target="_blank">georeferencedDate</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              The date on which the Location was georeferenced.
+              <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use a date that conforms to ISO 8601-1:2019.</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:georeferenceProtocol" target="_blank">georeferenceProtocol</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              A description or reference to the methods used to determine the spatial footprint, coordinates, and uncertainties.
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:georeferenceSources" target="_blank">georeferenceSources</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              A list (concatenated and separated) of maps, gazetteers, or other resources used to georeference the Location, described specifically
+              enough
+              to allow anyone in the future to use the same resources.
+              <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to separate the values in a list with space vertical bar
+                space
+                ( | ).</p>
+            </div>
+          </div>
+
+          <div class="help_unit_export">
+            <div class="help_unit_export_item">
+              <a href="https://dwc.tdwg.org/terms/#dwc:georeferenceRemarks" target="_blank">georeferenceRemarks</a>
+            </div>
+            <div class="help_unit_export_item_text">
+              Notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to the those
+              formalized
+              in the method referred to in georeferenceProtocol.
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
-
-    <!-- NOTE ON UNCERTAINTY -->
-    <div class="help_container">
-      <div class="help_unit">
-        <div class="help_unit_title">A final note on uncertainty:</div>
-        <p class="mt-3 is-size-5"><span class="geopick_name">GeoPick</span> gives coordinates with seven decimal places following Georeferencing Best Practices (<a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision" target="_blank">Chapman and Wieczorek, 2022</a>) and Georeferencing Quick Reference Guide (<a href="https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format" target="_blank">Zermoglio et al., 2022</a>). This allows preservation of the correct coordinates in all formats regardless of how many transformations are
-          done (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>; <a href="https://doi.org/10.1080/13658810412331280211" target="_blank">Wiezorek et al., 2010</a>). Accordingly,
-          <span class="geopick_name">GeoPick</span> sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of the
-          number of decimals given with the coordinates (<a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">Darwin Core
-            Maintenance Group, 2021</a>). Please also note that as in this
-          version of <span class="geopick_name">GeoPick</span>, 1.0, coordinate uncertainty refers only to the radius of the bounding circle of the
-          geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of the
-          underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator (<a
-            href="http://georeferencing.org/georefcalculator/gc.html" target="_blank">Wieczorek C and Wieczorek J.R., 2021)</a> and its manual (<a
-            href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>).
-        </p>
-      </div>
-    </div>
-  <!-- KEYBOARD SHORTCUTS -->
-  <div class="help_container">
-    <div class="help_unit">
-      <div class="help_unit_title">Keyboard shortcuts</div>
-      <div class="content">
-      <p class="mt-3 is-size-5">You can use the following keyboard shortcuts to interact with <span class="geopick_name">GeoPick</span>:
-        <ul>
-          <li><b>CTRL-T, CTRL-t</b>: Start drawing a point.</li>
-          <li><b>CTRL-L, CTRL-l</b>: Start drawing a line.</li>
-          <li><b>CTRL-P, CTRL-p</b>: Start drawing a polygon.</li>
-          <li><b>CTRL-D, CTRL-d</b>: Clear all geometries.</li>
-          <li><b>CTRL-K</b>: Open point/uncertainty dialog box.</li>
-          <li><b>CTRL-W</b>: Open WKT import dialog box.</li>
-          <li><b>CTRL-K</b>: Set focus on <i>Georeferenced by</i> field.</li>
-          <li><b>CTRL-M</b>: Set focus on <i>Georeference remarks</i> field.</li>
-          <li><b>CTRL-H</b>: Copy data with headers.</li>
-          <li><b>CTRL-C</b>: Copy data without headers.</li>
-          <li><b>CTRL-S, CTRL-s</b>: Set focus on Nominatim search field.</li>
-          <li><b>CTRL-I, CTRL-i</b>: Import geometry from Nominatim.</li>
-          <li><b>ESC</b>: Close dialog box.</li>
-        </ul>
-      </p>
-    </div>
-    </div>
-  </div>
-
-  <!-- EXPORTED DATA -->
-  <div class="help_container">
-    <div class="help_unit">
-      <div class="help_unit_title">Exported data</div>
-      <div class="help_unit_explanation">
-        The following are the <a href="https://dwc.tdwg.org">Darwin Core standard</a> fields exported in tab-delimited format by <span
-          class="geopick_name">GeoPick</span>.
-      </div>
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:decimalLatitude" target="_blank">decimalLatitude</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The geographic latitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a
-          Location. Positive values are north of the Equator, negative values are south of it. Legal values lie between -90 and 90, inclusive.
-        </div>
-      </div>
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:decimalLongitude" target="_blank">decimalLongitude</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The geographic longitude (in decimal degrees, using the spatial reference system given in geodeticDatum) of the geographic center of a
-          Location. Positive values are east of the Greenwich Meridian, negative values are west of it. Legal values lie between -180 and 180,
-          inclusive.
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class=" help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:geodeticDatum" target="_blank">geodeticDatum</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geographic coordinates given in decimalLatitude and
-          decimalLongitude as based.
-          <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use the EPSG code of the SRS, if known. Otherwise use a
-            controlled vocabulary for the name or code of the geodetic datum, if known. Otherwise use a controlled vocabulary for the name or code
-            of the ellipsoid, if known. If none of these is known, use the value unknown.</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:coordinateUncertaintyInMeters" target="_blank">coordinateUncertaintyInMeters</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The horizontal distance (in meters) from the given decimalLatitude and decimalLongitude describing the smallest circle containing the
-          whole of the Location. Leave the value empty if the uncertainty is unknown, cannot be estimated, or is not applicable (because there are
-          no coordinates). Zero is not a valid value for this term.
-          <p style="font-style: italic; padding-top: 1em;">30 (reasonable lower limit on or after 2020-05-01 of a GPS reading under good conditions
-            if the actual precision was not recorded at the time). 100 (reasonable lower limit before 2020-05-01 of a GPS reading under good
-            conditions if the actual precision was not recorded at the time). 71 (uncertainty for a UTM coordinate having 100 meter precision and a
-            known spatial reference system).</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">coordinatePrecision</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          A decimal representation of the precision of the coordinates given in the decimalLatitude and decimalLongitude.
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:geodeticDatum" target="_blank">geodeticDatum</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geographic coordinates given in decimalLatitude and
-          decimalLongitude as based.
-          <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use the EPSG code of the SRS, if known. Otherwise use a
-            controlled vocabulary for the name or code of the geodetic datum, if known. Otherwise use a controlled vocabulary for the name or code of
-            the ellipsoid, if known. If none of these is known, use the value unknown.</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:pointRadiusSpatialFit" target="_blank">pointRadiusSpatialFit</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The ratio of the area of the point-radius (decimalLatitude, decimalLongitude, coordinateUncertaintyInMeters) to the area of the true
-          (original, or most specific) spatial representation of the Location. Legal values are 0, greater than or equal to 1, or undefined. A value
-          of 1 is an exact match or 100% overlap. A value of 0 should be used if the given point-radius does not completely contain the original
-          representation. The pointRadiusSpatialFit is undefined (and should be left empty) if the original representation is a point without
-          uncertainty and the given georeference is not that same point (without uncertainty). If both the original and the given georeference are the
-          same point, the pointRadiusSpatialFit is 1.
-          <p style="font-style: italic; padding-top: 1em;">Detailed explanations with graphical examples can be found in the Georeferencing Best
-            Practices, Chapman and Wieczorek, 2020 (<a href="https://doi.org/10.15468/doc-gg7h-s853">https://doi.org/10.15468/doc-gg7h-s853</a>).</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:footprintWKT" target="_blank">footprintWKT</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          A Well-Known Text (WKT) representation of the shape (footprint, geometry) that defines the Location. A Location may have both a point-radius
-          representation (see decimalLatitude) and a footprint representation, and they may differ from each other.
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:footprintSRS" target="_blank">footprintSRS</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The ellipsoid, geodetic datum, or spatial reference system (SRS) upon which the geometry given in footprintWKT is based.
-          <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use the EPSG code of the SRS, if known. Otherwise use a
-            controlled vocabulary for the name or code of the geodetic datum, if known. Otherwise use a controlled vocabulary for the name or code of
-            the ellipsoid, if known. If none of these is known, use the value unknown. It is also permitted to provide the SRS in Well-Known-Text,
-            especially if no EPSG code provides the necessary values for the attributes of the SRS. Do not use this term to describe the SRS of the
-            decimalLatitude and decimalLongitude, nor of any verbatim coordinates - use the geodeticDatum and verbatimSRS instead.</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:footprintSpatailFit" target="_blank">footprintSpatailFit</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The ratio of the area of the footprint (footprintWKT) to the area of the true (original, or most specific) spatial representation of the
-          Location. Legal values are 0, greater than or equal to 1, or undefined. A value of 1 is an exact match or 100% overlap. A value of 0 should
-          be used if the given footprint does not completely contain the original representation. The footprintSpatialFit is undefined (and should be
-          left empty) if the original representation is a point without uncertainty and the given georeference is not that same point (without
-          uncertainty). If both the original and the given georeference are the same point, the footprintSpatialFit is 1.
-          <p style="font-style: italic; padding-top: 1em;">Detailed explanations with graphical examples can be found in the Georeferencing Best
-            Practices, Chapman and Wieczorek, 2020 (<a href="https://doi.org/10.15468/doc-gg7h-s853">https://doi.org/10.15468/doc-gg7h-s853</a>).</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:georeferencedBy" target="_blank">georeferencedBy</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          A list (concatenated and separated) of names of people, groups, or organizations who determined the georeference (spatial representation)
-          for the Location.
-          <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to separate the values in a list with space vertical bar space
-            ( | ).</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:georeferencedDate" target="_blank">georeferencedDate</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          The date on which the Location was georeferenced.
-          <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to use a date that conforms to ISO 8601-1:2019.</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:georeferenceProtocol" target="_blank">georeferenceProtocol</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          A description or reference to the methods used to determine the spatial footprint, coordinates, and uncertainties.
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:georeferenceSources" target="_blank">georeferenceSources</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          A list (concatenated and separated) of maps, gazetteers, or other resources used to georeference the Location, described specifically enough
-          to allow anyone in the future to use the same resources.
-          <p style="font-style: italic; padding-top: 1em;">Recommended best practice is to separate the values in a list with space vertical bar space
-            ( | ).</p>
-        </div>
-      </div>
-
-      <div class="help_unit_export">
-        <div class="help_unit_export_item">
-          <a href="https://dwc.tdwg.org/terms/#dwc:georeferenceRemarks" target="_blank">georeferenceRemarks</a>
-        </div>
-        <div class="help_unit_export_item_text">
-          Notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to the those formalized
-          in the method referred to in georeferenceProtocol.
-        </div>
-      </div>
-
-    </div>
-  </div>
-  </div>
 </body>
 
 </html>
