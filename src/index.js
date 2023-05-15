@@ -1,7 +1,6 @@
 const L = require("leaflet");
 const draw = require("leaflet-draw");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min");
-
 require("leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css");
 require("leaflet-defaulticon-compatibility");
 require("leaflet/dist/leaflet.css");
@@ -410,3 +409,33 @@ $("#infoDivOK").click(function () {
   $("#infoDivBox").bringToFront();
 });
 
+// Keyboard shortcuts
+// CTRL-H: Copy data with headers
+// CTRL-C: Copy data without headers
+// CTRL-W: Import WKT data
+// CTRL-K: Enter data via keyboard
+// ESC: Closes div dialogs
+$(document).keydown(function (event) {      
+  if (event.ctrlKey && event.which === 72) {
+    ui.do_copy_data(true);
+  } else if (event.ctrlKey && event.which === 67) {
+    ui.do_copy_data(false);
+  } else if (event.ctrlKey && event.which === 87) {
+    $("#importWKT").click();
+  } else if (event.ctrlKey && event.which === 75) {
+    $("#keyboardEdit").click();
+  } else if (event.key === "Escape") {        
+    if ($("#controlTextWKT").is(":visible")) {        
+      ui.resetDrawControls();
+      $("#controlTextWKT").hide();
+      $("#keyboardEdit").show();
+      $("#importWKT").show();
+    } else if ($("#controlKeyboard").is(":visible")) {
+      if (editableLayers.getLayers().length == 0) {
+        ui.resetDrawControls();
+        $("#importWKT").show();
+      }
+      $("#controlKeyboard").hide();
+    }
+  }
+});

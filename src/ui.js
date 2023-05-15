@@ -211,37 +211,7 @@ module.exports = {
     hideCircleDrawControl,
     resetDrawControls,
     show_api_centroid_data,
-    show_centroid_data
+    show_centroid_data,
+    do_copy_data
 }
 
-// Keyboard shortcuts
-// CTRL-H: Copy data with headers
-// CTRL-C: Copy data without headers
-// CTRL-W: Import WKT data
-// CTRL-K: Enter data via keyboard
-// ESC: Closes div dialogs
-$(document).keydown(function (event) {  
-    if (event.ctrlKey && event.which === 72) {
-      do_copy_data(true);
-    } else if (event.ctrlKey && event.which === 67) {
-      do_copy_data(false);
-    } else if (event.ctrlKey && event.which === 87) {
-      $("#importWKT").click();
-    } else if (event.ctrlKey && event.which === 75) {
-      $("#keyboardEdit").click();
-    } else if (event.key === "Escape") {
-      if ($("#controlTextWKT").is(":visible")) {
-        ui.resetDrawControls();
-        $("#controlTextWKT").hide();
-        $("#keyboardEdit").show();
-        $("#importWKT").show();
-      } else if ($("#controlKeyboard").is(":visible")) {
-        if (editableLayers.getLayers().length == 0) {
-          ui.resetDrawControls();
-          $("#importWKT").show();
-        }
-        $("#controlKeyboard").hide();
-      }
-    }
-  });
-  
