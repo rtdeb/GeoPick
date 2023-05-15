@@ -223,6 +223,10 @@ map.on(L.Draw.Event.EDITED, function (e) {
 });
 
 map.on(L.Draw.Event.DELETED, function (e) {
+  clearAllGeometries();
+});
+
+const clearAllGeometries = function(){
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
@@ -237,8 +241,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
     $("#importWKT").show();
     $("#keyboardEdit").show();
   }
-});
-
+}
 map.on(L.Draw.Event.DRAWSTART, function (e) {
   var type = e.layerType;
   // alert(type);
@@ -484,6 +487,7 @@ $("#infoDivOK").click(function () {
 // CTRL-t or CTRL-T: Start drawing a circle
 // CTRL-s or CTRL-S: Search Nominatim
 // CTRL-i or CTRL-I: Import from Nominatim
+// CTRL-d or CTRL-D: Delete all
 // ESC: Closes div dialogs
 $(document).keydown(function (event) {
   if (event.ctrlKey && event.which === 72) {
@@ -526,5 +530,8 @@ $(document).keydown(function (event) {
     $("#place_search").focus();
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
     importNominatim();
+  } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
+    clearAllGeometries();
   }
+
 });
