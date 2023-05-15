@@ -246,6 +246,10 @@ map.on(L.Draw.Event.DELETED, function (e) {
     $("#keyboardEdit").show();
   }
 });
+map.on(L.Draw.Event.DRAWSTOP, function(e){
+  $("#importWKT").show();
+  $("#keyboardEdit").show();
+});
 
 ui.init_autocomplete(map, "place_search", reference_layer);
 
@@ -414,6 +418,8 @@ $("#infoDivOK").click(function () {
 // CTRL-C: Copy data without headers
 // CTRL-W: Import WKT data
 // CTRL-K: Enter data via keyboard
+// CTRL-G: Put focus on Georeferenced by input field
+// CTRL-M: Put focus on Georeferenced remarks input field
 // ESC: Closes div dialogs
 $(document).keydown(function (event) {      
   if (event.ctrlKey && event.which === 72) {
@@ -424,6 +430,10 @@ $(document).keydown(function (event) {
     $("#importWKT").click();
   } else if (event.ctrlKey && event.which === 75) {
     $("#keyboardEdit").click();
+  } else if (event.ctrlKey && event.which === 71) {
+    $("#georeferencer_name").focus();
+  } else if (event.ctrlKey && event.which === 77) {
+    $("#georeference_remarks").focus();
   } else if (event.key === "Escape") {        
     if ($("#controlTextWKT").is(":visible")) {        
       ui.resetDrawControls();
