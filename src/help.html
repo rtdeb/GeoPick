@@ -59,9 +59,9 @@
             target="_blank">Nominatim</a>, the search
           engine for <a href="https://www.openstreetmap.org/#map=6/40.007/-2.488" target="_blank">OpenStreetMap</a> data, and retrieve its
           corresponding geometry.
-          Once displayed you may capture the geometry and use it as your georeference. </p>
+          Once displayed you may import the geometry and use it as your georeference. </p>
 
-        <p class="help_paragraph">Once you have the geometry on the map, either created by you or retrieved and captured from <a
+        <p class="help_paragraph">Once you have the geometry on the map, either created by you or retrieved and imported from <a
             href="https://nominatim.openstreetmap.org/ui/about.html" target="_blank">Nominatim</a>, <span class="geopick_name">GeoPick</span> will
           automatically
           calculate its <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center" target="_blank">corrected center</a>,
@@ -112,7 +112,7 @@
     <!-- LOCATION SEARCH BAR -->
     <div class="help_container">
       <div id="#help_nominatim" class="help_unit">
-        <div class="help_unit_title">Location search and capture</div>
+        <div class="help_unit_title">Location search and import</div>
         <div class="help_unit_explanation">
           You can use the horizontal bar centered on top of the map view to search for a given location.
         </div>
@@ -121,7 +121,7 @@
             <img src=<%=require("./nominatim-search-bar.png")%>>
           </div>
           <div class="help_unit_control_text" style="flex-basis: 40%;">Just type the name of a place and when the
-            list of places found appears, select one. Its representing geometry, if available, will be shown. You can then click on the <i>Capture
+            list of places found appears, select one. Its representing geometry, if available, will be shown. You can then click on the <i>Import
               location button</i> to use it as your georeference.
           </div>
         </div>
@@ -260,7 +260,31 @@
         </p>
       </div>
     </div>
-  
+  <!-- KEYBOARD SHORTCUTS -->
+  <div class="help_container">
+    <div class="help_unit">
+      <div class="help_unit_title">Keyboard shortcuts</div>
+      <div class="content">
+      <p class="mt-3 is-size-5">You can use the following keyboard shortcuts to interact with <span class="geopick_name">GeoPick</span>:
+        <ul>
+          <li><b>CTRL-H</b>: Copy data with headers.</li>
+          <li><b>CTRL-C</b>: Copy data without headers.</li>
+          <li><b>CTRL-W</b>: Open WKT import dialog box.</li>
+          <li><b>CTRL-K</b>: Open point/uncertainty dialog box.</li>
+          <li><b>CTRL-K</b>: Open point/uncertainty dialog box.</li>
+          <li><b>CTRL-K</b>: Set focus on <i>Georeferenced by</i> field.</li>
+          <li><b>CTRL-M</b>: Set focus on <i>Georeference remarks</i> field.</li>
+          <li><b>CTRL-P, CTRL-p</b>: Start drawing a polygon.</li>
+          <li><b>CTRL-L, CTRL-l</b>: Start drawing a line.</li>
+          <li><b>CTRL-T, CTRL-t</b>: Start drawing a point.</li>
+          <li><b>CTRL-S, CTRL-s</b>: Set focus on Nominatim search field.</li>
+          <li><b>CTRL-I, CTRL-i</b>: Import geometry from Nominatim.</li>
+          <li><b>ESC</b>: Close dialog box.</li>
+        </ul>
+      </p>
+    </div>
+    </div>
+  </div>
 
   <!-- EXPORTED DATA -->
   <div class="help_container">

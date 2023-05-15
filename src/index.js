@@ -166,16 +166,6 @@ var coordControl = L.control.coordinates({
 });
 map.addControl(coordControl);
 
-map.on(L.Draw.Event.DRAWSTART, function (e) {
-  // var type = e.layerType;
-  // if(type == 'circle'){
-  //   $("#importWKT").hide();
-  // } else {
-  $("#importWKT").hide();
-  $("#keyboardEdit").hide();
-  // }
-});
-
 map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
   // console.log(e);
@@ -183,19 +173,19 @@ map.on(L.Draw.Event.CREATED, function (e) {
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
 
-  if (type == "polygon") {
-    ui.hideLineDrawControl();
-    ui.hideCircleDrawControl();
-  } else if (type == "circle") {
-    ui.hideLineDrawControl();
-    ui.hidePolyDrawControl();
-    ui.hideCircleDrawControl();
-    $("#keyboardEdit").show();
-  } else {
-    ui.hidePolyDrawControl();
-    ui.hideCircleDrawControl();
-  }
-  $("#importWKT").hide();
+  // if (type == "polygon") {
+  //   ui.hideLineDrawControl();
+  //   ui.hideCircleDrawControl();
+  // } else if (type == "circle") {
+  //   ui.hideLineDrawControl();
+  //   ui.hidePolyDrawControl();
+  //   ui.hideCircleDrawControl();
+  //   $("#keyboardEdit").show();
+  // } else {
+  //   ui.hidePolyDrawControl();
+  //   ui.hideCircleDrawControl();
+  // }
+  // $("#importWKT").hide();
   var layer = e.layer;
   editableLayers.addLayer(layer);
   editableLayers.bringToFront();
@@ -237,6 +227,8 @@ map.on(L.Draw.Event.DELETED, function (e) {
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
   reference_layer.clearLayers();
+  editableLayers.clearLayers();
+
   if (editableLayers.toGeoJSON().features.length > 0) {
     util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
     editableLayers.bringToFront();
@@ -246,16 +238,71 @@ map.on(L.Draw.Event.DELETED, function (e) {
     $("#keyboardEdit").show();
   }
 });
-map.on(L.Draw.Event.DRAWSTOP, function(e){
-  $("#importWKT").show();
-  $("#keyboardEdit").show();
+
+map.on(L.Draw.Event.DRAWSTART, function (e) {
+  var type = e.layerType;
+  // alert(type);
+  if (editableLayers.toGeoJSON().features.length != 0) {
+    // alert(editableLayers.toGeoJSON().features[0].geometry.type);
+    if (
+      type == "polygon" &&
+      editableLayers.toGeoJSON().features[0].geometry.type == "Polygon"
+    ) {
+      ui.hideLineDrawControl();
+      ui.hideCircleDrawControl();
+    } else if (
+      type == "polyline" &&
+      editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
+    ) {
+      ui.hidePolyDrawControl();
+      ui.hideCircleDrawControl();
+    } else if (
+      type == "circle" &&
+      editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
+    ) {
+      ui.hidePolyDrawControl();
+      ui.hideLineDrawControl();
+      ui.hideCircleDrawControl();
+    } else {
+      ui.clear_centroid_data();
+      centroid_layer.clearLayers();
+      buffer_layer.clearLayers();
+      reference_layer.clearLayers();
+      editableLayers.clearLayers();
+    }
+  } else {
+    if(type == "polygon"){
+      ui.hideLineDrawControl();
+      ui.hideCircleDrawControl();
+    } else if(type == "polyline"){
+      ui.hidePolyDrawControl();
+      ui.hideCircleDrawControl();
+    } else if(type == "circle"){
+      ui.hidePolyDrawControl();
+      ui.hideLineDrawControl();
+      ui.hideCircleDrawControl();
+    }
+  }
+  $("#keyboardEdit").hide();
+  $("#importWKT").hide();
+});
+
+map.on(L.Draw.Event.DRAWSTOP, function (e) {
+  var type = e.layerType;
+  if(type == "circle"){
+    $("#keyboardEdit").show();
+  }
 });
 
 ui.init_autocomplete(map, "place_search", reference_layer);
 
-$("#capture").click(function () {
+$("#import").click(function () {
+  importNominatim();
+});
+
+const importNominatim = function(){
   if (reference_layer.toGeoJSON().features.length == 0) {
-    ui.toast_error("Nothing to capture! Please select a location.");
+    ui.toast_error("Nothing to import! Please select a location.");
   } else {
     type = reference_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
@@ -284,8 +331,7 @@ $("#capture").click(function () {
     }
     $("#importWKT").hide();
   }
-});
-
+}
 addPointCircleToMap = function (lat, long, radius) {
   // console.log(map);
   ui.clear_centroid_data();
@@ -326,6 +372,7 @@ $("#importWKT").click(function () {
   $("#controlTextWKT").show();
   $("#infoDivBox").hide();
   $("#importWKT").hide();
+  $("#textareaWKT").focus();
 });
 
 $("#cancelWKT").click(function () {
@@ -358,6 +405,11 @@ $("#okWKT").click(function () {
 
       $("#keyboardEdit").show();
     } else {
+      if(geojson.type == "Polygon"){
+        $(".leaflet-draw-draw-polygon").show();
+      } else if (geojson.type == "LineString"){
+        $(".leaflet-draw-draw-polyline").show();
+      }
       util.promote_reference_to_editable(
         editableLayers,
         reference_layer,
@@ -380,6 +432,7 @@ $("#keyboardEdit").click(function () {
   $("#keyboardUncertainty").val($("#radius_m").val());
   $("#controlKeyboard").show();
   $("#importWKT").hide();
+  $("#keyboardLatitude").focus();
 });
 
 $("#keyboardOK").click(function () {
@@ -420,8 +473,13 @@ $("#infoDivOK").click(function () {
 // CTRL-K: Enter data via keyboard
 // CTRL-G: Put focus on Georeferenced by input field
 // CTRL-M: Put focus on Georeferenced remarks input field
+// CTRL-p or CTRL-P: Start drawing a polygon
+// CTRL-l or CTRL-L: Start drawing a polyline
+// CTRL-t or CTRL-T: Start drawing a circle
+// CTRL-s or CTRL-S: Search Nominatim
+// CTRL-i or CTRL-I: Import from Nominatim
 // ESC: Closes div dialogs
-$(document).keydown(function (event) {      
+$(document).keydown(function (event) {
   if (event.ctrlKey && event.which === 72) {
     ui.do_copy_data(true);
   } else if (event.ctrlKey && event.which === 67) {
@@ -430,22 +488,37 @@ $(document).keydown(function (event) {
     $("#importWKT").click();
   } else if (event.ctrlKey && event.which === 75) {
     $("#keyboardEdit").click();
+    console.log(event);
   } else if (event.ctrlKey && event.which === 71) {
     $("#georeferencer_name").focus();
   } else if (event.ctrlKey && event.which === 77) {
     $("#georeference_remarks").focus();
-  } else if (event.key === "Escape") {        
-    if ($("#controlTextWKT").is(":visible")) {        
+  } else if (event.key === "Escape") {
+    if ($("#controlTextWKT").is(":visible")) {
       ui.resetDrawControls();
       $("#controlTextWKT").hide();
       $("#keyboardEdit").show();
       $("#importWKT").show();
     } else if ($("#controlKeyboard").is(":visible")) {
-      if (editableLayers.getLayers().length == 0) {
-        ui.resetDrawControls();
-        $("#importWKT").show();
-      }
+      ui.resetDrawControls();
+      $("#importWKT").show();
       $("#controlKeyboard").hide();
     }
+  } else if (event.ctrlKey && (event.key === "l" || event.key === "L")) {
+    new L.Draw.Polyline(map).enable();
+    ui.hideCircleDrawControl();
+    ui.hidePolyDrawControl();
+  } else if (event.ctrlKey && (event.key === "p" || event.key === "P")) {
+    new L.Draw.Polygon(map).enable();
+    ui.hideLineDrawControl();
+    ui.hideCircleDrawControl();
+  } else if (event.ctrlKey && (event.key === "t" || event.key === "T")) {
+    new L.Draw.Circle(map).enable();
+    ui.hideLineDrawControl();
+    ui.hidePolyDrawControl();
+  } else if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
+    $("#place_search").focus();
+  } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
+    importNominatim();
   }
 });

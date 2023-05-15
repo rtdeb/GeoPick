@@ -42,7 +42,7 @@ const parse_api_data = function(data){
     const center = JSON.parse(all_data.centre[0]);
     var spatial_fit;
     if( all_data.spatial_fit[0] == 'Inf' ){
-        spatial_fit = '';
+        spatial_fit = 'N/A';
     }else{
         spatial_fit = JSON.parse(all_data.spatial_fit[0]);        
     }     
