@@ -167,13 +167,13 @@ var coordControl = L.control.coordinates({
 });
 map.addControl(coordControl);
 
-map.on(L.Draw.Event.DRAWSTART, function(e) {
+map.on(L.Draw.Event.DRAWSTART, function (e) {
   // var type = e.layerType;
   // if(type == 'circle'){
   //   $("#importWKT").hide();
   // } else {
-    $("#importWKT").hide();
-    $("#keyboardEdit").hide();  
+  $("#importWKT").hide();
+  $("#keyboardEdit").hide();
   // }
 });
 
@@ -190,8 +190,8 @@ map.on(L.Draw.Event.CREATED, function (e) {
   } else if (type == "circle") {
     ui.hideLineDrawControl();
     ui.hidePolyDrawControl();
-    ui.hideCircleDrawControl();    
-    $("#keyboardEdit").show();  
+    ui.hideCircleDrawControl();
+    $("#keyboardEdit").show();
   } else {
     ui.hidePolyDrawControl();
     ui.hideCircleDrawControl();
@@ -262,7 +262,7 @@ $("#capture").click(function () {
       coordinates =
         reference_layer.toGeoJSON().features[0].geometry.coordinates;
       addPointCircleToMap(coordinates[1], coordinates[0], null);
-    //   $("#uncertaintyBox").show();
+      //   $("#uncertaintyBox").show();
     } else {
       if (type == "LineString" || type == "MultiLineString") {
         ui.hidePolyDrawControl();
@@ -279,7 +279,7 @@ $("#capture").click(function () {
         map
       );
     }
-    $("#importWKT").hide();    
+    $("#importWKT").hide();
   }
 });
 
@@ -330,7 +330,6 @@ $("#cancelWKT").click(function () {
   $("#controlTextWKT").hide();
   $("#keyboardEdit").show();
   $("#importWKT").show();
-
 });
 
 $("#okWKT").click(function () {
@@ -339,8 +338,8 @@ $("#okWKT").click(function () {
   if (geojson === null) {
     /* using === because checking for null 
                              in javascript is  a special case */
-    $('#infoDivBox').show();
-    $('#errorWKT').val("ERROR: Malformed WKT. Please check and try again.");
+    $("#infoDivBox").show();
+    $("#errorWKT").val("ERROR: Malformed WKT. Please check and try again.");
     // alert("ERROR: Malformed WKT. Please check and try again.");
   } else if (geojson.type == "MultiPoint") {
     alert(
@@ -353,8 +352,8 @@ $("#okWKT").click(function () {
     if (geojson.type == "Point") {
       //No need to go to the API, just show the point as editable so it can be cleared.
       addPointCircleToMap(geojson.coordinates[1], geojson.coordinates[0], null);
-      
-      $("#keyboardEdit").show();  
+
+      $("#keyboardEdit").show();
     } else {
       util.promote_reference_to_editable(
         editableLayers,
@@ -373,16 +372,16 @@ $("#keyboardEdit").click(function () {
   ui.hideLineDrawControl();
   ui.hidePolyDrawControl();
   ui.hideCircleDrawControl();
-  $('#keyboardLatitude').val($('#centroid_y').val());
-  $('#keyboardLongitude').val($('#centroid_x').val());
-  $('#keyboardUncertainty').val($('#radius_m').val());
+  $("#keyboardLatitude").val($("#centroid_y").val());
+  $("#keyboardLongitude").val($("#centroid_x").val());
+  $("#keyboardUncertainty").val($("#radius_m").val());
   $("#controlKeyboard").show();
   $("#importWKT").hide();
 });
 
-$('#keyboardOK').click(function(){
-  lat = parseFloat($('#keyboardLatitude').val());
-  lng = parseFloat($('#keyboardLongitude').val());
+$("#keyboardOK").click(function () {
+  lat = parseFloat($("#keyboardLatitude").val());
+  lng = parseFloat($("#keyboardLongitude").val());
   unc = $("#keyboardUncertainty").val();
   if (unc == "") {
     unc = null;
@@ -397,16 +396,17 @@ $('#keyboardOK').click(function(){
 
 $("#keyboardCancel").click(function () {
   // ui.resetDrawControls();
-  if(editableLayers.getLayers().length == 0){
-    ui.resetDrawControls();    
+  if (editableLayers.getLayers().length == 0) {
+    ui.resetDrawControls();
     $("#importWKT").show();
   }
-    $("#controlKeyboard").hide();
+  $("#controlKeyboard").hide();
 
-  // $("#importWKT").show();  
+  // $("#importWKT").show();
 });
 
 $("#infoDivOK").click(function () {
-    $("#infoDivBox").hide();
-    $("#infoDivBox").bringToFront();
+  $("#infoDivBox").hide();
+  $("#infoDivBox").bringToFront();
 });
+

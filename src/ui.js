@@ -9,7 +9,7 @@ const { LineString } = require('terraformer');
 
 Toastr.options = {
     "positionClass": "toast-top-center",
-    "timeOut": "3000",
+    "timeOut": "3000"    
 }
 
 const headers = [
@@ -92,6 +92,7 @@ $("#cpdata").on("click", function(){
 $("#cpdatanh").on("click", function(){
     do_copy_data(false);
 });
+
 
 const hideLineDrawControl = function(){
     $(".leaflet-draw-draw-polyline").hide();
@@ -193,6 +194,7 @@ const toast_success = function(message){
 }
 
 const toast_warning = function(message){
+
     Toastr.warning(message);
 }
 
@@ -211,3 +213,35 @@ module.exports = {
     show_api_centroid_data,
     show_centroid_data
 }
+
+// Keyboard shortcuts
+// CTRL-H: Copy data with headers
+// CTRL-C: Copy data without headers
+// CTRL-W: Import WKT data
+// CTRL-K: Enter data via keyboard
+// ESC: Closes div dialogs
+$(document).keydown(function (event) {  
+    if (event.ctrlKey && event.which === 72) {
+      do_copy_data(true);
+    } else if (event.ctrlKey && event.which === 67) {
+      do_copy_data(false);
+    } else if (event.ctrlKey && event.which === 87) {
+      $("#importWKT").click();
+    } else if (event.ctrlKey && event.which === 75) {
+      $("#keyboardEdit").click();
+    } else if (event.key === "Escape") {
+      if ($("#controlTextWKT").is(":visible")) {
+        ui.resetDrawControls();
+        $("#controlTextWKT").hide();
+        $("#keyboardEdit").show();
+        $("#importWKT").show();
+      } else if ($("#controlKeyboard").is(":visible")) {
+        if (editableLayers.getLayers().length == 0) {
+          ui.resetDrawControls();
+          $("#importWKT").show();
+        }
+        $("#controlKeyboard").hide();
+      }
+    }
+  });
+  

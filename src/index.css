@@ -2,6 +2,7 @@ html,
 body {
   font-size: 0.9em;
   background-color: wheat;
+  /* background-color: white; */
 }
 
 .geopick_name {
@@ -30,6 +31,20 @@ div.info_box {
   z-index: 9999;
   opacity: 0.9;
 }
+
+/* #info {
+  position:absolute;
+  right: 50px;
+  top: 50px;
+  background-color: wheat;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-right: 20px;
+  z-index: 9999;
+  opacity: 0.9;
+} */
+
 .logos {
   display: flex;
   justify-content: space-between;
@@ -132,7 +147,7 @@ div.info_box {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  padding: 1px;
+  padding: 2px;
   margin-top: 10px;
   background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -244,7 +259,7 @@ div.info_box {
 }
 
 #capture {
-  font-size: 1.1em;
+  font-size: 1.2em;
   background-color: #297c82;
   color: white;
   border: 1px;
@@ -274,6 +289,7 @@ div.info_box {
   font-size: 1em;
   font-weight:bolder;
   color: #833904;
+ /* color:gray; */
 }
 .dwc_url {    
   font-size: 0.9em;
@@ -290,12 +306,15 @@ div.info_box {
 .non-editable {
   border: 0px;
   border-color: #a94b08;
-  /* background-color: transparent; */
+  background-color: transparent;
+  /* background-color: white; */
   box-shadow: none;
   outline: none;
   color: black;
+  /* color: #833904; */
   /* pointer-events:none; */
   font-weight: bold;
+  font-size: 1em;
 }
 
 .editable {
@@ -308,6 +327,7 @@ div.info_box {
   width: 95%;
   resize: none;
   font-weight: bold;
+  font-size: 1em;
 }
 
 #centroid_x,
