@@ -292,6 +292,12 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   if(type == "circle"){
     $("#keyboardEdit").show();
   }
+  if(editableLayers.toGeoJSON().features.length == 0){
+    ui.resetDrawControls();
+    $("#keyboardEdit").show();
+    $("#importWKT").show();
+  
+  }
 });
 
 ui.init_autocomplete(map, "place_search", reference_layer);
