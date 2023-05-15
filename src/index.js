@@ -226,7 +226,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
   clearAllGeometries();
 });
 
-const clearAllGeometries = function(){
+const clearAllGeometries = function () {
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
@@ -241,7 +241,7 @@ const clearAllGeometries = function(){
     $("#importWKT").show();
     $("#keyboardEdit").show();
   }
-}
+};
 map.on(L.Draw.Event.DRAWSTART, function (e) {
   var type = e.layerType;
   // alert(type);
@@ -274,13 +274,13 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
       editableLayers.clearLayers();
     }
   } else {
-    if(type == "polygon"){
+    if (type == "polygon") {
       ui.hideLineDrawControl();
       ui.hideCircleDrawControl();
-    } else if(type == "polyline"){
+    } else if (type == "polyline") {
       ui.hidePolyDrawControl();
       ui.hideCircleDrawControl();
-    } else if(type == "circle"){
+    } else if (type == "circle") {
       ui.hidePolyDrawControl();
       ui.hideLineDrawControl();
       ui.hideCircleDrawControl();
@@ -292,14 +292,13 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
 
 map.on(L.Draw.Event.DRAWSTOP, function (e) {
   var type = e.layerType;
-  if(type == "circle"){
+  if (type == "circle") {
     $("#keyboardEdit").show();
   }
-  if(editableLayers.toGeoJSON().features.length == 0){
+  if (editableLayers.toGeoJSON().features.length == 0) {
     ui.resetDrawControls();
     $("#keyboardEdit").show();
     $("#importWKT").show();
-  
   }
 });
 
@@ -309,7 +308,7 @@ $("#import").click(function () {
   importNominatim();
 });
 
-const importNominatim = function(){
+const importNominatim = function () {
   if (reference_layer.toGeoJSON().features.length == 0) {
     ui.toast_error("Nothing to import! Please select a location.");
   } else {
@@ -340,7 +339,7 @@ const importNominatim = function(){
     }
     $("#importWKT").hide();
   }
-}
+};
 addPointCircleToMap = function (lat, long, radius) {
   // console.log(map);
   ui.clear_centroid_data();
@@ -414,9 +413,9 @@ $("#okWKT").click(function () {
 
       $("#keyboardEdit").show();
     } else {
-      if(geojson.type == "Polygon"){
+      if (geojson.type == "Polygon") {
         $(".leaflet-draw-draw-polygon").show();
-      } else if (geojson.type == "LineString"){
+      } else if (geojson.type == "LineString") {
         $(".leaflet-draw-draw-polyline").show();
       }
       util.promote_reference_to_editable(
@@ -531,10 +530,10 @@ $(document).keydown(function (event) {
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
-    if (confirm('Are you sure you want to clear all geometries?')) {
-      clearAllGeometries();
-  } 
+    if(editableLayers.toGeoJSON().features.length > 0){
+      if (confirm("Are you sure you want to clear all geometries?")) {
+        clearAllGeometries();
+      }  
+    }
   }
-
 });
-
