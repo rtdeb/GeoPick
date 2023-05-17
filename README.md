@@ -1,7 +1,6 @@
 # GeoPick
 ## Implementing best practices for georeferencing.
 ![](src/geopick-screenshot.png)
-
 GeoPick is an open source online companion tool to the Georeferencing Best Practices [(Chapman A.D. and Wieczorek J.R.)](https://docs.gbif.org/georeferencing-best-practices/1.0/en) that follows its recommendations and practices. Its idea started within work done in the [Museu de Ciències Naturals de Barcelona (MCNB)](https://museuciencies.cat/) and the [MOBILISE Cost Action](https://www.mobilise-action.eu/). It is meant to provide georeferencers with a simple, easy-to-use yet powerful tool that helps them to follow best georeferencing practices and data standards (i.e., [Darwin Core](https://dwc.tdwg.org/)). The guiding principle behind its design is to remain as simple and user-friendly as possible.
 
 ### FEATURES
@@ -37,7 +36,7 @@ GeoPick gives coordinates with seven decimal places following Georeferencing Bes
 <hr>
 
 ##### How to cite:
-Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.2023). GeoPick: an online companion tool for easy georeferencing following best practices[web application], URL: https://nhc.creaf.cat/geopick, GitHub: https://github.com/aescobarr/GeoPick
+Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.2023). GeoPick: Implementing best practices for georeferencing [web application], URL: https://nhc.creaf.cat/geopick, GitHub: https://github.com/aescobarr/GeoPick
 
 <hr>
 
