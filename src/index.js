@@ -9,10 +9,8 @@ require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css");
 require("./index.css");
 require("./mystyle.scss");
 const { parseFromWK } = require("wkt-parser-helper");
-
 const ui = require("./ui");
 const util = require("./util");
-
 const $ = require("jquery");
 
 var osmUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -174,7 +172,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
-  var layer = e.layer;
+  var layer = e.layer;  
   editableLayers.addLayer(layer);
   editableLayers.bringToFront();
   if (type != "circle") {

@@ -34,9 +34,11 @@
     "leaflet": "^1.9.2",
     "leaflet-defaulticon-compatibility": "^0.1.1",
     "leaflet-draw": "^1.0.4",
+    "proj4": "^2.9.0",
     "terraformer": "^1.0.12",
     "terraformer-wkt-parser": "^1.2.1",
     "toastr": "^2.1.4",
+    "transform-coordinates": "^1.0.0",
     "wkt-parser-helper": "^4.1.0"
   }
 }
