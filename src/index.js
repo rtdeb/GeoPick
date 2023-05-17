@@ -64,6 +64,8 @@ var map = L.map("map", {
   zoomControl: false,
   dragging: !L.Browser.mobile, //, tap: L.Browser.mobile
 });
+var editableLayers = new L.FeatureGroup();
+map.addLayer(editableLayers);
 
 var centroid_layer = new L.geoJSON();
 map.addLayer(centroid_layer);
@@ -84,9 +86,6 @@ var reference_layer = new L.geoJSON(null, {
 });
 map.addLayer(reference_layer);
 
-var editableLayers = new L.FeatureGroup();
-//var editableLayers = new L.geoJSON();
-map.addLayer(editableLayers);
 
 L.control.scale({ position: "bottomleft" }).addTo(map);
 
