@@ -114,7 +114,7 @@
         </div>
         <div class="help_unit_controls">
           <div class="help_unit_control_icon" style="flex-basis: 60%;"">
-            <img src=<%=require("./nominatim-search-bar.png")%>>
+            <img src=<%=require("./nominatim-search-bar.png")%> >
           </div>
           <div class="help_unit_control_text" style="flex-basis: 40%;">Just type the name of a place and when the
             list of places found appears, select one. Its representing geometry, if available, will be shown. You can then click on the <i>Import
@@ -147,7 +147,6 @@
               node by node. To finish the line, click on the <i>Finish</i> option offered by the tool or click again on the last node. To delete the
               last
               entered node click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.</div>
-            <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
           </div>
           <!-- POLYGON TOOL -->
           <div class="help_unit_controls" style="display: flex;">
@@ -156,8 +155,19 @@
               polygon you need to close the polygon by clicking again on the starting node or by clicking on the <i>Finish</i> option offered by the
               tool. To delete the last entered node, click on the <i>Delete last point</i> option and, to cancel, click on the <i>Cancel</i> option.
             </div>
-            <!-- <div class="help_unit_control_explanation">With this tool ...</div> -->
           </div>
+          <!-- KEYBOARD TOOL -->
+          <div class="help_unit_controls" style="display: flex;">
+            <div class="help_unit_control_icon"><img src=<%=require("./control-keyboard.png")%> width = "36px"></div>
+            <div class="help_unit_control_text">Type the latitude, longitude and coordinate uncertainty to create a point with your exact values. You can also use this dialog to adjust the uncertainty of a point you have digitized with your mouse using the interactive tool.
+              <div style="text-align: center; margin-top: 15px;">
+                <img src=<%=require("./keyboard-point.png")%> width="300px">
+              
+              </div>  
+  
+            </div>
+          </div>
+
         </div>
       </div>
 
