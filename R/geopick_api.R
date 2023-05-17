@@ -7,7 +7,6 @@ library(terra)
 library(stringr)
 library(mapview)
 
-
 df.env <- read.table("../.env", sep = "=") %>% setNames(., c("var","value"))
 
 allow_origin <- df.env[df.env$var == "ALLOW_ORIGIN", "value"]
@@ -18,7 +17,7 @@ if(length(df.env[df.env$var == "MAX_PTS_PER_POLYGON", "value"]) == 0){
   max_points_polygon <- as.integer(df.env[df.env$var == "MAX_PTS_PER_POLYGON", "value"])
 }
 if(length(df.env[df.env$var == "TOLERANCE", "value"]) == 0){
-  tolerance <- 500
+  tolerance <- 500 # default value
 } else {
   tolerance <- as.double(df.env[df.env$var == "TOLERANCE", "value"])
 }
@@ -43,10 +42,6 @@ function() {
   "GeoPick API 1.0.2023-Beta"
 }
 
-# NOTE: MULTILINESTRINGS do not work. 
-# There seems to be a bug in geojsonsf_2.0.3 and if type is 'MULTILINESTRING' it gives 
-# error <Rcpp::exception in rcpp_geojson_to_sf(geojson, expand_geometries): unknown sfg type>
-# Until we can resolve this issue, sites as multiple lines are not supported
 #* @post /mbc
 function(req) {
   site.geojson <- toJSON(req$body, digits = NA)
@@ -56,7 +51,7 @@ function(req) {
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
   epsg.tr <- 3857
   
-  # transform to a projection so that the mbc is done correctly, if not, lat/long
+  # need to transform to a projection so that the mbc is done correctly, if not, lat/long
   # are used as planar coordinates and the mbc is not calculated correctly
   site.tr <- st_transform(site.sf, epsg.tr)
 
@@ -86,8 +81,7 @@ function(req) {
     p.furthest <- site.p[idx.furthest,]
     mbc.tr <- st_as_sf(terra::buffer(vect(pc.tr.sf), radius))
   }
-  # mbc.tr <- st_as_sf(terra::buffer(vect(pc.tr.sf), radius.tr))
-  # print(radius.tr)
+
   # Determine four cardinal points in circle (just for testing purposes)
   x1.tr <- st_bbox(mbc.tr)$xmin
   x2.tr <- st_bbox(mbc.tr)$xmax
@@ -99,7 +93,7 @@ function(req) {
   ps <- st_as_sf(st_sfc(st_point(c(st_coordinates(pc.tr.sf)[1], y1.tr)))) %>% st_set_crs(epsg.tr)
   pn <- st_as_sf(st_sfc(st_point(c(st_coordinates(pc.tr.sf)[1], y2.tr)))) %>% st_set_crs(epsg.tr)
 
-  # Transform mbc back to wgs8
+  # Transform mbc back to wgs84
   mbc.4326 <- st_transform(mbc.tr, 4326)
   mbc.json <- sf_geojson(mbc.4326)
   
@@ -126,12 +120,6 @@ function(req) {
     site.sf <- st_cast(site.sf, "LINESTRING")
   }
   
-  # We return the geojson as we have received it as a WKT
-  # print(site.geojson)
-  # site.wkt <- as.character(geojson_wkt(site.geojson))
-  
-  # if simplify is True, it returns a geojson with a FeatureCollection instead of
-  # just an array of polygons.
   site.gj <- sf_geojson(site.sf, simplify = F)
   
   l <- list(mbc=mbc.json, site=site.gj, spatial_fit=spatial.fit,
@@ -139,9 +127,5 @@ function(req) {
             pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
   
   response <- toJSON(l, digits = NA)
-  # print(response)
   response
-  
 }
-
-# comment

@@ -30,6 +30,7 @@ var googleSat = L.tileLayer(
   {
     maxZoom: 20,
     subdomains: ["mt0", "mt1", "mt2", "mt3"],
+    attribution: "Google Maps",
   }
 );
 
@@ -38,6 +39,7 @@ var googleStreets = L.tileLayer(
   {
     maxZoom: 20,
     subdomains: ["mt0", "mt1", "mt2", "mt3"],
+    attribution: "Google Maps",
   }
 );
 
@@ -46,6 +48,7 @@ var googleHybrid = L.tileLayer(
   {
     maxZoom: 20,
     subdomains: ["mt0", "mt1", "mt2", "mt3"],
+    attribution: "Google Maps",
   }
 );
 
@@ -54,6 +57,7 @@ var googleTerrain = L.tileLayer(
   {
     maxZoom: 20,
     subdomains: ["mt0", "mt1", "mt2", "mt3"],
+    attribution: "Google Maps",
   }
 );
 
@@ -209,7 +213,6 @@ map.on(L.Draw.Event.EDITED, function (e) {
 map.on(L.Draw.Event.DELETED, function (e) {
   clearAllGeometries();
 });
-
 const clearAllGeometries = function () {
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
