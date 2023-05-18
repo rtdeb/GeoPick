@@ -474,7 +474,6 @@ $(document).keydown(function (event) {
     $("#importWKT").click();
   } else if (event.ctrlKey && event.which === 75) {
     $("#keyboardEdit").click();
-    console.log(event);
   } else if (event.ctrlKey && event.which === 71) {
     $("#georeferencer_name").focus();
   } else if (event.ctrlKey && event.which === 77) {

@@ -141,5 +141,6 @@ function distance(x0, y0, x1, y1) {
 
 module.exports = {
   Point,
+  Circle,
   makeCircle
 }

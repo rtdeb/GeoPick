@@ -1,17 +1,10 @@
 
-const proj4 = require("proj4")
+const proj4 = require("proj4");
+const turf = require('@turf/turf');
+const mbc = require("./mbc.js");
 
 
-
-  coordinates = [
-    [
-      [10, 20],
-      [30, 40],
-      [50, 60],
-      [10, 20]
-    ]
-  ]
-
-coordinates = [10, 20];
-console.log(coordinates.flat(1));
-
+p1 = [50.06149225172495, 45.58328999999999]
+p2 = [26.311591, 45.58328999999999]
+d = turf.distance(p1, p2, {units: 'kilometers'})
+console.log(d);
