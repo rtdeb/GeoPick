@@ -47,7 +47,7 @@ function(req) {
   site.geojson <- toJSON(req$body, digits = NA)
   
   site.sf <- geojson_sf(site.geojson)
-  
+
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
   epsg.tr <- 3857
   
