@@ -176,7 +176,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
   editableLayers.addLayer(layer);
   editableLayers.bringToFront();
   if (type != "circle") {
-    util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    util.load_api_data2(editableLayers, buffer_layer, centroid_layer, map);
   } else {
     ui.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
     centroid_layer.addData(editableLayers.toGeoJSON());

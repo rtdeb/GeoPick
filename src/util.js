@@ -89,7 +89,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
     });        
 }
 
-const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
+const load_api_data2 = function(editableLayers, buffer_layer, centroid_layer, map){
     var geom = editableLayers.toGeoJSON().features;
     
     // Get all points of geometries to pass to makeCircle for the mbc
@@ -97,9 +97,12 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
     var epsg_3857 = new proj4.Proj('EPSG:3857');
     
     var points = geometryToPoints(geom);
-    points = reprojectPoints(points, 4326, 3857);
     unc_circle = mbc.makeCircle(points);
-
+    findFurthestPoint()
+    
+    
+    points = reprojectPoints(points, 4326, 3857);
+    radius = unc_circle.r;
     // Is centroid inside polygon(s)?
     centroid_4326 = proj4.transform(epsg_3857, epsg_4326, [unc_circle.x, unc_circle.y]);
     is_inside = false;
@@ -129,6 +132,7 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
             type: 'Point',
             coordinates: [centroid.x, centroid.y]
         };    
+        unc_circle = new mbc.Circle(centroid.x, centroid.y, radius);                
     }
     console.log(unc_circle);
     pol_json = circleToPolygon(unc_circle.x, unc_circle.y, unc_circle.r, 36);
@@ -142,12 +146,76 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
     };    
     centroid_layer.addData( centroid_json_original );
     // centroid_layer.addData( point );
-    
 
     console.log(unc_circle);
     addPointCircleToMap(unc_circle.y, unc_circle.x, unc_circle.r);
+    // addPointCircleToMap(40.414, -3.71, 505940);
     // map.fitBounds(buffer_layer.getBounds());
 }
+
+const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
+    var geom = editableLayers.toGeoJSON().features;
+    
+    // Get all points of geometries to pass to makeCircle for the mbc
+    var epsg_4326 = new proj4.Proj('EPSG:4326');
+    var epsg_3857 = new proj4.Proj('EPSG:3857');
+    
+    var points = geometryToPoints(geom);
+    
+    
+    points = reprojectPoints(points, 4326, 3857);
+    unc_circle = mbc.makeCircle(points);
+    radius = unc_circle.r;
+    // Is centroid inside polygon(s)?
+    centroid_4326 = proj4.transform(epsg_3857, epsg_4326, [unc_circle.x, unc_circle.y]);
+    is_inside = false;
+    for(i = 0; i < geom.length; i++){
+        if(turf.booleanPointInPolygon(turf.point([centroid_4326.x, centroid_4326.y]), geom[i].geometry)){
+        is_inside = true;
+        }
+    }
+    
+    // If centroid is not inside any of the polygons move it to closest line point
+    if(is_inside == false){
+        // console.log(geom);
+        // mp = turf.multiPolygon(geom);
+        // console.log("1");
+        centroid_json = findNearestPointInPerimeter(geom, centroid_4326);
+        radius = findFurthestPoint(centroid_json, geom);
+        console.log(centroid_json);
+        unc_circle = proj4.transform(epsg_4326, epsg_3857, centroid_json.coordinates);
+        unc_circle = proj4.transform(epsg_3857, epsg_4326, [unc_circle.x, unc_circle.y]);
+        // console.log(unc_circle);                
+        unc_circle = new mbc.Circle(unc_circle.x, unc_circle.y, radius);                
+        console.log("radius:" + radius);
+    } else {
+        // console.log("2");
+        centroid = proj4.transform(epsg_3857, epsg_4326, [unc_circle.x, unc_circle.y])
+        centroid_json = {
+            type: 'Point',
+            coordinates: [centroid.x, centroid.y]
+        };    
+        unc_circle = new mbc.Circle(centroid.x, centroid.y, radius);                
+    }
+    console.log(unc_circle);
+    pol_json = circleToPolygon(unc_circle.x, unc_circle.y, unc_circle.r, 36);
+    // console.log(centroid_json);
+    // console.log(pol_json);
+    // buffer_layer.addData( pol_json );
+    centroid_layer.addData( centroid_json );
+    centroid_json_original = {
+        type: 'Point',
+        coordinates: [centroid_4326.x, centroid_4326.y]
+    };    
+    centroid_layer.addData( centroid_json_original );
+    // centroid_layer.addData( point );
+
+    console.log(unc_circle);
+    addPointCircleToMap(unc_circle.y, unc_circle.x, unc_circle.r);
+    // addPointCircleToMap(40.414, -3.71, 505940);
+    // map.fitBounds(buffer_layer.getBounds());
+}
+
 const geometryToPoints = function(geom){
     var points = [];
     for(i = 0; i < geom.length; i++){        
