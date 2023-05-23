@@ -10,6 +10,27 @@ library(terra)
 library(stringr)
 library(mapview)
 library(geosed)
+library(useful)
+getSegments <- function(segment, n){
+  ipc <- st_coordinates(segment)[1, 1:2]
+  fpc <- st_coordinates(segment)[2, 1:2]
+  dx <- fpc[1] - ipc[1]
+  dy <- fpc[2] - ipc[2]
+  rad <- as.numeric(set_units(atan(dy/dx), "radians"))
+  h <- sqrt(dx^2 + dy^2)
+  df <- data.frame(cbind(x=ipc[1], y=ipc[2]))
+  for(i in 1:n){
+    xt <- ipc[1] + i*(h/n)*cos(rad)
+    yt <- ipc[2] + i*(h/n)*sin(rad)
+    df <- rbind(df, cbind(x=xt, y=yt))
+    df
+  }
+  df$x <- as.numeric(df$x)
+  df$y <- as.numeric(df$y)
+  
+  ls <- st_as_sf(st_sfc(st_linestring(as.matrix(df)))) %>% st_set_crs(st_crs(site.tr))
+  ls %>% st_transform(4326)
+}
 
 # function(req) {
 #   site.geojson <- toJSON(req$body, digits = NA)
@@ -38,10 +59,22 @@ kk <- function(site.sf) {
   mbc.tr <- st_minimum_bounding_circle(site.tr, nQuadSegs = 30)
   mbc.tr.centroid <- st_centroid(mbc.tr)
   
+  # Displace centroid outside site
+  if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
+    mbc.tr.centroid <- st_nearest_points(site.tr, mbc.tr.centroid)
+    mbc.tr.centroid <- st_sfc(st_cast(mbc.tr.centroid, "POINT")[[1]]) %>% st_set_crs(crs)
+    site.p <- st_cast(site.tr, "POINT")
+    distances <- st_distance(site.p, mbc.tr.centroid)
+    idx.furthest <- which.max(distances)
+    radius <- as.double(distances[idx.furthest])
+    p.furthest <- site.p[idx.furthest,]
+    mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
+  }
+  
   # Get uncertainty, i.e. from centroid to any point in circle
   p <- st_set_crs(st_as_sf(st_sfc(st_point(st_coordinates(mbc.tr)[1, 1:2]))), crs)
   radius <- st_distance(p, mbc.tr.centroid)
-
+  
   # Calculate spatial fit
   spatial.fit <- round(radius^2 * pi / as.double(st_area(site.tr)), 3)
   
@@ -81,16 +114,17 @@ kk <- function(site.sf) {
   }
   
   site.gj <- sf_geojson(site.sf, simplify = F)
-  
-  l <- list(mbc=mbc.json, mbc.tr=sf_geojson(mbc.tr), 
+  # site.sf <- getSegments(site.tr, 10)
+  l <- list(mbc=mbc.json, mbc.tr=sf_geojson(centre), 
             site=sf_geojson(site.sf), site.tr=sf_geojson(site.tr),spatial_fit=spatial.fit,
-            centre=centre.json, centre.tr=sf_geojson(mbc.tr.centroid),
-            uncertainty=radius,
+            centre=centre.json, centre.tr=centre.json,
+            uncertainty=round(radius),
             pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
   
   response <- toJSON(l, force = T, digits = NA)
   response
 }
+
 
 max_points_polygon <- 10000
 
@@ -124,11 +158,14 @@ r <- crop(r, ext(xc - 45, xc + 45, yc - 25, yc + 25))
 
 r.tr <- terra::project(r, crs)
 plot(r.tr)
+
 plot(geojson_sf(res$mbc.tr), add = T)
 plot(geojson_sf(res$site.tr), add = T)
 plot(geojson_sf(res$centre.tr), add = T)
 
+
 site <- geojson_sf(res$site)
+
 mbc <- geojson_sf(res$mbc)
 centre <- geojson_sf(res$centre)
 

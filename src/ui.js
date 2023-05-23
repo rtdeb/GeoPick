@@ -151,7 +151,8 @@ const init_autocomplete = function(map, input_id, reference_layer){
 const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
-    $('#radius_m').val( parsed_json.uncertainty.toFixed(0) );
+
+    $('#radius_m').val( parsed_json.uncertainty );
     $('#spatial_fit').val( parsed_json.spatial_fit );   
     
     /* The following if code is cumbersome in order to deal with inconsistencies in the geom variable between lines and polygons. For lines we needed to build the MULTILINESTRING wkt ourselves beacause the convertToWK did not like. When lines, geom arrives as an array of LINESTRINGs instead of a MULTILINESTRING, while for polygons, geom already arrives as MULTIPOLYGON, and, in this latter case, convertToWK works.
