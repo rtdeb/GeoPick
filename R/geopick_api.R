@@ -6,6 +6,7 @@ library(jsonlite)
 library(terra)
 library(stringr)
 library(mapview)
+library(geosed)
 
 df.env <- read.table("../.env", sep = "=") %>% setNames(., c("var","value"))
 
@@ -72,6 +73,7 @@ function(req) {
   
   # Displace point if centroid outside site
   if(is.na(as.integer(st_intersects(site.tr, pc.tr.sf)))){
+    print("Point displaced")
     pc.tr.sf <- st_nearest_points(site.tr, pc.tr.sf)
     pc.tr.sf <- st_sfc(st_cast(pc.tr.sf, "POINT")[[1]]) %>% st_set_crs(epsg.tr)
     site.p <- st_cast(site.tr, "POINT")

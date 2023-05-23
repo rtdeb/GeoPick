@@ -732,3 +732,33 @@ points2_pnt2_ncd <- '{
     }
   ]
 }'
+
+# Edinburgh, Alta, Bergen
+edinburgh_alta_1_ncd <- '{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {},
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              3.17, 
+              55.98
+            ],
+            [
+              23.25,
+              70.00
+            ],
+            [
+              5.28, 
+              60.42
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      }
+    }
+  ]
+}'

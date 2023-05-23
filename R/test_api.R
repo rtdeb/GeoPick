@@ -19,9 +19,10 @@ source("R/test_data.R")
 # site.name <- points2_pnt2_ncd
 # site.name <- europe_1_ncd
 # site.name <- transect2_lin2_cd # MULTILINESTRING gives error, not supported yet
-site.name <- antarctica_2_cd
+# site.name <- antarctica_2_cd
 # site.name <- cardedeu_1_ncd
 # site.name <- cardedeu3_1_ncd
+site.name <- edinburgh_alta_1_ncd
 crop.dif <- 1 # Air around mbc
 
 site <- site.name %>%
@@ -63,6 +64,25 @@ centre <- geojson_sf(response$centre)
 print(site)
 print(sf_geojson(site))
 # Plot
+site.l <- rbind(site,mbc)
+site.l <- leaflet(site.l)
+site.l <- addTiles(site.l)
+map <- 
+  addPolygons(site.l) %>%
+  addMarkers(lng=st_coordinates(centre)[1], lat=st_coordinates(centre)[2]) %>% 
+  addTiles() 
+map
+# addTiles(urlTemplate = "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", attribution = 'Google')
+# addRasterImage(rc)
+map
+
+map <- 
+  addPolygons(site) %>%
+  addTiles() 
+# addTiles(urlTemplate = "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", attribution = 'Google')
+# addRasterImage(rc)
+map
+
 r <- rast("tmp/wc2.1_10m_elev.tif")
 rc <- crop(r, ext(xmin - crop.dif, xmax + crop.dif, ymin - crop.dif, ymax + crop.dif))
 # plot(rc)
