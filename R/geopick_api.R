@@ -23,34 +23,10 @@ if(length(df.env[df.env$var == "TOLERANCE", "value"]) == 0){
   tolerance <- as.double(df.env[df.env$var == "TOLERANCE", "value"])
 }
 
-#* @filter cors
-cors <- function(res) {
-  res$setHeader("Access-Control-Allow-Origin", allow_origin)
-  res$setHeader("Access-Control-Allow-Methods", allow_methods)
-  res$setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
-  plumber::forward()
-}
-
-#* @options /mbc
-options <- function() {}
-
-#* @options /version
-options <- function() {}
-
-
-#* @get /version
-function() {
-  "GeoPick API 1.0.2023-Beta"
-}
-
-#* @post /mbc
-function(req) {
-  site.geojson <- toJSON(req$body, digits = NA)
+getGeoreference <- function(site.sf){
   
-  site.sf <- geojson_sf(site.geojson)
-
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
-
+  
   # Get Centroid to determine parameters for projecting to LAEA 
   centroid <- st_centroid(site.sf)
   xc <- st_coordinates(centroid)[1]
@@ -135,5 +111,32 @@ function(req) {
             pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
   
   response <- toJSON(l, force = T, digits = NA)
+  response
+}
+#* @filter cors
+cors <- function(res) {
+  res$setHeader("Access-Control-Allow-Origin", allow_origin)
+  res$setHeader("Access-Control-Allow-Methods", allow_methods)
+  res$setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept, Authorization")
+  plumber::forward()
+}
+
+#* @options /mbc
+options <- function() {}
+
+#* @options /version
+options <- function() {}
+
+
+#* @get /version
+function() {
+  "GeoPick API 1.0.2023-Beta"
+}
+
+#* @post /mbc
+function(req) {
+  site.geojson <- toJSON(req$body, digits = NA)
+  site.sf <- geojson_sf(site.geojson)
+  response <- getGeoreference(site.sf)  
   response
 }
