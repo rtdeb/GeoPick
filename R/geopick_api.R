@@ -27,13 +27,12 @@ getGeoreference <- function(site.sf){
   
   site.sf <- site.sf %>% summarise(geometry = st_combine(geometry))
   
-  # Get Centroid to determine parameters for projecting to LAEA 
+  # Get Centroid to determine parameters for projecting to Azimuthal Equidistant Projection 
   centroid <- st_centroid(site.sf)
   xc <- st_coordinates(centroid)[1]
   yc <- st_coordinates(centroid)[2]
-  crs <- paste0("+proj=laea +lat_0=", yc, " +lon_0=", xc, 
-                " +x_0=4321000 +y_0=3210000 +ellps=GRS80 ", 
-                "+towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs")
+  crs <- paste0("+proj=aeqd +lat_0=", yc, " +lon_0=", xc, 
+                " +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs")
   
   # Project site to parameterized LAEA
   site.tr <- site.sf %>% st_transform(crs)
