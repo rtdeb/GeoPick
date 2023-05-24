@@ -42,10 +42,10 @@ Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.202
 
 ### How to install
 To download, install and run the application, please follow these steps:
-> git clone https://github.com/aescobarr/GeoPick.git
-> cd GeoPick
-> npm install
-> npm run start
+> git clone https://github.com/aescobarr/GeoPick.git  
+> cd GeoPick  
+> npm install  
+> npm run start  
 
 The app runs on localhost:8080  
 Works with node v16.16.0
