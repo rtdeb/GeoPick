@@ -127,8 +127,8 @@ function(req) {
   }
   
   site.gj <- sf_geojson(site.sf, simplify = F)
-  
-  l <- list(mbc=mbc.json, mbc.tr=sf_geojson(mbc.tr), 
+  # site.sf <- getSegments(site.tr, 10)
+  l <- list(mbc=mbc.json, mbc.tr=sf_geojson(centre), 
             site=sf_geojson(site.sf), site.tr=sf_geojson(site.tr),spatial_fit=spatial.fit,
             centre=centre.json, centre.tr=centre.json,
             uncertainty=round(radius),

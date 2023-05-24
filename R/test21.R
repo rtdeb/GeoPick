@@ -129,18 +129,18 @@ kk <- function(site.sf) {
 max_points_polygon <- 10000
 
 coords <- matrix(c(15.239274, 68.39918, -13.936656, 49.61071, 3.639205, 29.53523, -5.148726, 48.458352, 44.063687, 74.496413, 15.239274, 68.39918), ncol = 2, nrow = 6, byrow = T)
-coords <- matrix(c(12.57296, 55.725887, 12.571163, 55.72563, 12.57185, 55.725246, 12.572681, 55.725264, 12.571598, 55.725557, 12.57296, 55.725887), ncol = 2, nrow = 6, byrow = T)
 coords <- matrix(c(0, -85, 5, 85), ncol = 2, nrow = 2, byrow = T)
 coords <- matrix(c(-3.17, 55.98, 23.25, 70.00), ncol = 2, nrow = 2, byrow = T)
 coords <- matrix(c(75, -55.98, 23.25, -70.00), ncol = 2, nrow = 2, byrow = T)
-coords <- matrix(c(75, 55.98, 23.25, 70.00), ncol = 2, nrow = 2, byrow = T)
 coords <- matrix(c(45, -25, 18, -33, 51, -66), ncol = 2, nrow = 3, byrow = T)
 coords <- matrix(c(78, 21, 98, -15), ncol = 2, nrow = 2, byrow = T)
 coords <- matrix(c(32, -78, 119, -70.00), ncol = 2, nrow = 2, byrow = T)
 coords <- matrix(c(-8, 43, 8, 59), ncol = 2, nrow = 2, byrow = T)
-coords <- matrix(c(-8, 43, 8, -59), ncol = 2, nrow = 2, byrow = T)
 coords <- matrix(c(-3.17, 55.98, 23.25, 70.00), ncol = 2, nrow = 2, byrow = T)
+coords <- matrix(c(-8, 43, 8, -59), ncol = 2, nrow = 2, byrow = T)
+coords <- matrix(c(12.57296, 55.725887, 12.571163, 55.72563, 12.57185, 55.725246, 12.572681, 55.725264, 12.571598, 55.725557, 12.57296, 55.725887), ncol = 2, nrow = 6, byrow = T)
 
+coords <- matrix(c(75, 55.98, 23.25, 70.00), ncol = 2, nrow = 2, byrow = T)
 site.sf <- st_as_sf(st_sfc(st_linestring(coords))) %>% st_set_crs(4326)
 res <- fromJSON(kk(site.sf))
 

@@ -24,8 +24,10 @@ getSegments <- function(segment, n){
 }
 
 getSegments2 <- function(segment, n){
-  if(st_geometry_type(segment)[1] == "MULTILINESTRING"){
+  if(st_geometry_type(segment)[1] == "MULTILINESTRING" | st_geometry_type(segment)[1] == "POLYGON"){
     segment <- st_cast(segment, "LINESTRING")
+  } else if(st_geometry_type(segment)[1] == "MULTIPOLYGON") {
+    segment <- st_cast(st_cast(site.sf, "POLYGON"), "LINESTRING") 
   }
   processed.site <- NULL
   for(i in 1:length(st_geometry(segment))){
@@ -46,7 +48,7 @@ getSegments2 <- function(segment, n){
     df$x <- as.numeric(df$x)
     df$y <- as.numeric(df$y)
     
-    ls <- st_as_sf(st_sfc(st_linestring(as.matrix(df)))) %>% st_set_crs(st_crs(site.tr))
+    ls <- st_as_sf(st_sfc(st_linestring(as.matrix(df)))) %>% st_set_crs(st_crs(segment))
     processed.site <- rbind(processed.site, ls %>% st_transform(4326))
   }
   st_as_sf(st_combine(processed.site))
@@ -54,6 +56,9 @@ getSegments2 <- function(segment, n){
 
 
 wkt <- 'MULTILINESTRING ((-3 30, 12 40),(12 40, 25 75))'
+wkt <- 'MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)),
+((15 5, 40 10, 10 20, 5 10, 15 5)))'
+wkt <- 'LINESTRING (-3 30, 12 40)'
 site.sf <- st_set_crs(st_as_sf(st_as_sfc(wkt)), 4326)
 centroid <- st_centroid(site.sf)
 xc <- st_coordinates(centroid)[1]
