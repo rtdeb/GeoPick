@@ -36,7 +36,7 @@ getSegments <- function(segment, n){
 # function(req) {
 #   site.geojson <- toJSON(req$body, digits = NA)
 #   site.sf <- geojson_sf(site.geojson)
-kk <- function(site.sf) {
+kk <- function(site.sf, crs.calculations) {
   # site.sf <- site.sf %>% sf::summarise(geometry = st_combine(geometry))
   
   # Get Centroid to determine parameters for projecting to LAEA 
