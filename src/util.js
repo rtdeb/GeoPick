@@ -149,12 +149,12 @@ const load_api_data2 = function(editableLayers, buffer_layer, centroid_layer, ma
 
     // console.log(unc_circle);
     // addPointCircleToMap(unc_circle.y, unc_circle.x, unc_circle.r);
-    addPointCircleToMap(63.555625, 6.792595, 1012000.282);
+    // addPointCircleToMap(63.555625, 6.792595, 1012000.282);
     // addPointCircleToMap(40.414, -3.71, 505940);
     // map.fitBounds(buffer_layer.getBounds());
 }
 
-const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
+const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){    
     var geom = editableLayers.toGeoJSON().features;
     
     // Get all points of geometries to pass to makeCircle for the mbc
