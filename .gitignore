@@ -16,3 +16,4 @@ GeoPick.Rproj
 grt_api.patch
 .RData
 .Rhistory
+R/tests
