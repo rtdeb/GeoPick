@@ -33,9 +33,10 @@ const getPoints = function(coordinates){
 // =============================================================================== //
 wkt = "POLYGON ((0.650833 48.341646, -9.718925 45.706179, -5.852235 39.909736, -0.22796 41.112469, 0.650833 48.341646))";
 
-wkt = "LINESTRING (2 42, 4 50, 7 35)";
 
 wkt = "LINESTRING (-1.004225 42.868919, -0.622499 43.132059, -0.294325 42.765162, -1.004225 42.868919)"
+wkt = "LINESTRING (2 42, 4 50, 7 35)";
+wkt = "LINESTRING (0 40, 8 45, 16 40)"
 
 site = parseFromWK(wkt);
 
@@ -51,8 +52,11 @@ console.log("CENTROID ORIGINAL SITE");
 console.log(centroid.geometry.coordinates);
 console.log("---------------------------------------------------------------------");
 var latlon_proj = new proj4.Proj('EPSG:4326');
-var target_proj = new proj4.Proj("+proj=aeqd +lat_0=" + centroid.geometry.coordinates[0] + " +lon_0=0 +x_0=0 +y_0=" + centroid.geometry.coordinates[1] + " +datum=WGS84 +units=m +no_defs +type=crs");
+var target_proj = new proj4.Proj("+proj=aeqd +lat_0=" + centroid.geometry.coordinates[1] + " +lon_0=" + centroid.geometry.coordinates[0] + " +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs");
 
+target_proj = new proj4.Proj(params);
+
+console.log(target_proj);
 projectedCoordinates = site.coordinates.map(([lon, lat]) =>
   proj4(latlon_proj, target_proj, [lon, lat])
 );
