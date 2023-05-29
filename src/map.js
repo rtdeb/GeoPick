@@ -438,6 +438,7 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   }
 });
 
+
 // Draw controls visibility handling
 const hideLineDrawControl = function(){
   $(".leaflet-draw-draw-polyline").hide();

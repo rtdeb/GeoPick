@@ -1,5 +1,4 @@
 const  $ = require('jquery');
-const turf = require('@turf/turf');
 const Toastr = require('toastr');
 const p = require('../package.json');
 const { convertToWK } = require('wkt-parser-helper');

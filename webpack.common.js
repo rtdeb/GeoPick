@@ -7,7 +7,7 @@ const version = require("./package.json").version;
 
 module.exports = {
   entry: {
-    index: "./src/index.js",
+    index: "./src/map.js",
     util: "./src/util.js",
     ui: "./src/ui.js",
   },
