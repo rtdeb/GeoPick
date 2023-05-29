@@ -8,21 +8,18 @@ require("leaflet-draw/dist/leaflet.draw.css");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css");
 require("./index.css");
 require("./mystyle.scss");
-const { parseFromWK } = require("wkt-parser-helper");
 
+const { parseFromWK } = require("wkt-parser-helper");
 const ui = require("./ui");
 const util = require("./util");
-
 const $ = require("jquery");
 
-var osmUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-var osmAttrib =
-  'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors';
-
-var osm = L.tileLayer(osmUrl, {
+// MAP =========================================================================== //
+var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", 
+{
   minZoom: 2,
   maxZoom: 18,
-  attribution: osmAttrib,
+  attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
 });
 
 var googleSat = L.tileLayer(
@@ -90,9 +87,6 @@ var reference_layer = new L.geoJSON(null, {
 });
 map.addLayer(reference_layer);
 
-
-L.control.scale({ position: "bottomleft" }).addTo(map);
-
 var baseMaps = {
   OpenStreetMap: osm,
   "Google default view": googleStreets,
@@ -102,7 +96,7 @@ var baseMaps = {
 };
 
 L.control.layers(baseMaps, null, { position: "topright" }).addTo(map);
-
+L.control.scale({ position: "bottomleft" }).addTo(map);
 L.control.zoom({ position: "topleft" }).addTo(map);
 
 var options = {
@@ -153,7 +147,6 @@ var options = {
         className: "leaflet-div-icon leaflet-editing-icon leaflet-touch-icon",
       }),
     },
-    //remove: true
   },
 };
 
@@ -169,6 +162,7 @@ var coordControl = L.control.coordinates({
 });
 map.addControl(coordControl);
 
+// Map events ···································································· //
 map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
   ui.clear_centroid_data();
@@ -229,6 +223,7 @@ const clearAllGeometries = function () {
     $("#keyboardEdit").show();
   }
 };
+
 map.on(L.Draw.Event.DRAWSTART, function (e) {
   var type = e.layerType;
   if (editableLayers.toGeoJSON().features.length != 0) {
@@ -287,12 +282,124 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   }
 });
 
+// Nominatim handling
 ui.init_autocomplete(map, "place_search", reference_layer);
+$("#importNominatim").on("click", function () {  importNominatim() });
 
-$("#import").click(function () {
-  importNominatim();
+// Keyboard point editting handling
+$("#keyboardEdit").on("click", function(){ show_point_kb_box() });
+const show_point_kb_box = function(){
+  ui.hideLineDrawControl();
+  ui.hidePolyDrawControl();
+  ui.hideCircleDrawControl();
+  $("#keyboardLatitude").val($("#centroid_y").val());
+  $("#keyboardLongitude").val($("#centroid_x").val());
+  $("#keyboardUncertainty").val($("#radius_m").val());
+  $("#controlKeyboard").show();
+  $("#importWKT").hide();
+  $("#keyboardLatitude").trigger("focus");
+};
+
+$("#keyboardCancel").on("click", function () {  cancel_point_kb_box() });
+const cancel_point_kb_box = function() {
+  if (editableLayers.getLayers().length == 0) {
+    ui.resetDrawControls();
+    $("#importWKT").show();
+  }
+  $("#controlKeyboard").hide();
+};
+
+$("#keyboardOK").on("click", function () { process_point_kb_box() });
+
+// Well-Known Text event handling
+$("#importWKT").on("click", function() { show_wkt_box() });
+const show_wkt_box = function(){
+  ui.hideLineDrawControl();
+  ui.hidePolyDrawControl();
+  ui.hideCircleDrawControl();
+  $("#keyboardEdit").hide();
+  $("#controlTextWKT").show();
+  $("#infoDivBox").hide();
+  $("#importWKT").hide();
+  $("#textareaWKT").focus();
+};
+
+$("#cancelWKT").on("click", function(){ cancel_wkt_box() });
+const cancel_wkt_box = function(){
+  ui.resetDrawControls();
+  $("#controlTextWKT").hide();
+  $("#keyboardEdit").show();
+  $("#importWKT").show();
+};
+
+$("#okWKT").on("click", function () { process_wkt_box() });
+
+// Keyboard shortcuts handling
+// Keyboard shortcuts
+// CTRL-H: Copy data with headers
+// CTRL-C: Copy data without headers
+// CTRL-W: Import WKT data
+// CTRL-K: Enter data via keyboard
+// CTRL-G: Put focus on Georeferenced by input field
+// CTRL-M: Put focus on Georeferenced remarks input field
+// CTRL-p or CTRL-P: Start drawing a polygon
+// CTRL-l or CTRL-L: Start drawing a polyline
+// CTRL-t or CTRL-T: Start drawing a circle
+// CTRL-s or CTRL-S: Search Nominatim
+// CTRL-i or CTRL-I: Import from Nominatim
+// CTRL-d or CTRL-D: Delete all
+// ESC: Closes div dialogs
+$(document).on("keydown", function (event) {
+  if (event.ctrlKey && event.key === 'h') {
+    ui.do_copy_data(true);
+  } else if (event.ctrlKey && event.key === 'c') {
+    ui.do_copy_data(false);
+  } else if (event.ctrlKey && event.key === 'w') {    
+      show_wkt_box(); 
+  } else if (event.ctrlKey && event.key === 'k') {
+    show_point_kb_box();
+  } else if (event.ctrlKey && event.key === 'g') {
+    $("#georeferencer_name").trigger("focus");
+  
+  } else if (event.ctrlKey && event.key === 'm') {
+    $("#georeference_remarks").trigger("focus");
+  } else if (event.key === "Escape") {
+    if ($("#controlTextWKT").is(":visible")) {
+      ui.resetDrawControls();
+      $("#controlTextWKT").hide();
+      $("#keyboardEdit").show();
+      $("#importWKT").show();
+    } else if ($("#controlKeyboard").is(":visible")) {
+      ui.resetDrawControls();
+      $("#importWKT").show();
+      $("#controlKeyboard").hide();
+    }
+  } else if (event.ctrlKey && (event.key === "l" || event.key === "L")) {
+    new L.Draw.Polyline(map).enable();
+    ui.hideCircleDrawControl();
+    ui.hidePolyDrawControl();
+  } else if (event.ctrlKey && (event.key === "p" || event.key === "P")) {
+    new L.Draw.Polygon(map).enable();
+    ui.hideLineDrawControl();
+    ui.hideCircleDrawControl();
+  } else if (event.ctrlKey && (event.key === "t" || event.key === "T")) {
+    new L.Draw.Circle(map).enable();
+    ui.hideLineDrawControl();
+    ui.hidePolyDrawControl();
+  } else if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
+    $("#place_search").focus();
+  } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
+    importNominatim();
+  } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
+    if (editableLayers.toGeoJSON().features.length > 0) {
+      if (confirm("Are you sure you want to clear all geometries?")) {
+        clearAllGeometries();
+      }
+    }
+  }
 });
 
+// FUNCTIONS ===================================================================== //
 const importNominatim = function () {
   if (reference_layer.toGeoJSON().features.length == 0) {
     ui.toast_error("Nothing to import! Please select a location.");
@@ -325,7 +432,8 @@ const importNominatim = function () {
     $("#importWKT").hide();
   }
 };
-addPointCircleToMap = function (lat, long, radius) {
+
+const addPointCircleToMap = function (lat, long, radius) {
   ui.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
@@ -355,25 +463,7 @@ setVisibleAreaAroundCircle = function (circle) {
   map.fitBounds(circle.getBounds());
 };
 
-$("#importWKT").click(function () {
-  ui.hideLineDrawControl();
-  ui.hidePolyDrawControl();
-  ui.hideCircleDrawControl();
-  $("#keyboardEdit").hide();
-  $("#controlTextWKT").show();
-  $("#infoDivBox").hide();
-  $("#importWKT").hide();
-  $("#textareaWKT").focus();
-});
-
-$("#cancelWKT").click(function () {
-  ui.resetDrawControls();
-  $("#controlTextWKT").hide();
-  $("#keyboardEdit").show();
-  $("#importWKT").show();
-});
-
-$("#okWKT").click(function () {
+const process_wkt_box = function(){
   wkt = $("#textareaWKT").val();
   geojson = parseFromWK(wkt);
   if (geojson === null) {
@@ -412,21 +502,9 @@ $("#okWKT").click(function () {
     $("#controlTextWKT").hide();
     $("#importWKT").hide();
   }
-});
+};
 
-$("#keyboardEdit").click(function () {
-  ui.hideLineDrawControl();
-  ui.hidePolyDrawControl();
-  ui.hideCircleDrawControl();
-  $("#keyboardLatitude").val($("#centroid_y").val());
-  $("#keyboardLongitude").val($("#centroid_x").val());
-  $("#keyboardUncertainty").val($("#radius_m").val());
-  $("#controlKeyboard").show();
-  $("#importWKT").hide();
-  $("#keyboardLatitude").focus();
-});
-
-$("#keyboardOK").click(function () {
+const process_point_kb_box = function(){
   lat = parseFloat($("#keyboardLatitude").val());
   lng = parseFloat($("#keyboardLongitude").val());
   unc = $("#keyboardUncertainty").val();
@@ -438,81 +516,5 @@ $("#keyboardOK").click(function () {
 
   addPointCircleToMap(lat, lng, unc);
   $("#controlKeyboard").hide();
-});
+};
 
-$("#keyboardCancel").click(function () {
-  if (editableLayers.getLayers().length == 0) {
-    ui.resetDrawControls();
-    $("#importWKT").show();
-  }
-  $("#controlKeyboard").hide();
-});
-
-$("#infoDivOK").click(function () {
-  $("#infoDivBox").hide();
-  $("#infoDivBox").bringToFront();
-});
-
-// Keyboard shortcuts
-// CTRL-H: Copy data with headers
-// CTRL-C: Copy data without headers
-// CTRL-W: Import WKT data
-// CTRL-K: Enter data via keyboard
-// CTRL-G: Put focus on Georeferenced by input field
-// CTRL-M: Put focus on Georeferenced remarks input field
-// CTRL-p or CTRL-P: Start drawing a polygon
-// CTRL-l or CTRL-L: Start drawing a polyline
-// CTRL-t or CTRL-T: Start drawing a circle
-// CTRL-s or CTRL-S: Search Nominatim
-// CTRL-i or CTRL-I: Import from Nominatim
-// CTRL-d or CTRL-D: Delete all
-// ESC: Closes div dialogs
-$(document).keydown(function (event) {
-  if (event.ctrlKey && event.which === 72) {
-    ui.do_copy_data(true);
-  } else if (event.ctrlKey && event.which === 67) {
-    ui.do_copy_data(false);
-  } else if (event.ctrlKey && event.which === 87) {
-    $("#importWKT").click();
-  } else if (event.ctrlKey && event.which === 75) {
-    $("#keyboardEdit").click();
-    console.log(event);
-  } else if (event.ctrlKey && event.which === 71) {
-    $("#georeferencer_name").focus();
-  } else if (event.ctrlKey && event.which === 77) {
-    $("#georeference_remarks").focus();
-  } else if (event.key === "Escape") {
-    if ($("#controlTextWKT").is(":visible")) {
-      ui.resetDrawControls();
-      $("#controlTextWKT").hide();
-      $("#keyboardEdit").show();
-      $("#importWKT").show();
-    } else if ($("#controlKeyboard").is(":visible")) {
-      ui.resetDrawControls();
-      $("#importWKT").show();
-      $("#controlKeyboard").hide();
-    }
-  } else if (event.ctrlKey && (event.key === "l" || event.key === "L")) {
-    new L.Draw.Polyline(map).enable();
-    ui.hideCircleDrawControl();
-    ui.hidePolyDrawControl();
-  } else if (event.ctrlKey && (event.key === "p" || event.key === "P")) {
-    new L.Draw.Polygon(map).enable();
-    ui.hideLineDrawControl();
-    ui.hideCircleDrawControl();
-  } else if (event.ctrlKey && (event.key === "t" || event.key === "T")) {
-    new L.Draw.Circle(map).enable();
-    ui.hideLineDrawControl();
-    ui.hidePolyDrawControl();
-  } else if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
-    $("#place_search").focus();
-  } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
-    importNominatim();
-  } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
-    if (editableLayers.toGeoJSON().features.length > 0) {
-      if (confirm("Are you sure you want to clear all geometries?")) {
-        clearAllGeometries();
-      }
-    }
-  }
-});
