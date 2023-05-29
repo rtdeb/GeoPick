@@ -13,7 +13,7 @@ body {
 div.info_box {
   width: 100px;
   height: 100px;
-}
+} 
 
 .about {
   text-align: right;
@@ -38,19 +38,24 @@ div.info_box {
   padding: 20px;
   vertical-align: middle;
 }
+
 #creaf {
   float: left;
   width: 400px;
 }
+
 #mobilise {
   float: right;
 }
+
 .ui-autocomplete {
   z-index: 99999 !important;
 }
+
 .button.is-primary {
   background-color: teal;
 }
+
 .button.is-success {
   background-color: mediumseagreen;
 }
@@ -67,33 +72,41 @@ div.info_box {
 .leaflet-top {
   margin-left: 5px;
 }
+
 .leaflet-control {
   border-width: 0px;
 }
+
 .leaflet-touch {
   border-width: 0px !important;
 }
+
 .leaflet-bar {
   margin-left: 9px;
   border-width: 0px !important;
 }
+
 .leaflet-control {
   border-width: 0px;
 }
+
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
   margin-left: 9px;
 }
+
 .leaflet-bottom {
   margin-left: 7px;
   margin-bottom: 10px;
   border-width: 0px;
 }
+
 .leaflet-control-scale-line {
   margin-left: 5px;
   margin-bottom: 10px;
   border-width: 0px;
 }
+
 .button_container {
   display: flex;
   flex-wrap: wrap;
@@ -120,7 +133,7 @@ div.info_box {
 }
 
 #map {
-  height: 100vh; /* Set map height to a specific value */
+  height: 100vh; 
 }
 
 .search {
@@ -145,6 +158,7 @@ div.info_box {
   background-color: wheat;
   opacity: 1;
 }
+
 .wkt {
   position: absolute;
   top: 245px;
@@ -152,6 +166,7 @@ div.info_box {
   padding: 10px;
   z-index: 1000;
 }
+
 .control-keyboard {
   position: absolute;
   top: 280px;
@@ -159,6 +174,7 @@ div.info_box {
   padding: 10px;
   z-index: 1000;
 }
+
 #controlKeyboard{
   display:block;
   width: 300px;
@@ -177,16 +193,19 @@ div.info_box {
   border-style: solid;
   border-radius: 5px;
 }
+
 #controlKeyBoard{
   width: 100%;
   height:85%;
   margin-top: 5px;
 }
+
 #buttonsKeyboard{
   position: absolute;
   bottom: 2%;
   right: 5%;
 }
+
 #controlTextWKT{
   display:block;
   width: 300px;
@@ -206,6 +225,7 @@ div.info_box {
   border-style: solid;
   border-radius: 5px;
 }
+
 #textareaWKT{
   width: 100%;
   height:75%;
@@ -214,6 +234,7 @@ div.info_box {
   resize: none;
   scroll-behavior: auto;
 }
+
 #errorWKT{
   width: 100%;
   height:75%;
@@ -225,6 +246,7 @@ div.info_box {
   font-weight: bold;
   scroll-behavior: auto;
 }
+
 #buttonsWKT{
   position: absolute;
   bottom: 2%;
@@ -234,6 +256,7 @@ div.info_box {
 #okWKT, #cancelWKT {
   margin-left: 0px;
 }
+
 #place_search {
   border-width: 0px;
   min-width: 225px;
@@ -278,6 +301,7 @@ div.info_box {
   color: #833904;
  /* color:gray; */
 }
+
 .dwc_url {    
   font-size: 0.9em;
   font-weight: 400;
@@ -323,6 +347,7 @@ div.info_box {
   margin-right: 5px;
   text-align: left;
 }
+
 #radius_m,
 #geodetic_datum,
 #spatial_fit,
@@ -330,6 +355,7 @@ div.info_box {
   text-align: left;
   width: 40%;
 }
+
 #georeference_protocol,
 #georeference_sources {
   width: 95%;
@@ -362,17 +388,20 @@ div.info_box {
   font-size: 1em;
   cursor: pointer;
 }
+
 .button-headers {
   background-color: #297c82;
 }
+
 .button-noheaders {
   background-color: ;
 }
+
 .button:hover {
   background-color: #3e8e41;
 }
 
-/* Stack the key above the value on narrow screens */
+/* Narrow screens */
 @media only screen and (max-width: 1400px) {
   .pair {
     flex-direction: column;
@@ -384,20 +413,24 @@ div.info_box {
     margin-bottom: 10px; 
     
   }
+  
   .dwc_name {
     flex: 1;
     font-size: 0.9em;
     font-weight: 400;
   }
+  
   .dwc_url {    
     font-size: 0.9em;
     font-weight: 400;
     text-align: right;
   }
+  
   .value {
     width: 100%;
     margin-top: 0px;
   }  
+  
   .button-container {
     flex-direction: column;
     align-items: center;
@@ -412,7 +445,7 @@ div.info_box {
   }
 }
 
-/* HELP */
+/* help */
 .help_container {
   background-color: aliceblue;
   margin-bottom: 10px;
