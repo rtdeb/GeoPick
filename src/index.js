@@ -1,5 +1,6 @@
 const L = require("leaflet");
 const draw = require("leaflet-draw");
+const $ = require("jquery");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min");
 require("leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css");
 require("leaflet-defaulticon-compatibility");
@@ -8,11 +9,166 @@ require("leaflet-draw/dist/leaflet.draw.css");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css");
 require("./index.css");
 require("./mystyle.scss");
+require('jquery-ui/ui/widgets/autocomplete');
 
 const { parseFromWK } = require("wkt-parser-helper");
 const ui = require("./ui");
 const util = require("./util");
-const $ = require("jquery");
+
+// FUNCTIONS ===================================================================== //
+const importNominatim = function () {
+  if (reference_layer.toGeoJSON().features.length == 0) {
+    ui.toast_error("Nothing to import! Please select a location.");
+  } else {
+    type = reference_layer.toGeoJSON().features[0].geometry.type;
+    if (type == "Point") {
+      ui.hideLineDrawControl();
+      ui.hidePolyDrawControl();
+      ui.hideCircleDrawControl();
+      coordinates =
+        reference_layer.toGeoJSON().features[0].geometry.coordinates;
+      addPointCircleToMap(coordinates[1], coordinates[0], null);
+      //   $("#uncertaintyBox").show();
+    } else {
+      if (type == "LineString" || type == "MultiLineString") {
+        ui.hidePolyDrawControl();
+        ui.hideCircleDrawControl();
+      } else if (type == "Polygon" || type == "MultiPolygon") {
+        ui.hideLineDrawControl();
+        ui.hideCircleDrawControl();
+      }
+      util.promote_reference_to_editable(
+        editableLayers,
+        reference_layer,
+        buffer_layer,
+        centroid_layer,
+        map
+      );
+    }
+    $("#importWKT").hide();
+  }
+};
+
+const addPointCircleToMap = function (lat, long, radius) {
+  ui.clear_centroid_data();
+  centroid_layer.clearLayers();
+  buffer_layer.clearLayers();
+  reference_layer.clearLayers();
+  circle = L.circle([lat, long], radius, {
+    color: "blue",
+    fillColor: "blue",
+  });
+
+  if (radius === null) {
+    circle.setStyle({
+      fillColor: "#e7e7e7",
+      fillOpacity: 0.5,
+      color: "#e7e7e7",
+      opacity: 0.5,
+    });    
+  }
+  map.addLayer(circle);
+  editableLayers.clearLayers();
+  editableLayers.addLayer(circle);
+  centroid_layer.addData(editableLayers.toGeoJSON());
+  ui.show_centroid_data(lat, long, radius);
+  setVisibleAreaAroundCircle(circle);
+};
+
+setVisibleAreaAroundCircle = function (circle) {
+  map.fitBounds(circle.getBounds());
+};
+
+const process_wkt_box = function(){
+  wkt = $("#textareaWKT").val();
+  geojson = parseFromWK(wkt);
+  if (geojson === null) {
+    /* using === because checking for null 
+                             in javascript is  a special case */
+    $("#infoDivBox").show();
+    $("#errorWKT").val("ERROR: Malformed WKT. Please check and try again.");
+    // alert("ERROR: Malformed WKT. Please check and try again.");
+  } else if (geojson.type == "MultiPoint") {
+    alert(
+      "MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported."
+    );
+  } else {
+    reference_layer.clearLayers();
+    reference_layer.addData(geojson);
+
+    if (geojson.type == "Point") {
+      //No need to go to the API, just show the point as editable so it can be cleared.
+      addPointCircleToMap(geojson.coordinates[1], geojson.coordinates[0], null);
+
+      $("#keyboardEdit").show();
+    } else {
+      if (geojson.type == "Polygon") {
+        $(".leaflet-draw-draw-polygon").show();
+      } else if (geojson.type == "LineString") {
+        $(".leaflet-draw-draw-polyline").show();
+      }
+      util.promote_reference_to_editable(
+        editableLayers,
+        reference_layer,
+        buffer_layer,
+        centroid_layer,
+        map
+      );
+    }
+    $("#controlTextWKT").hide();
+    $("#importWKT").hide();
+  }
+};
+
+const process_point_kb_box = function(){
+  lat = parseFloat($("#keyboardLatitude").val());
+  lng = parseFloat($("#keyboardLongitude").val());
+  unc = $("#keyboardUncertainty").val();
+  if (unc == "") {
+    unc = null;
+  } else {
+    unc = parseFloat(unc);
+  }
+
+  addPointCircleToMap(lat, lng, unc);
+  $("#controlKeyboard").hide();
+};
+
+const init_autocomplete = function(map, input_id, reference_layer){
+  $( "#" + input_id ).autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: 'https://nominatim.openstreetmap.org/search',
+          data: {
+              q: request.term,
+              format: 'geojson',
+              polygon_geojson: 1
+          },
+          success: function(data) {
+              var results = $.map(data.features, function(item) {
+                  return item;
+              });
+              response(results);
+          }
+        });
+      },      
+      minLength: 2,        
+      select: function( event, ui ) {
+        const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
+        const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
+        map.fitBounds( [ne,sw] );
+        reference_layer.clearLayers();
+        reference_layer.addData( ui.item.geometry );
+      },
+      create: function () {
+        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+            return $('<li>')
+                .append('<a>' + item.properties.display_name + '</a>')
+                .appendTo(ul);
+        };
+      }
+  });
+}
 
 // MAP =========================================================================== //
 var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", 
@@ -283,7 +439,7 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
 });
 
 // Nominatim handling
-ui.init_autocomplete(map, "place_search", reference_layer);
+init_autocomplete(map, "place_search", reference_layer);
 $("#importNominatim").on("click", function () {  importNominatim() });
 
 // Keyboard point editting handling
@@ -398,123 +554,4 @@ $(document).on("keydown", function (event) {
     }
   }
 });
-
-// FUNCTIONS ===================================================================== //
-const importNominatim = function () {
-  if (reference_layer.toGeoJSON().features.length == 0) {
-    ui.toast_error("Nothing to import! Please select a location.");
-  } else {
-    type = reference_layer.toGeoJSON().features[0].geometry.type;
-    if (type == "Point") {
-      ui.hideLineDrawControl();
-      ui.hidePolyDrawControl();
-      ui.hideCircleDrawControl();
-      coordinates =
-        reference_layer.toGeoJSON().features[0].geometry.coordinates;
-      addPointCircleToMap(coordinates[1], coordinates[0], null);
-      //   $("#uncertaintyBox").show();
-    } else {
-      if (type == "LineString" || type == "MultiLineString") {
-        ui.hidePolyDrawControl();
-        ui.hideCircleDrawControl();
-      } else if (type == "Polygon" || type == "MultiPolygon") {
-        ui.hideLineDrawControl();
-        ui.hideCircleDrawControl();
-      }
-      util.promote_reference_to_editable(
-        editableLayers,
-        reference_layer,
-        buffer_layer,
-        centroid_layer,
-        map
-      );
-    }
-    $("#importWKT").hide();
-  }
-};
-
-const addPointCircleToMap = function (lat, long, radius) {
-  ui.clear_centroid_data();
-  centroid_layer.clearLayers();
-  buffer_layer.clearLayers();
-  reference_layer.clearLayers();
-  circle = L.circle([lat, long], radius, {
-    color: "blue",
-    fillColor: "blue",
-  });
-
-  if (radius === null) {
-    circle.setStyle({
-      fillColor: "#e7e7e7",
-      fillOpacity: 0.5,
-      color: "#e7e7e7",
-      opacity: 0.5,
-    });    
-  }
-  map.addLayer(circle);
-  editableLayers.clearLayers();
-  editableLayers.addLayer(circle);
-  centroid_layer.addData(editableLayers.toGeoJSON());
-  ui.show_centroid_data(lat, long, radius);
-  setVisibleAreaAroundCircle(circle);
-};
-
-setVisibleAreaAroundCircle = function (circle) {
-  map.fitBounds(circle.getBounds());
-};
-
-const process_wkt_box = function(){
-  wkt = $("#textareaWKT").val();
-  geojson = parseFromWK(wkt);
-  if (geojson === null) {
-    /* using === because checking for null 
-                             in javascript is  a special case */
-    $("#infoDivBox").show();
-    $("#errorWKT").val("ERROR: Malformed WKT. Please check and try again.");
-    // alert("ERROR: Malformed WKT. Please check and try again.");
-  } else if (geojson.type == "MultiPoint") {
-    alert(
-      "MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported."
-    );
-  } else {
-    reference_layer.clearLayers();
-    reference_layer.addData(geojson);
-
-    if (geojson.type == "Point") {
-      //No need to go to the API, just show the point as editable so it can be cleared.
-      addPointCircleToMap(geojson.coordinates[1], geojson.coordinates[0], null);
-
-      $("#keyboardEdit").show();
-    } else {
-      if (geojson.type == "Polygon") {
-        $(".leaflet-draw-draw-polygon").show();
-      } else if (geojson.type == "LineString") {
-        $(".leaflet-draw-draw-polyline").show();
-      }
-      util.promote_reference_to_editable(
-        editableLayers,
-        reference_layer,
-        buffer_layer,
-        centroid_layer,
-        map
-      );
-    }
-    $("#controlTextWKT").hide();
-    $("#importWKT").hide();
-  }
-};
-
-const process_point_kb_box = function(){
-  lat = parseFloat($("#keyboardLatitude").val());
-  lng = parseFloat($("#keyboardLongitude").val());
-  unc = $("#keyboardUncertainty").val();
-  if (unc == "") {
-    unc = null;
-  } else {
-    unc = parseFloat(unc);
-  }
-
-  addPointCircleToMap(lat, lng, unc);
-  $("#controlKeyboard").hide();
-};
 

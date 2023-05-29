@@ -1,4 +1,4 @@
-require('jquery-ui/ui/widgets/autocomplete');
+// require('jquery-ui/ui/widgets/autocomplete');
 const  $ = require('jquery');
 const turf = require('@turf/turf');
 const Toastr = require('toastr');
@@ -112,42 +112,6 @@ const resetDrawControls = function(){
     $(".leaflet-draw-draw-circle").show();
 }
 
-const init_autocomplete = function(map, input_id, reference_layer){
-    $( "#" + input_id ).autocomplete({
-        source: function(request, response) {
-          $.ajax({
-            url: 'https://nominatim.openstreetmap.org/search',
-            data: {
-                q: request.term,
-                format: 'geojson',
-                polygon_geojson: 1
-            },
-            success: function(data) {
-                var results = $.map(data.features, function(item) {
-                    return item;
-                });
-                response(results);
-            }
-          });
-        },      
-        minLength: 2,        
-        select: function( event, ui ) {
-          const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
-          const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
-          map.fitBounds( [ne,sw] );
-          reference_layer.clearLayers();
-          reference_layer.addData( ui.item.geometry );
-        },
-        create: function () {
-          $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-              return $('<li>')
-                  .append('<a>' + item.properties.display_name + '</a>')
-                  .appendTo(ul);
-          };
-        }
-    });
-}
-
 const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
@@ -206,7 +170,6 @@ module.exports = {
     toast_success,
     toast_warning,
     clear_centroid_data,
-    init_autocomplete,
     hideLineDrawControl,
     hidePolyDrawControl,
     hideCircleDrawControl,
