@@ -1,11 +1,8 @@
-// require('jquery-ui/ui/widgets/autocomplete');
 const  $ = require('jquery');
 const turf = require('@turf/turf');
 const Toastr = require('toastr');
 const p = require('../package.json');
-
 const { convertToWK } = require('wkt-parser-helper');
-const { LineString } = require('terraformer');
 
 Toastr.options = {
     "positionClass": "toast-top-center",
@@ -93,25 +90,6 @@ $("#cpdatanh").on("click", function(){
     do_copy_data(false);
 });
 
-
-const hideLineDrawControl = function(){
-    $(".leaflet-draw-draw-polyline").hide();
-}
-
-const hideCircleDrawControl = function(){
-    $(".leaflet-draw-draw-circle").hide();
-}
-
-const hidePolyDrawControl = function(){
-    $(".leaflet-draw-draw-polygon").hide();
-}
-
-const resetDrawControls = function(){
-    $(".leaflet-draw-draw-polyline").show();
-    $(".leaflet-draw-draw-polygon").show();
-    $(".leaflet-draw-draw-circle").show();
-}
-
 const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_x').val( parsed_json.center.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.center.geometry.coordinates[1].toFixed(7) );
@@ -170,10 +148,6 @@ module.exports = {
     toast_success,
     toast_warning,
     clear_centroid_data,
-    hideLineDrawControl,
-    hidePolyDrawControl,
-    hideCircleDrawControl,
-    resetDrawControls,
     show_api_centroid_data,
     show_centroid_data,
     do_copy_data

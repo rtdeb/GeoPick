@@ -22,20 +22,20 @@ const importNominatim = function () {
   } else {
     type = reference_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
-      ui.hideLineDrawControl();
-      ui.hidePolyDrawControl();
-      ui.hideCircleDrawControl();
+      hideLineDrawControl();
+      hidePolyDrawControl();
+      hideCircleDrawControl();
       coordinates =
         reference_layer.toGeoJSON().features[0].geometry.coordinates;
       addPointCircleToMap(coordinates[1], coordinates[0], null);
       //   $("#uncertaintyBox").show();
     } else {
       if (type == "LineString" || type == "MultiLineString") {
-        ui.hidePolyDrawControl();
-        ui.hideCircleDrawControl();
+        hidePolyDrawControl();
+        hideCircleDrawControl();
       } else if (type == "Polygon" || type == "MultiPolygon") {
-        ui.hideLineDrawControl();
-        ui.hideCircleDrawControl();
+        hideLineDrawControl();
+        hideCircleDrawControl();
       }
       util.promote_reference_to_editable(
         editableLayers,
@@ -374,7 +374,7 @@ const clearAllGeometries = function () {
     util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
     editableLayers.bringToFront();
   } else {
-    ui.resetDrawControls();
+    resetDrawControls();
     $("#importWKT").show();
     $("#keyboardEdit").show();
   }
@@ -387,21 +387,21 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
       type == "polygon" &&
       editableLayers.toGeoJSON().features[0].geometry.type == "Polygon"
     ) {
-      ui.hideLineDrawControl();
-      ui.hideCircleDrawControl();
+      hideLineDrawControl();
+      hideCircleDrawControl();
     } else if (
       type == "polyline" &&
       editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
     ) {
-      ui.hidePolyDrawControl();
-      ui.hideCircleDrawControl();
+      hidePolyDrawControl();
+      hideCircleDrawControl();
     } else if (
       type == "circle" &&
       editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
     ) {
-      ui.hidePolyDrawControl();
-      ui.hideLineDrawControl();
-      ui.hideCircleDrawControl();
+      hidePolyDrawControl();
+      hideLineDrawControl();
+      hideCircleDrawControl();
     } else {
       ui.clear_centroid_data();
       centroid_layer.clearLayers();
@@ -411,15 +411,15 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
     }
   } else {
     if (type == "polygon") {
-      ui.hideLineDrawControl();
-      ui.hideCircleDrawControl();
+      hideLineDrawControl();
+      hideCircleDrawControl();
     } else if (type == "polyline") {
-      ui.hidePolyDrawControl();
-      ui.hideCircleDrawControl();
+      hidePolyDrawControl();
+      hideCircleDrawControl();
     } else if (type == "circle") {
-      ui.hidePolyDrawControl();
-      ui.hideLineDrawControl();
-      ui.hideCircleDrawControl();
+      hidePolyDrawControl();
+      hideLineDrawControl();
+      hideCircleDrawControl();
     }
   }
   $("#keyboardEdit").hide();
@@ -432,11 +432,30 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
     $("#keyboardEdit").show();
   }
   if (editableLayers.toGeoJSON().features.length == 0) {
-    ui.resetDrawControls();
+    resetDrawControls();
     $("#keyboardEdit").show();
     $("#importWKT").show();
   }
 });
+
+// Draw controls visibility handling
+const hideLineDrawControl = function(){
+  $(".leaflet-draw-draw-polyline").hide();
+}
+
+const hideCircleDrawControl = function(){
+  $(".leaflet-draw-draw-circle").hide();
+}
+
+const hidePolyDrawControl = function(){
+  $(".leaflet-draw-draw-polygon").hide();
+}
+
+const resetDrawControls = function(){
+  $(".leaflet-draw-draw-polyline").show();
+  $(".leaflet-draw-draw-polygon").show();
+  $(".leaflet-draw-draw-circle").show();
+}
 
 // Nominatim handling
 init_autocomplete(map, "place_search", reference_layer);
@@ -445,9 +464,9 @@ $("#importNominatim").on("click", function () {  importNominatim() });
 // Keyboard point editting handling
 $("#keyboardEdit").on("click", function(){ show_point_kb_box() });
 const show_point_kb_box = function(){
-  ui.hideLineDrawControl();
-  ui.hidePolyDrawControl();
-  ui.hideCircleDrawControl();
+  hideLineDrawControl();
+  hidePolyDrawControl();
+  hideCircleDrawControl();
   $("#keyboardLatitude").val($("#centroid_y").val());
   $("#keyboardLongitude").val($("#centroid_x").val());
   $("#keyboardUncertainty").val($("#radius_m").val());
@@ -459,7 +478,7 @@ const show_point_kb_box = function(){
 $("#keyboardCancel").on("click", function () {  cancel_point_kb_box() });
 const cancel_point_kb_box = function() {
   if (editableLayers.getLayers().length == 0) {
-    ui.resetDrawControls();
+    resetDrawControls();
     $("#importWKT").show();
   }
   $("#controlKeyboard").hide();
@@ -470,9 +489,9 @@ $("#keyboardOK").on("click", function () { process_point_kb_box() });
 // Well-Known Text event handling
 $("#importWKT").on("click", function() { show_wkt_box() });
 const show_wkt_box = function(){
-  ui.hideLineDrawControl();
-  ui.hidePolyDrawControl();
-  ui.hideCircleDrawControl();
+  hideLineDrawControl();
+  hidePolyDrawControl();
+  hideCircleDrawControl();
   $("#keyboardEdit").hide();
   $("#controlTextWKT").show();
   $("#infoDivBox").hide();
@@ -482,7 +501,7 @@ const show_wkt_box = function(){
 
 $("#cancelWKT").on("click", function(){ cancel_wkt_box() });
 const cancel_wkt_box = function(){
-  ui.resetDrawControls();
+  resetDrawControls();
   $("#controlTextWKT").hide();
   $("#keyboardEdit").show();
   $("#importWKT").show();
@@ -521,27 +540,27 @@ $(document).on("keydown", function (event) {
     $("#georeference_remarks").trigger("focus");
   } else if (event.key === "Escape") {
     if ($("#controlTextWKT").is(":visible")) {
-      ui.resetDrawControls();
+      resetDrawControls();
       $("#controlTextWKT").hide();
       $("#keyboardEdit").show();
       $("#importWKT").show();
     } else if ($("#controlKeyboard").is(":visible")) {
-      ui.resetDrawControls();
+      resetDrawControls();
       $("#importWKT").show();
       $("#controlKeyboard").hide();
     }
   } else if (event.ctrlKey && (event.key === "l" || event.key === "L")) {
     new L.Draw.Polyline(map).enable();
-    ui.hideCircleDrawControl();
-    ui.hidePolyDrawControl();
+    hideCircleDrawControl();
+    hidePolyDrawControl();
   } else if (event.ctrlKey && (event.key === "p" || event.key === "P")) {
     new L.Draw.Polygon(map).enable();
-    ui.hideLineDrawControl();
-    ui.hideCircleDrawControl();
+    hideLineDrawControl();
+    hideCircleDrawControl();
   } else if (event.ctrlKey && (event.key === "t" || event.key === "T")) {
     new L.Draw.Circle(map).enable();
-    ui.hideLineDrawControl();
-    ui.hidePolyDrawControl();
+    hideLineDrawControl();
+    hidePolyDrawControl();
   } else if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
     $("#place_search").focus();
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
