@@ -12,13 +12,13 @@ require("./mystyle.scss");
 require('jquery-ui/ui/widgets/autocomplete');
 
 const { parseFromWK } = require("wkt-parser-helper");
-const ui = require("./ui");
-const util = require("./util");
+const info = require("./info");
+const util = require("./api");
 
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
   if (reference_layer.toGeoJSON().features.length == 0) {
-    ui.toast_error("Nothing to import! Please select a location.");
+    info.toast_error("Nothing to import! Please select a location.");
   } else {
     type = reference_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
@@ -50,7 +50,7 @@ const importNominatim = function () {
 };
 
 const addPointCircleToMap = function (lat, long, radius) {
-  ui.clear_centroid_data();
+  info.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
   reference_layer.clearLayers();
@@ -71,7 +71,7 @@ const addPointCircleToMap = function (lat, long, radius) {
   editableLayers.clearLayers();
   editableLayers.addLayer(circle);
   centroid_layer.addData(editableLayers.toGeoJSON());
-  ui.show_centroid_data(lat, long, radius);
+  info.show_centroid_data(lat, long, radius);
   setVisibleAreaAroundCircle(circle);
 };
 
@@ -154,11 +154,11 @@ const init_autocomplete = function(map, input_id, reference_layer){
       },      
       minLength: 2,        
       select: function( event, ui ) {
-        const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
-        const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
+        const sw = [ info.item.bbox[1], info.item.bbox[0]  ];
+        const ne = [ info.item.bbox[3], info.item.bbox[2]  ];
         map.fitBounds( [ne,sw] );
         reference_layer.clearLayers();
-        reference_layer.addData( ui.item.geometry );
+        reference_layer.addData( info.item.geometry );
       },
       create: function () {
         $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
@@ -219,7 +219,7 @@ var map = L.map("map", {
   zoom: 3,
   layers: [osm, googleHybrid],
   zoomControl: false,
-  dragging: !L.Browser.mobile, //, tap: L.Browser.mobile
+  dragging: !L.Browser.mobile, 
 });
 var editableLayers = new L.FeatureGroup();
 map.addLayer(editableLayers);
@@ -321,7 +321,7 @@ map.addControl(coordControl);
 // Map events ···································································· //
 map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
-  ui.clear_centroid_data();
+  info.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
   var layer = e.layer;
@@ -330,7 +330,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
   if (type != "circle") {
     util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
   } else {
-    ui.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
+    info.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
     centroid_layer.addData(editableLayers.toGeoJSON());
   }
 });
@@ -344,7 +344,7 @@ map.on(L.Draw.Event.EDITED, function (e) {
   ) {
     for (var l in e.layers._layers) {
       var maybe_circle = e.layers._layers[l];
-      ui.show_centroid_data(
+      info.show_centroid_data(
         maybe_circle._latlng.lat,
         maybe_circle._latlng.lng,
         maybe_circle._mRadius
@@ -364,7 +364,7 @@ map.on(L.Draw.Event.DELETED, function (e) {
   clearAllGeometries();
 });
 const clearAllGeometries = function () {
-  ui.clear_centroid_data();
+  info.clear_centroid_data();
   centroid_layer.clearLayers();
   buffer_layer.clearLayers();
   reference_layer.clearLayers();
@@ -403,7 +403,7 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
       hideLineDrawControl();
       hideCircleDrawControl();
     } else {
-      ui.clear_centroid_data();
+      info.clear_centroid_data();
       centroid_layer.clearLayers();
       buffer_layer.clearLayers();
       reference_layer.clearLayers();
@@ -437,7 +437,6 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
     $("#importWKT").show();
   }
 });
-
 
 // Draw controls visibility handling
 const hideLineDrawControl = function(){
@@ -527,9 +526,9 @@ $("#okWKT").on("click", function () { process_wkt_box() });
 // ESC: Closes div dialogs
 $(document).on("keydown", function (event) {
   if (event.ctrlKey && event.key === 'h') {
-    ui.do_copy_data(true);
+    info.do_copy_data(true);
   } else if (event.ctrlKey && event.key === 'c') {
-    ui.do_copy_data(false);
+    info.do_copy_data(false);
   } else if (event.ctrlKey && event.key === 'w') {    
       show_wkt_box(); 
   } else if (event.ctrlKey && event.key === 'k') {

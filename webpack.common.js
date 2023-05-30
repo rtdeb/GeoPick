@@ -8,8 +8,8 @@ const version = require("./package.json").version;
 module.exports = {
   entry: {
     index: "./src/map.js",
-    util: "./src/util.js",
-    ui: "./src/ui.js",
+    util: "./src/api.js",
+    ui: "./src/info.js",
   },
   output: {
     filename: "js/[name].bundle.js",

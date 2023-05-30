@@ -1,4 +1,4 @@
-const ui = require('./ui');
+const info = require('./info');
 require('leaflet-spin');
 const turf = require('@turf/turf');
 
@@ -74,7 +74,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         buffer_layer.addData( parsed_json.mbc );
         centroid_layer.addData( parsed_json.center );
         map.fitBounds(buffer_layer.getBounds());
-        ui.show_api_centroid_data( parsed_json, geom );        
+        info.show_api_centroid_data( parsed_json, geom );        
         var layer = L.geoJSON(parsed_json.site);        
         layer.eachLayer(
         function(l){
@@ -83,7 +83,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         editableLayers.bringToFront();        
     })
     .catch(function(error){
-        ui.toast_error(error);
+        info.toast_error(error);
         map.spin(false);
     });        
 }
@@ -123,10 +123,10 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
         centroid_layer.addData( parsed_json.center );
         map.fitBounds(buffer_layer.getBounds());
        
-        ui.show_api_centroid_data( parsed_json, geom );
+        info.show_api_centroid_data( parsed_json, geom );
     })
     .catch(function(error){
-        ui.toast_error(error);
+        info.toast_error(error);
         map.spin(false);
     });
 }
