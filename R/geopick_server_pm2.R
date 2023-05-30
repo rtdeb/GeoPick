@@ -1,3 +1,5 @@
+# Script to launch the server for the API
+
 #!/usr/bin/env Rscript
 
 library(dplyr)

@@ -1,3 +1,5 @@
+# GeoPick API, as served by the plumber package
+
 library(plumber)
 library(lwgeom)
 library(geojsonsf)
