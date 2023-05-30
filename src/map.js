@@ -156,11 +156,11 @@ const init_autocomplete = function(map, input_id, reference_layer){
       },      
       minLength: 2,        
       select: function( event, ui ) {
-        const sw = [ info.item.bbox[1], info.item.bbox[0]  ];
-        const ne = [ info.item.bbox[3], info.item.bbox[2]  ];
+        const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
+        const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
         map.fitBounds( [ne,sw] );
         reference_layer.clearLayers();
-        reference_layer.addData( info.item.geometry );
+        reference_layer.addData( ui.item.geometry );
       },
       create: function () {
         $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
