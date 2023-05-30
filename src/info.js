@@ -1,3 +1,5 @@
+// This script contains functionality related to the info side panel plus notification functions
+
 const  $ = require('jquery');
 const Toastr = require('toastr');
 const p = require('../package.json');
@@ -127,6 +129,7 @@ const show_centroid_data = function(lat,lng,radius){
     }
 }
 
+// Notification functions
 const toast_error = function(message){
     Toastr.error(message);
 }

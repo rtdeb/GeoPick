@@ -1,3 +1,5 @@
+// This script contains functionality related to the map
+
 const L = require("leaflet");
 const draw = require("leaflet-draw");
 const $ = require("jquery");
@@ -13,7 +15,7 @@ require('jquery-ui/ui/widgets/autocomplete');
 
 const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
-const util = require("./api");
+const api = require("./api");
 
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
@@ -37,7 +39,7 @@ const importNominatim = function () {
         hideLineDrawControl();
         hideCircleDrawControl();
       }
-      util.promote_reference_to_editable(
+      api.promote_reference_to_editable(
         editableLayers,
         reference_layer,
         buffer_layer,
@@ -107,7 +109,7 @@ const process_wkt_box = function(){
       } else if (geojson.type == "LineString") {
         $(".leaflet-draw-draw-polyline").show();
       }
-      util.promote_reference_to_editable(
+      api.promote_reference_to_editable(
         editableLayers,
         reference_layer,
         buffer_layer,
@@ -328,7 +330,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
   editableLayers.addLayer(layer);
   editableLayers.bringToFront();
   if (type != "circle") {
-    util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    api.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
   } else {
     info.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
     centroid_layer.addData(editableLayers.toGeoJSON());
@@ -356,7 +358,7 @@ map.on(L.Draw.Event.EDITED, function (e) {
       );
     }
   } else {
-    util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    api.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
   }
 });
 
@@ -371,7 +373,7 @@ const clearAllGeometries = function () {
   editableLayers.clearLayers();
 
   if (editableLayers.toGeoJSON().features.length > 0) {
-    util.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    api.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
     editableLayers.bringToFront();
   } else {
     resetDrawControls();

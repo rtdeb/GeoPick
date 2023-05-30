@@ -1,3 +1,5 @@
+// This script contains functionality related to interaction with the API
+
 const info = require('./info');
 require('leaflet-spin');
 const turf = require('@turf/turf');
@@ -54,7 +56,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         body: JSON.stringify(geom),
         headers: new Headers({
             'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'Basic ' + btoa(api_username + ":" + api_pwd)
+            'Authorization': 'Basic ' + window.btoa(api_username + ":" + api_pwd)            
         })        
     }
 
@@ -107,7 +109,7 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
         body: JSON.stringify(geom),
         headers: new Headers({
             'Content-Type': 'application/json; charset=UTF-8',
-            'Authorization': 'Basic ' + btoa(api_username + ":" + api_pwd)
+            'Authorization': 'Basic ' + window.btoa(api_username + ":" + api_pwd)            
         })        
     }
     
