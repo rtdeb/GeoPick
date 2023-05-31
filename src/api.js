@@ -4,8 +4,7 @@ const info = require('./info');
 require('leaflet-spin');
 const turf = require('@turf/turf');
 
-const port = process.env.PORT;
-const api_base_url = process.env.API_URL + ":" + port + "/";
+const api_base_url = process.env.API_URL;
 const api_username = process.env.USER;
 const api_pwd = process.env.PASSWORD;
 

@@ -1,8 +1,8 @@
 // This script contains functionality related to the map
 
 const L = require("leaflet");
-const draw = require("leaflet-draw");
 const $ = require("jquery");
+require("leaflet-draw");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min");
 require("leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css");
 require("leaflet-defaulticon-compatibility");
