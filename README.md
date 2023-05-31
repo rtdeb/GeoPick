@@ -64,12 +64,12 @@ You can configure some API parameters through the *.env* file. You can see an ex
 #### 3 Set up the client side  
 Requirements: npm v16.16.0 with webpack
 
-You can change the port by modifying file the *webpack.dev.js* before executing the command *npm run start*.
+You can change the port by modifying file the *webpack.dev.js* before executing the command *npm run start*. The default port is set at 8085.
 
 > cd GeoPick  
 > npm install  
 > npm run start  
 
-Once done, you can access the application at http://localhost:8085 (8085 is the default development port used here), or at the web server address where you deployed the application.
+Once done, you can access the application at http://localhost:8085, or at the web server address where you deployed the application.
 
 
