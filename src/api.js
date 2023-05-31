@@ -21,7 +21,7 @@ const parse_api_data = function(data){
     const all_data = JSON.parse(data[0]);
     const mbc = JSON.parse(all_data.mbc[0]);
     const site = JSON.parse(all_data.site[0]);
-    const center = JSON.parse(all_data.centre[0]);
+    const centroid = JSON.parse(all_data.centroid[0]);
     var spatial_fit;
     if( all_data.spatial_fit[0] == 'Inf' ){
         spatial_fit = 'N/A';
@@ -29,7 +29,7 @@ const parse_api_data = function(data){
         spatial_fit = JSON.parse(all_data.spatial_fit[0]);        
     }     
     return {
-        center: { type: 'Feature', 'geometry': center },
+        centroid: { type: 'Feature', 'geometry': centroid },
         mbc: { type: 'Feature', 'geometry': mbc },
         site: site,
         spatial_fit: spatial_fit,
@@ -37,7 +37,7 @@ const parse_api_data = function(data){
     };
 }
 
-const promote_reference_to_editable = function(editableLayers, reference_layer, buffer_layer, centroid_layer, map){
+const promote_reference_to_editable = function(editableLayers, reference_layer, mbc_layer, centroid_layer, map){
     var geom = reference_layer.toGeoJSON().features;
     if(geom.length > 1){
         var geom_type = '';
@@ -67,15 +67,15 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
     })
     .then(function(data){     
         editableLayers.clearLayers();
-        buffer_layer.clearLayers();
+        mbc_layer.clearLayers();
         centroid_layer.clearLayers();
         reference_layer.clearLayers();
 
         const parsed_json = parse_api_data(data);        
         map.spin(false);
-        buffer_layer.addData( parsed_json.mbc );
-        centroid_layer.addData( parsed_json.center );
-        map.fitBounds(buffer_layer.getBounds());
+        mbc_layer.addData( parsed_json.mbc );
+        centroid_layer.addData( parsed_json.centroid );
+        map.fitBounds(mbc_layer.getBounds());
         info.show_api_centroid_data( parsed_json, geom );        
         var layer = L.geoJSON(parsed_json.site);        
         layer.eachLayer(
@@ -90,7 +90,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
     });        
 }
 
-const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map){
+const load_api_data = function(editableLayers, mbc_layer, centroid_layer, map){
     var geom = editableLayers.toGeoJSON().features;
     if(geom.length > 1){
         var geom_type = '';
@@ -121,9 +121,9 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
     .then(function(data){              
         const parsed_json = parse_api_data(data);                
         map.spin(false);        
-        buffer_layer.addData( parsed_json.mbc );
-        centroid_layer.addData( parsed_json.center );
-        map.fitBounds(buffer_layer.getBounds());
+        mbc_layer.addData( parsed_json.mbc );
+        centroid_layer.addData( parsed_json.centroid );
+        map.fitBounds(mbc_layer.getBounds());
        
         info.show_api_centroid_data( parsed_json, geom );
     })

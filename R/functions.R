@@ -14,6 +14,7 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   
   # Get Centroid to determine parameters for projecting to Azimuthal Equidistant Projection 
   centroid <- st_centroid(site.sf)
+  
   xc <- st_coordinates(centroid)[1]
   yc <- st_coordinates(centroid)[2]
   
@@ -53,33 +54,14 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   # Calculate spatial fit
   spatial.fit <- round(radius^2 * pi / as.double(st_area(site.tr)), 3)
   
-  # Determine four cardinal points in circle (just for testing purposes)
-  x1.tr <- st_bbox(mbc.tr)$xmin
-  x2.tr <- st_bbox(mbc.tr)$xmax
-  y1.tr <- st_bbox(mbc.tr)$ymin
-  y2.tr <- st_bbox(mbc.tr)$ymax
-  
-  pw <- st_as_sf(st_sfc(st_point(c(x1.tr, st_coordinates(mbc.tr.centroid)[2])))) %>% 
-    st_set_crs(crs)
-  pe <- st_as_sf(st_sfc(st_point(c(x2.tr, st_coordinates(mbc.tr.centroid)[2])))) %>% 
-    st_set_crs(crs)
-  ps <- st_as_sf(st_sfc(st_point(c(st_coordinates(mbc.tr.centroid)[1], y1.tr)))) %>% 
-    st_set_crs(crs)
-  pn <- st_as_sf(st_sfc(st_point(c(st_coordinates(mbc.tr.centroid)[1], y2.tr)))) %>% 
-    st_set_crs(crs)
-  
   # Transform mbc back to wgs84
   mbc.4326 <- st_transform(mbc.tr, 4326)
   mbc.json <- sf_geojson(mbc.4326)
   
   # Centre
-  centre <- st_as_sf(mbc.tr.centroid) %>% st_transform(4326)
-  centre.json <- sf_geojson(centre)
-  pe <- pe %>% st_transform(4326)
-  pw <- pw %>% st_transform(4326)
-  ps <- ps %>% st_transform(4326)
-  pn <- pn %>% st_transform(4326)
-  
+  centroid <- st_as_sf(mbc.tr.centroid) %>% st_transform(4326)
+  centroid.json <- sf_geojson(centroid)
+
   # Return not as multipolygon or multilinestring since leaflet does not support
   # multipolygon or multilinestring for editing.
   if(st_geometry_type(site.sf) == "MULTIPOLYGON"){
@@ -89,16 +71,10 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   }
   
   site.sf.json <- sf_geojson(site.sf, simplify = F)
-  site.tr.json <- sf_geojson(site.tr, simplify = F)
-  mbc.tr.json <- sf_geojson(mbc.tr)
-  centre.tr.json <- sf_geojson(st_as_sf(mbc.tr.centroid))
   
-  l <- list(mbc=mbc.json, mbc.tr=mbc.tr.json, 
-            site=site.sf.json, site.tr=site.tr.json, spatial_fit=spatial.fit,
-            centre=centre.json, centre.tr=centre.json,
-            uncertainty=round(radius),
-            pe=sf_geojson(pe), pn=sf_geojson(pn), pw=sf_geojson(pw), ps=sf_geojson(ps))
-  
-  response <- toJSON(l, force = T, digits = NA)
+  l <- list(mbc=mbc.json, site=site.sf.json, spatial_fit=spatial.fit,
+            centroid=centroid.json, uncertainty=round(radius))
+
+    response <- toJSON(l, force = T, digits = NA)
   response
 }

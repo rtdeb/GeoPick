@@ -42,7 +42,7 @@ const importNominatim = function () {
       api.promote_reference_to_editable(
         editableLayers,
         reference_layer,
-        buffer_layer,
+        mbc_layer,
         centroid_layer,
         map
       );
@@ -54,7 +54,7 @@ const importNominatim = function () {
 const addPointCircleToMap = function (lat, long, radius) {
   info.clear_centroid_data();
   centroid_layer.clearLayers();
-  buffer_layer.clearLayers();
+  mbc_layer.clearLayers();
   reference_layer.clearLayers();
   circle = L.circle([lat, long], radius, {
     color: "blue",
@@ -109,7 +109,7 @@ const process_wkt_box = function(){
       api.promote_reference_to_editable(
         editableLayers,
         reference_layer,
-        buffer_layer,
+        mbc_layer,
         centroid_layer,
         map
       );
@@ -226,8 +226,8 @@ map.addLayer(editableLayers);
 var centroid_layer = new L.geoJSON();
 map.addLayer(centroid_layer);
 
-var buffer_layer = new L.geoJSON();
-map.addLayer(buffer_layer);
+var mbc_layer = new L.geoJSON();
+map.addLayer(mbc_layer);
 
 var reference_layer = new L.geoJSON(null, {
   style: function (feature) {
@@ -322,12 +322,12 @@ map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
   info.clear_centroid_data();
   centroid_layer.clearLayers();
-  buffer_layer.clearLayers();
+  mbc_layer.clearLayers();
   var layer = e.layer;
   editableLayers.addLayer(layer);
   editableLayers.bringToFront();
   if (type != "circle") {
-    api.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
   } else {
     info.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
     centroid_layer.addData(editableLayers.toGeoJSON());
@@ -336,7 +336,7 @@ map.on(L.Draw.Event.CREATED, function (e) {
 
 map.on(L.Draw.Event.EDITED, function (e) {
   centroid_layer.clearLayers();
-  buffer_layer.clearLayers();
+  mbc_layer.clearLayers();
   if (
     editableLayers.toGeoJSON().features.length == 1 &&
     editableLayers.toGeoJSON().features[0].geometry.type == "Point"
@@ -355,7 +355,7 @@ map.on(L.Draw.Event.EDITED, function (e) {
       );
     }
   } else {
-    api.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
   }
 });
 
@@ -365,12 +365,12 @@ map.on(L.Draw.Event.DELETED, function (e) {
 const clearAllGeometries = function () {
   info.clear_centroid_data();
   centroid_layer.clearLayers();
-  buffer_layer.clearLayers();
+  mbc_layer.clearLayers();
   reference_layer.clearLayers();
   editableLayers.clearLayers();
 
   if (editableLayers.toGeoJSON().features.length > 0) {
-    api.load_api_data(editableLayers, buffer_layer, centroid_layer, map);
+    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
     editableLayers.bringToFront();
   } else {
     resetDrawControls();
@@ -404,7 +404,7 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
     } else {
       info.clear_centroid_data();
       centroid_layer.clearLayers();
-      buffer_layer.clearLayers();
+      mbc_layer.clearLayers();
       reference_layer.clearLayers();
       editableLayers.clearLayers();
     }
