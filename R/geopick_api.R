@@ -52,5 +52,5 @@ function(req) {
   site.geojson <- toJSON(req$body, digits = NA)
   site.sf <- geojson_sf(site.geojson)
   response <- getGeoreference(site.sf, max_points_polygon, tolerance)  
-  response
+  return(response)
 }

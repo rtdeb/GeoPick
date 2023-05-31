@@ -75,6 +75,6 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   l <- list(mbc=mbc.json, site=site.sf.json, spatial_fit=spatial.fit,
             centroid=centroid.json, uncertainty=round(radius))
 
-    response <- toJSON(l, force = T, digits = NA)
-  response
+  response <- toJSON(l, force = T, digits = NA)
+  return(response)
 }
