@@ -46,21 +46,30 @@ You may give us feedback on bugs or desired enhancements by sending an email to 
 <hr>
 
 ### HOW TO INSTALL
-To download, install, and run the application, please set up the server and client sides by executing the commands below. Once done, you can access the application at http://localhost.8081. You can change the execution parameters in a *.env* (in this repo shown as *.env_example*).
+To download, install, and run the application, please follow these steps:
+
+#### 1 Download project
+Requirement: *git*
 
 > git clone https://github.com/aescobarr/GeoPick.git  
 
-#### Client side
-Requirements: v16.16.0
+#### 2 Set up server API
+Requirements: R version 4.2.1
+
+You can configure some API parameters through the *.env* file. You can see an example of it in this repo's *.env_example*
+
+> cd R
+> Rscript geopick_server.R
+
+#### 3 Set up client side  
+Requirements: npm v16.16.0 with webpack
+
+You can change the port by modifying file the *webpack.dev.js* before executing the command *npm run start*.
 
 > cd GeoPick  
 > npm install  
 > npm run start  
 
-#### Server side
-Requirements: R version 4.2.1
-
-> cd R
-> Rscript geopick_server.R
+Once done, you can access the application at http://localhost:8085 (8085 is the default development port used here), or at the web server address where you deployed the application.
 
 
