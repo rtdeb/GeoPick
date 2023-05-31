@@ -41,8 +41,9 @@ Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.202
 <hr>
 
 ##### Feedback:
-You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*. Please understand though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, we will do our best to solve any existing bugs.
+You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*. We will do our best to solve any existing bugs. Please understand, though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, your input will be of much value when considering future developments. 
 
+For those acquainted with GitHub, you may use GitHub's interface to raise issues. Please set the label to *Feedback from user*
 <hr>
 
 ### HOW TO INSTALL
