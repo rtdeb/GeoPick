@@ -8,11 +8,11 @@ tmp
 docker
 log.md
 .Rproj.user
+.env
 GeoPick.Rproj
 **/._*
 **/.DS_Store
 .Rhistory
-.env
 grt_api.patch
 .RData
 .Rhistory
