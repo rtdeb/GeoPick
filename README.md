@@ -59,11 +59,11 @@ Requirements: R version 4.2.1
 
 You can configure some API parameters by setting an *.env* file at the GeoPick's root directory. You can see an example of it in this repo's *.env_example*
 
-> cd R
+> cd R  
 > Rscript geopick_server.R
 
 #### 3 Set up the client side  
-Requirements: npm v16.16.0 with webpack
+Requirements: node v16.16.0
 
 You can change the port by modifying the *webpack.dev.js* file before executing the command *npm run start*. The default port is set at 8085.
 
