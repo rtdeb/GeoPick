@@ -133,7 +133,6 @@ const load_api_data = function(editableLayers, buffer_layer, centroid_layer, map
     });
 }
 
-
 module.exports = {
     parse_api_data,
     load_api_data,

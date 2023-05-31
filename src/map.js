@@ -85,11 +85,8 @@ const process_wkt_box = function(){
   wkt = $("#textareaWKT").val();
   geojson = parseFromWK(wkt);
   if (geojson === null) {
-    /* using === because checking for null 
-                             in javascript is  a special case */
     $("#infoDivBox").show();
     $("#errorWKT").val("ERROR: Malformed WKT. Please check and try again.");
-    // alert("ERROR: Malformed WKT. Please check and try again.");
   } else if (geojson.type == "MultiPoint") {
     alert(
       "MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported."
