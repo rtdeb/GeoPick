@@ -48,12 +48,12 @@ You may give us feedback on bugs or desired enhancements by sending an email to 
 ### HOW TO INSTALL
 To download, install, and run the application, please follow these steps:
 
-#### 1 Download project
+#### 1 Download the project
 Requirement: *git*
 
 > git clone https://github.com/aescobarr/GeoPick.git  
 
-#### 2 Set up server API
+#### 2 Set up the server API
 Requirements: R version 4.2.1
 
 You can configure some API parameters through the *.env* file. You can see an example of it in this repo's *.env_example*
@@ -61,7 +61,7 @@ You can configure some API parameters through the *.env* file. You can see an ex
 > cd R
 > Rscript geopick_server.R
 
-#### 3 Set up client side  
+#### 3 Set up the client side  
 Requirements: npm v16.16.0 with webpack
 
 You can change the port by modifying file the *webpack.dev.js* before executing the command *npm run start*.
