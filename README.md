@@ -36,7 +36,7 @@ GeoPick gives coordinates with seven decimal places following Georeferencing Bes
 <hr>
 
 ##### How to cite:
-Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.2023). GeoPick: Implementing best practices for georeferencing [web application], URL: https://nhc.creaf.cat/geopick, GitHub: https://github.com/aescobarr/GeoPick
+Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application], URL: *\<public URL in preparation\>*, GitHub: https://github.com/aescobarr/GeoPick
 
 <hr>
 
@@ -72,4 +72,6 @@ You can change the port by modifying the *webpack.dev.js* file before executing 
 
 Once done, you can access the application at http://localhost:8085, or at the web server address where you deployed the application.
 
+#### DISCLAIMER
+**GeoPick** is provided "as is" without warranty or liability for any purpose. Though developed with all the good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their best to correct errors, but can not guarantee their quick resolution. The **GeoPick** application is publicly accessible on a server that can not guarantee efficient performance under high traffic conditions. The open source code is hosted on <a href="https://github.com/aescobarr/GeoPick">GitHub</a> with the license <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>. The code can be downloaded and installed free of charge.
 
