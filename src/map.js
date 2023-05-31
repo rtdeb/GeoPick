@@ -1,4 +1,4 @@
-// This script contains functionality related to the map panel
+// This script contains functionality related to the map
 
 const L = require("leaflet");
 const draw = require("leaflet-draw");
