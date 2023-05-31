@@ -1,7 +1,7 @@
 // This script contains functionality related to the map
 
 const L = require("leaflet");
-const draw = require("leaflet-draw");
+require("leaflet-draw");
 const $ = require("jquery");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.min");
 require("leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css");
@@ -19,16 +19,16 @@ const api = require("./api");
 
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
-  if (reference_layer.toGeoJSON().features.length == 0) {
+  if (nominatim_layer.toGeoJSON().features.length == 0) {
     info.toast_error("Nothing to import! Please select a location.");
   } else {
-    type = reference_layer.toGeoJSON().features[0].geometry.type;
+    type = nominatim_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
       hideLineDrawControl();
       hidePolyDrawControl();
       hideCircleDrawControl();
       coordinates =
-        reference_layer.toGeoJSON().features[0].geometry.coordinates;
+        nominatim_layer.toGeoJSON().features[0].geometry.coordinates;
       addPointCircleToMap(coordinates[1], coordinates[0], null);
       //   $("#uncertaintyBox").show();
     } else {
@@ -40,8 +40,8 @@ const importNominatim = function () {
         hideCircleDrawControl();
       }
       api.promote_reference_to_editable(
-        editableLayers,
-        reference_layer,
+        site_layer,
+        nominatim_layer,
         mbc_layer,
         centroid_layer,
         map
@@ -55,7 +55,7 @@ const addPointCircleToMap = function (lat, long, radius) {
   info.clear_centroid_data();
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
-  reference_layer.clearLayers();
+  nominatim_layer.clearLayers();
   circle = L.circle([lat, long], radius, {
     color: "blue",
     fillColor: "blue",
@@ -70,9 +70,9 @@ const addPointCircleToMap = function (lat, long, radius) {
     });    
   }
   map.addLayer(circle);
-  editableLayers.clearLayers();
-  editableLayers.addLayer(circle);
-  centroid_layer.addData(editableLayers.toGeoJSON());
+  site_layer.clearLayers();
+  site_layer.addLayer(circle);
+  centroid_layer.addData(site_layer.toGeoJSON());
   info.show_centroid_data(lat, long, radius);
   setVisibleAreaAroundCircle(circle);
 };
@@ -92,8 +92,8 @@ const process_wkt_box = function(){
       "MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported."
     );
   } else {
-    reference_layer.clearLayers();
-    reference_layer.addData(geojson);
+    nominatim_layer.clearLayers();
+    nominatim_layer.addData(geojson);
 
     if (geojson.type == "Point") {
       //No need to go to the API, just show the point as editable so it can be cleared.
@@ -107,8 +107,8 @@ const process_wkt_box = function(){
         $(".leaflet-draw-draw-polyline").show();
       }
       api.promote_reference_to_editable(
-        editableLayers,
-        reference_layer,
+        site_layer,
+        nominatim_layer,
         mbc_layer,
         centroid_layer,
         map
@@ -133,7 +133,7 @@ const process_point_kb_box = function(){
   $("#controlKeyboard").hide();
 };
 
-const init_autocomplete = function(map, input_id, reference_layer){
+const init_autocomplete = function(map, input_id, nominatim_layer){
   $( "#" + input_id ).autocomplete({
       source: function(request, response) {
         $.ajax({
@@ -156,8 +156,8 @@ const init_autocomplete = function(map, input_id, reference_layer){
         const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
         const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
         map.fitBounds( [ne,sw] );
-        reference_layer.clearLayers();
-        reference_layer.addData( ui.item.geometry );
+        nominatim_layer.clearLayers();
+        nominatim_layer.addData( ui.item.geometry );
       },
       create: function () {
         $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
@@ -220,8 +220,8 @@ var map = L.map("map", {
   zoomControl: false,
   dragging: !L.Browser.mobile, 
 });
-var editableLayers = new L.FeatureGroup();
-map.addLayer(editableLayers);
+var site_layer = new L.FeatureGroup();
+map.addLayer(site_layer);
 
 var centroid_layer = new L.geoJSON();
 map.addLayer(centroid_layer);
@@ -229,7 +229,7 @@ map.addLayer(centroid_layer);
 var mbc_layer = new L.geoJSON();
 map.addLayer(mbc_layer);
 
-var reference_layer = new L.geoJSON(null, {
+var nominatim_layer = new L.geoJSON(null, {
   style: function (feature) {
     return {
       weight: 3,
@@ -240,7 +240,7 @@ var reference_layer = new L.geoJSON(null, {
     };
   },
 });
-map.addLayer(reference_layer);
+map.addLayer(nominatim_layer);
 
 var baseMaps = {
   OpenStreetMap: osm,
@@ -291,7 +291,7 @@ var options = {
     marker: false,
   },
   edit: {
-    featureGroup: editableLayers,
+    featureGroup: site_layer,
     poly: {
       icon: new L.DivIcon({
         iconSize: new L.Point(10, 10),
@@ -324,13 +324,13 @@ map.on(L.Draw.Event.CREATED, function (e) {
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
   var layer = e.layer;
-  editableLayers.addLayer(layer);
-  editableLayers.bringToFront();
+  site_layer.addLayer(layer);
+  site_layer.bringToFront();
   if (type != "circle") {
-    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
+    api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
   } else {
     info.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
-    centroid_layer.addData(editableLayers.toGeoJSON());
+    centroid_layer.addData(site_layer.toGeoJSON());
   }
 });
 
@@ -338,8 +338,8 @@ map.on(L.Draw.Event.EDITED, function (e) {
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
   if (
-    editableLayers.toGeoJSON().features.length == 1 &&
-    editableLayers.toGeoJSON().features[0].geometry.type == "Point"
+    site_layer.toGeoJSON().features.length == 1 &&
+    site_layer.toGeoJSON().features[0].geometry.type == "Point"
   ) {
     for (var l in e.layers._layers) {
       var maybe_circle = e.layers._layers[l];
@@ -355,7 +355,7 @@ map.on(L.Draw.Event.EDITED, function (e) {
       );
     }
   } else {
-    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
+    api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
   }
 });
 
@@ -366,12 +366,12 @@ const clearAllGeometries = function () {
   info.clear_centroid_data();
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
-  reference_layer.clearLayers();
-  editableLayers.clearLayers();
+  nominatim_layer.clearLayers();
+  site_layer.clearLayers();
 
-  if (editableLayers.toGeoJSON().features.length > 0) {
-    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
-    editableLayers.bringToFront();
+  if (site_layer.toGeoJSON().features.length > 0) {
+    api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
+    site_layer.bringToFront();
   } else {
     resetDrawControls();
     $("#importWKT").show();
@@ -381,22 +381,22 @@ const clearAllGeometries = function () {
 
 map.on(L.Draw.Event.DRAWSTART, function (e) {
   var type = e.layerType;
-  if (editableLayers.toGeoJSON().features.length != 0) {
+  if (site_layer.toGeoJSON().features.length != 0) {
     if (
       type == "polygon" &&
-      editableLayers.toGeoJSON().features[0].geometry.type == "Polygon"
+      site_layer.toGeoJSON().features[0].geometry.type == "Polygon"
     ) {
       hideLineDrawControl();
       hideCircleDrawControl();
     } else if (
       type == "polyline" &&
-      editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
+      site_layer.toGeoJSON().features[0].geometry.type == "LineString"
     ) {
       hidePolyDrawControl();
       hideCircleDrawControl();
     } else if (
       type == "circle" &&
-      editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
+      site_layer.toGeoJSON().features[0].geometry.type == "LineString"
     ) {
       hidePolyDrawControl();
       hideLineDrawControl();
@@ -405,8 +405,8 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
       info.clear_centroid_data();
       centroid_layer.clearLayers();
       mbc_layer.clearLayers();
-      reference_layer.clearLayers();
-      editableLayers.clearLayers();
+      nominatim_layer.clearLayers();
+      site_layer.clearLayers();
     }
   } else {
     if (type == "polygon") {
@@ -430,7 +430,7 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   if (type == "circle") {
     $("#keyboardEdit").show();
   }
-  if (editableLayers.toGeoJSON().features.length == 0) {
+  if (site_layer.toGeoJSON().features.length == 0) {
     resetDrawControls();
     $("#keyboardEdit").show();
     $("#importWKT").show();
@@ -457,7 +457,7 @@ const resetDrawControls = function(){
 }
 
 // Nominatim handling
-init_autocomplete(map, "place_search", reference_layer);
+init_autocomplete(map, "place_search", nominatim_layer);
 $("#importNominatim").on("click", function () {  importNominatim() });
 
 // Keyboard point editting handling
@@ -476,7 +476,7 @@ const show_point_kb_box = function(){
 
 $("#keyboardCancel").on("click", function () {  cancel_point_kb_box() });
 const cancel_point_kb_box = function() {
-  if (editableLayers.getLayers().length == 0) {
+  if (site_layer.getLayers().length == 0) {
     resetDrawControls();
     $("#importWKT").show();
   }
@@ -523,6 +523,7 @@ $("#okWKT").on("click", function () { process_wkt_box() });
 // CTRL-i or CTRL-I: Import from Nominatim
 // CTRL-d or CTRL-D: Delete all
 // ESC: Closes div dialogs
+
 $(document).on("keydown", function (event) {
   if (event.ctrlKey && event.key === 'h') {
     info.do_copy_data(true);
@@ -561,11 +562,11 @@ $(document).on("keydown", function (event) {
     hideLineDrawControl();
     hidePolyDrawControl();
   } else if (event.ctrlKey && (event.key === "s" || event.key === "S")) {
-    $("#place_search").focus();
+    $("#place_search").trigger("focus");
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
-    if (editableLayers.toGeoJSON().features.length > 0) {
+    if (site_layer.toGeoJSON().features.length > 0) {
       if (confirm("Are you sure you want to clear all geometries?")) {
         clearAllGeometries();
       }
