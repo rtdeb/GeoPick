@@ -41,13 +41,21 @@ Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.202
 <hr>
 
 ### How to install
-To download, install and run the application, please follow these steps:
+To download, install, and run the application, please set up the server and client sides by following the commands below (in shaded background). Once done, you can access the application at http://localhost.8081. You can change the execution parameters in a *.env* (in this repo shown as *.env_example*).
+
 > git clone https://github.com/aescobarr/GeoPick.git  
+
+#### Client side
+Requirements: v16.16.0
+
 > cd GeoPick  
 > npm install  
 > npm run start  
 
-The app runs on localhost:8080  
-Works with node v16.16.0
+#### Server side
+Requirements: R version 4.2.1
+
+> cd R
+> Rscript geopick_server.R
 
 
