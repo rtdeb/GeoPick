@@ -55,7 +55,7 @@ Requirements: git
 > git clone https://github.com/aescobarr/GeoPick.git  
 
 #### 2 Set up the server API
-Requirements: R version 4.2.1
+Requirements: R version 4.2.1 (packages: plumber 1.2.1, jsonlite 1.8.4, sf 1.0-9, geojsonsf 2.0.3, lwgeom 0.2-10, terra 1.6-53, mapview 2.11.0)
 
 You can configure some API parameters by setting an *.env* file at the GeoPick's root directory. You can see an example of it in this repo's *.env_example*
 

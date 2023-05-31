@@ -1,14 +1,14 @@
 # GeoPick API, as served by the plumber package
 
 library(plumber)
-library(lwgeom)
-library(geojsonsf)
-library(sf)
 library(jsonlite)
+library(sf)
+library(geojsonsf)
+library(lwgeom)
 library(terra)
-library(stringr)
+# library(stringr)
 library(mapview)
-library(geosed)
+
 source("../R/functions.R")
 
 df.env <- read.table("../.env", sep = "=") %>% setNames(., c("var","value"))
