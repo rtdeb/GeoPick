@@ -41,7 +41,7 @@ Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.202
 <hr>
 
 ##### Feedback:
-You may give us feedback on bugs or desired enhancements by sending an email to X. Please understand though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, we will do our best to solve any existing bugs.
+You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*. Please understand though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, we will do our best to solve any existing bugs.
 
 <hr>
 
