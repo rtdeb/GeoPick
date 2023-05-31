@@ -40,7 +40,12 @@ Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.202
 
 <hr>
 
-### How to install
+##### Feedback:
+You may give us feedback on bugs or desired enhancements by sending an email to X. Please understand though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, we will do our best to solve any existing bugs.
+
+<hr>
+
+### HOW TO INSTALL
 To download, install, and run the application, please set up the server and client sides by executing the commands below. Once done, you can access the application at http://localhost.8081. You can change the execution parameters in a *.env* (in this repo shown as *.env_example*).
 
 > git clone https://github.com/aescobarr/GeoPick.git  
