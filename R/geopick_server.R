@@ -1,6 +1,6 @@
-# Script to launch the server for the API
-
 #!/usr/bin/env Rscript
+
+# Script to launch the server for the API
 
 library(dplyr)
 library(plumber)
