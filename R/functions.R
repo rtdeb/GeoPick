@@ -13,10 +13,15 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   site.sf <- st_as_sf(st_combine(site.sf))
   
   # Get Centroid to determine parameters for projecting to Azimuthal Equidistant Projection 
-  centroid <- st_centroid(site.sf)
+  # centroid <- st_centroid(site.sf)
+  # 
+  # xc <- st_coordinates(centroid)[1]
+  # yc <- st_coordinates(centroid)[2]
+  # 
+
+  xc <- st_bbox(site.sf)$xmin + (st_bbox(site.sf)$xmax - st_bbox(site.sf)$xmin)/2
+  yc <- st_bbox(site.sf)$ymin + (st_bbox(site.sf)$ymax - st_bbox(site.sf)$ymin)/2
   
-  xc <- st_coordinates(centroid)[1]
-  yc <- st_coordinates(centroid)[2]
   
   # We use the Azimuthal Equaldistance projection to do the calculations
   crs <- paste0("+proj=aeqd +lat_0=", yc, " +lon_0=", xc, 
@@ -71,9 +76,10 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   }
   
   site.sf.json <- sf_geojson(site.sf, simplify = F)
-  
+   
   l <- list(mbc=mbc.json, site=site.sf.json, spatial_fit=spatial.fit,
-            centroid=centroid.json, uncertainty=round(radius))
+            centroid=centroid.json, uncertainty=round(radius),
+            xc=xc, yc=yc)
 
   response <- toJSON(l, force = T, digits = NA)
   return(response)
