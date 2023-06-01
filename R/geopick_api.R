@@ -6,7 +6,6 @@ library(sf)
 library(geojsonsf)
 library(lwgeom)
 library(terra)
-# library(stringr)
 library(mapview)
 
 source("../R/functions.R")
