@@ -5,6 +5,9 @@
 // - centroid_layer: the layer containing the calculated centroid
 // - nominatim_layer: the geometry from a Nominatim search
 
+// Sites represented by lines or polygons rely on a call to the API while sites 
+// represented by a point and a circle of uncertainty are solved at the client side.
+
 const L = require("leaflet");
 const $ = require("jquery");
 require("leaflet-draw");
