@@ -36,7 +36,7 @@ const parse_api_data = function(data){
     };
 }
 
-const promote_reference_to_editable = function(editableLayers, reference_layer, mbc_layer, centroid_layer, map){
+const promote_reference_to_editable = function(site_layer, reference_layer, mbc_layer, centroid_layer, map){
     var geom = reference_layer.toGeoJSON().features;
     if(geom.length > 1){
         var geom_type = '';
@@ -65,7 +65,7 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         return response.json();
     })
     .then(function(data){     
-        editableLayers.clearLayers();
+        site_layer.clearLayers();
         mbc_layer.clearLayers();
         centroid_layer.clearLayers();
         reference_layer.clearLayers();
@@ -79,9 +79,9 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
         var layer = L.geoJSON(parsed_json.site);        
         layer.eachLayer(
         function(l){
-            editableLayers.addLayer(l);
+            site_layer.addLayer(l);
         });
-        editableLayers.bringToFront();        
+        site_layer.bringToFront();        
     })
     .catch(function(error){
         info.toast_error(error);
@@ -89,8 +89,8 @@ const promote_reference_to_editable = function(editableLayers, reference_layer, 
     });        
 }
 
-const load_api_data = function(editableLayers, mbc_layer, centroid_layer, map){
-    var geom = editableLayers.toGeoJSON().features;
+const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
+    var geom = site_layer.toGeoJSON().features;
     if(geom.length > 1){
         var geom_type = '';
         var coords = [];

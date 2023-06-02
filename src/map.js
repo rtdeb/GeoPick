@@ -40,7 +40,7 @@ const importNominatim = function () {
         hideCircleDrawControl();
       }
       api.promote_reference_to_editable(
-        editableLayers,
+        site_layer,
         reference_layer,
         mbc_layer,
         centroid_layer,
@@ -70,9 +70,9 @@ const addPointCircleToMap = function (lat, long, radius) {
     });    
   }
   map.addLayer(circle);
-  editableLayers.clearLayers();
-  editableLayers.addLayer(circle);
-  centroid_layer.addData(editableLayers.toGeoJSON());
+  site_layer.clearLayers();
+  site_layer.addLayer(circle);
+  centroid_layer.addData(site_layer.toGeoJSON());
   info.show_centroid_data(lat, long, radius);
   setVisibleAreaAroundCircle(circle);
 };
@@ -107,7 +107,7 @@ const process_wkt_box = function(){
         $(".leaflet-draw-draw-polyline").show();
       }
       api.promote_reference_to_editable(
-        editableLayers,
+        site_layer,
         reference_layer,
         mbc_layer,
         centroid_layer,
@@ -220,8 +220,8 @@ var map = L.map("map", {
   zoomControl: false,
   dragging: !L.Browser.mobile, 
 });
-var editableLayers = new L.FeatureGroup();
-map.addLayer(editableLayers);
+var site_layer = new L.FeatureGroup();
+map.addLayer(site_layer);
 
 var centroid_layer = new L.geoJSON();
 map.addLayer(centroid_layer);
@@ -291,7 +291,7 @@ var options = {
     marker: false,
   },
   edit: {
-    featureGroup: editableLayers,
+    featureGroup: site_layer,
     poly: {
       icon: new L.DivIcon({
         iconSize: new L.Point(10, 10),
@@ -324,13 +324,13 @@ map.on(L.Draw.Event.CREATED, function (e) {
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
   var layer = e.layer;
-  editableLayers.addLayer(layer);
-  editableLayers.bringToFront();
+  site_layer.addLayer(layer);
+  site_layer.bringToFront();
   if (type != "circle") {
-    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
+    api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
   } else {
     info.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
-    centroid_layer.addData(editableLayers.toGeoJSON());
+    centroid_layer.addData(site_layer.toGeoJSON());
   }
 });
 
@@ -338,8 +338,8 @@ map.on(L.Draw.Event.EDITED, function (e) {
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
   if (
-    editableLayers.toGeoJSON().features.length == 1 &&
-    editableLayers.toGeoJSON().features[0].geometry.type == "Point"
+    site_layer.toGeoJSON().features.length == 1 &&
+    site_layer.toGeoJSON().features[0].geometry.type == "Point"
   ) {
     for (var l in e.layers._layers) {
       var maybe_circle = e.layers._layers[l];
@@ -355,7 +355,7 @@ map.on(L.Draw.Event.EDITED, function (e) {
       );
     }
   } else {
-    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
+    api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
   }
 });
 
@@ -367,11 +367,11 @@ const clearAllGeometries = function () {
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
   reference_layer.clearLayers();
-  editableLayers.clearLayers();
+  site_layer.clearLayers();
 
-  if (editableLayers.toGeoJSON().features.length > 0) {
-    api.load_api_data(editableLayers, mbc_layer, centroid_layer, map);
-    editableLayers.bringToFront();
+  if (site_layer.toGeoJSON().features.length > 0) {
+    api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
+    site_layer.bringToFront();
   } else {
     resetDrawControls();
     $("#importWKT").show();
@@ -381,22 +381,22 @@ const clearAllGeometries = function () {
 
 map.on(L.Draw.Event.DRAWSTART, function (e) {
   var type = e.layerType;
-  if (editableLayers.toGeoJSON().features.length != 0) {
+  if (site_layer.toGeoJSON().features.length != 0) {
     if (
       type == "polygon" &&
-      editableLayers.toGeoJSON().features[0].geometry.type == "Polygon"
+      site_layer.toGeoJSON().features[0].geometry.type == "Polygon"
     ) {
       hideLineDrawControl();
       hideCircleDrawControl();
     } else if (
       type == "polyline" &&
-      editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
+      site_layer.toGeoJSON().features[0].geometry.type == "LineString"
     ) {
       hidePolyDrawControl();
       hideCircleDrawControl();
     } else if (
       type == "circle" &&
-      editableLayers.toGeoJSON().features[0].geometry.type == "LineString"
+      site_layer.toGeoJSON().features[0].geometry.type == "LineString"
     ) {
       hidePolyDrawControl();
       hideLineDrawControl();
@@ -406,7 +406,7 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
       centroid_layer.clearLayers();
       mbc_layer.clearLayers();
       reference_layer.clearLayers();
-      editableLayers.clearLayers();
+      site_layer.clearLayers();
     }
   } else {
     if (type == "polygon") {
@@ -430,7 +430,7 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   if (type == "circle") {
     $("#keyboardEdit").show();
   }
-  if (editableLayers.toGeoJSON().features.length == 0) {
+  if (site_layer.toGeoJSON().features.length == 0) {
     resetDrawControls();
     $("#keyboardEdit").show();
     $("#importWKT").show();
@@ -476,7 +476,7 @@ const show_point_kb_box = function(){
 
 $("#keyboardCancel").on("click", function () {  cancel_point_kb_box() });
 const cancel_point_kb_box = function() {
-  if (editableLayers.getLayers().length == 0) {
+  if (site_layer.getLayers().length == 0) {
     resetDrawControls();
     $("#importWKT").show();
   }
@@ -565,7 +565,7 @@ $(document).on("keydown", function (event) {
   } else if (event.ctrlKey && (event.key === "i" || event.key === "I")) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
-    if (editableLayers.toGeoJSON().features.length > 0) {
+    if (site_layer.toGeoJSON().features.length > 0) {
       if (confirm("Are you sure you want to clear all geometries?")) {
         clearAllGeometries();
       }
