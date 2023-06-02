@@ -36,8 +36,8 @@ const parse_api_data = function(data){
     };
 }
 
-const promote_reference_to_editable = function(site_layer, reference_layer, mbc_layer, centroid_layer, map){
-    var geom = reference_layer.toGeoJSON().features;
+const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_layer, centroid_layer, map){
+    var geom = nominatim_layer.toGeoJSON().features;
     if(geom.length > 1){
         var geom_type = '';
         var coords = [];
@@ -68,7 +68,7 @@ const promote_reference_to_editable = function(site_layer, reference_layer, mbc_
         site_layer.clearLayers();
         mbc_layer.clearLayers();
         centroid_layer.clearLayers();
-        reference_layer.clearLayers();
+        nominatim_layer.clearLayers();
 
         const parsed_json = parse_api_data(data);        
         map.spin(false);

@@ -1,4 +1,9 @@
 // This script contains functionality related to the map
+// There are three layers of geometries to be considered:
+// - site_layer: the layer of the digitised site
+// - mbc_layer: the calculated minimum bounding circle containing the site_layer
+// - centroid_layer: the layer containing the calculated centroid
+// - nominatim_layer: the geometry from a Nominatim search
 
 const L = require("leaflet");
 const $ = require("jquery");
@@ -19,16 +24,16 @@ const api = require("./api");
 
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
-  if (reference_layer.toGeoJSON().features.length == 0) {
+  if (nominatim_layer.toGeoJSON().features.length == 0) {
     info.toast_error("Nothing to import! Please select a location.");
   } else {
-    type = reference_layer.toGeoJSON().features[0].geometry.type;
+    type = nominatim_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
       hideLineDrawControl();
       hidePolyDrawControl();
       hideCircleDrawControl();
       coordinates =
-        reference_layer.toGeoJSON().features[0].geometry.coordinates;
+        nominatim_layer.toGeoJSON().features[0].geometry.coordinates;
       addPointCircleToMap(coordinates[1], coordinates[0], null);
       //   $("#uncertaintyBox").show();
     } else {
@@ -41,7 +46,7 @@ const importNominatim = function () {
       }
       api.promote_reference_to_editable(
         site_layer,
-        reference_layer,
+        nominatim_layer,
         mbc_layer,
         centroid_layer,
         map
@@ -55,7 +60,7 @@ const addPointCircleToMap = function (lat, long, radius) {
   info.clear_centroid_data();
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
-  reference_layer.clearLayers();
+  nominatim_layer.clearLayers();
   circle = L.circle([lat, long], radius, {
     color: "blue",
     fillColor: "blue",
@@ -92,8 +97,8 @@ const process_wkt_box = function(){
       "MULTIPOINT, MULTIPOLYGON with holes, and GEOMETRYCOLLECTION types are not supported."
     );
   } else {
-    reference_layer.clearLayers();
-    reference_layer.addData(geojson);
+    nominatim_layer.clearLayers();
+    nominatim_layer.addData(geojson);
 
     if (geojson.type == "Point") {
       //No need to go to the API, just show the point as editable so it can be cleared.
@@ -108,7 +113,7 @@ const process_wkt_box = function(){
       }
       api.promote_reference_to_editable(
         site_layer,
-        reference_layer,
+        nominatim_layer,
         mbc_layer,
         centroid_layer,
         map
@@ -133,7 +138,7 @@ const process_point_kb_box = function(){
   $("#controlKeyboard").hide();
 };
 
-const init_autocomplete = function(map, input_id, reference_layer){
+const init_autocomplete = function(map, input_id, nominatim_layer){
   $( "#" + input_id ).autocomplete({
       source: function(request, response) {
         $.ajax({
@@ -156,8 +161,8 @@ const init_autocomplete = function(map, input_id, reference_layer){
         const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
         const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
         map.fitBounds( [ne,sw] );
-        reference_layer.clearLayers();
-        reference_layer.addData( ui.item.geometry );
+        nominatim_layer.clearLayers();
+        nominatim_layer.addData( ui.item.geometry );
       },
       create: function () {
         $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
@@ -229,7 +234,7 @@ map.addLayer(centroid_layer);
 var mbc_layer = new L.geoJSON();
 map.addLayer(mbc_layer);
 
-var reference_layer = new L.geoJSON(null, {
+var nominatim_layer = new L.geoJSON(null, {
   style: function (feature) {
     return {
       weight: 3,
@@ -240,7 +245,7 @@ var reference_layer = new L.geoJSON(null, {
     };
   },
 });
-map.addLayer(reference_layer);
+map.addLayer(nominatim_layer);
 
 var baseMaps = {
   OpenStreetMap: osm,
@@ -366,7 +371,7 @@ const clearAllGeometries = function () {
   info.clear_centroid_data();
   centroid_layer.clearLayers();
   mbc_layer.clearLayers();
-  reference_layer.clearLayers();
+  nominatim_layer.clearLayers();
   site_layer.clearLayers();
 
   if (site_layer.toGeoJSON().features.length > 0) {
@@ -405,7 +410,7 @@ map.on(L.Draw.Event.DRAWSTART, function (e) {
       info.clear_centroid_data();
       centroid_layer.clearLayers();
       mbc_layer.clearLayers();
-      reference_layer.clearLayers();
+      nominatim_layer.clearLayers();
       site_layer.clearLayers();
     }
   } else {
@@ -457,7 +462,7 @@ const resetDrawControls = function(){
 }
 
 // Nominatim handling
-init_autocomplete(map, "place_search", reference_layer);
+init_autocomplete(map, "place_search", nominatim_layer);
 $("#importNominatim").on("click", function () {  importNominatim() });
 
 // Keyboard point editting handling
