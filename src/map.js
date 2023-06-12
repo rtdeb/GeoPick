@@ -1,7 +1,7 @@
 // This script contains functionality related to the map
 // There are three layers of geometries to be considered:
 // - site_layer: the layer of the digitised site
-// - mbc_layer: the calculated minimum bounding circle containing the site_layer
+// - mbc_layer: the calculated smallest enclosing circle containing the site_layer
 // - centroid_layer: the layer containing the calculated centroid
 // - nominatim_layer: the geometry from a Nominatim search
 
