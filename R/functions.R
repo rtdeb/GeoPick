@@ -2,11 +2,11 @@
 # 1. Receives JSON and converts to sf object
 # 2. Estimates an approximate centroid where to center the projection for calculations
 # 3. Projects site to Azimuthal Equidistance
-# 4. Calculates minimum bounding circle (MBC) and centroid
-# 5. If centroid falls outside the georeferenced site, recalculates MBC using closest point in site
-# 6. Calculates uncertainty as radius of MBC
-# 7. Reprojects MBC and centroid to WGS84, plus some additional data for checking purposes
-# 8. Returns list as JSON with the calculated MBC and centroid
+# 4. Calculates smallest enclosing circle (SEC) and centroid
+# 5. If centroid falls outside the georeferenced site, recalculates SEC using closest point in site
+# 6. Calculates uncertainty as radius of SEC
+# 7. Reprojects SEC and centroid to WGS84, plus some additional data for checking purposes
+# 8. Returns list as JSON with the calculated SEC and centroid
 
 getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   
