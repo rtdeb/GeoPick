@@ -1,10 +1,11 @@
 // This script contains functionality related to the info side panel plus notification functions
 
-const  $ = require('jquery');
+const $ = require('jquery');
+const ui = require('jquery-ui/ui/widgets/dialog');
 const Toastr = require('toastr');
 const p = require('../package.json');
 const { convertToWK } = require('wkt-parser-helper');
-
+const map = require("./map");
 Toastr.options = {
     "positionClass": "toast-top-center",
     "timeOut": "3000"    
@@ -49,8 +50,7 @@ const clear_centroid_data = function(){
         $('#' + e).val("");
     });    
 }
-
-const do_copy_data = function( yes_headers ){
+const do_copy_data = function( yes_headers, yes_wkt ){
     if( empty_controls() ){        
         toast_warning('Nothing to copy!');
         return;
@@ -59,10 +59,12 @@ const do_copy_data = function( yes_headers ){
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
     let wkt = "";
-    if($('#d_geojson').val() == ""){
-        wkt = "POINT (" + centroid_x + " " + centroid_y + ")";
-    } else {
-        wkt = $('#d_geojson').val();   
+    if(yes_wkt){
+        if($('#d_geojson').val() == ""){
+            wkt = "POINT (" + centroid_x + " " + centroid_y + ")";
+        } else {
+            wkt = $('#d_geojson').val();   
+        }
     }
     let spatial_fit = $('#spatial_fit').val();
 
@@ -84,11 +86,11 @@ const do_copy_data = function( yes_headers ){
 };
 
 $("#cpdata").on("click", function(){
-    do_copy_data(true);
+    handle_copy_data(true);
 });
 
 $("#cpdatanh").on("click", function(){
-    do_copy_data(false);
+    handle_copy_data(false);
 });
 
 const show_api_centroid_data = function(parsed_json, geom){

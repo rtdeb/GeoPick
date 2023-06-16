@@ -52,6 +52,14 @@
           </div>
 
           <!-- HIDDEN DIALOG BOX CONTROLS -->
+          <div id="myModal" class="modal">
+            <div class="modal-content">
+              <p>Are you sure?</p>
+              <button id="handleYes">Yes</button>
+              <button id="handleNo">No</button>
+            </div>
+          </div>
+
           <div id="controlTextWKT" style="display: none;">
             <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
             <textarea id="textareaWKT" rows="9" name="text"></textarea>
@@ -80,9 +88,19 @@
               <button id="keyboardOK">OK</button>
             </div>
           </div>
+          <div id="wktTooBigDialog" style="display: none;">
+            <div style="text-align: justify; font-size: 1.2em;">
+              <p>The geometry is too complex to be handled by a spreadsheet. Would you like to copy the footprintWKT field with your data or dismiss
+                this field?</p>
+            </div>
+            <div id="buttonsWKT">
+              <button id="doNotCopyWKT">No</button>
+              <button id="copyWKT">Yes</button>
+            </div>
+          </div>
         </div>
       </div>
-      
+
       <!-- INFO BOX -->
       <div class="column is-3">
         <div id="info">

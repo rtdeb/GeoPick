@@ -516,6 +516,7 @@ const cancel_wkt_box = function(){
 
 $("#okWKT").on("click", function () { process_wkt_box() });
 
+
 // Keyboard shortcuts handling
 // Keyboard shortcuts
 // CTRL-H: Copy data with headers
@@ -532,10 +533,10 @@ $("#okWKT").on("click", function () { process_wkt_box() });
 // CTRL-d or CTRL-D: Delete all
 // ESC: Closes div dialogs
 $(document).on("keydown", function (event) {
-  if (event.ctrlKey && event.key === 'h') {
-    info.do_copy_data(true);
+  if (event.ctrlKey && event.key === 'h') {   
+    handle_copy_data(true); 
   } else if (event.ctrlKey && event.key === 'c') {
-    info.do_copy_data(false);
+    handle_copy_data(false);
   } else if (event.ctrlKey && event.key === 'w') {    
       show_wkt_box(); 
   } else if (event.ctrlKey && event.key === 'k') {
@@ -581,3 +582,66 @@ $(document).on("keydown", function (event) {
   }
 });
 
+
+// Handling WKT too big
+// const copy_wkt = true;
+
+
+const isWKTTooBig = function(){
+  wkt = $('#d_geojson').val();
+  too_big = false;
+  if(wkt.length >= 32767){
+    too_big = true;
+  } 
+  return too_big;
+}
+
+const handle_copy_data = function(withHeaders){
+  if(isWKTTooBig()){
+    showModal(withHeaders);
+  } else {
+    info.do_copy_data(withHeaders, true);
+  }
+
+}
+  // Get the modal element
+  const modal = document.getElementById('myModal');
+
+  // Function to display the modal
+  function showModal(withHeaders) {
+    modal.style.display = 'block';
+    modal.setAttribute('withHeaders', withHeaders);
+  }
+
+  // Function to handle the "Yes" button click
+  $("#handleYes").on("click", function () {     
+    const withHeaders = modal.getAttribute('withHeaders');
+    // alert('You clicked "Yes" with headers');
+    info.do_copy_data(withHeaders, true)
+    closeModal();
+
+  });
+  
+  // Function to handle the "No" button click
+  $("#handleNo").on("click", function () {     
+    const withHeaders = modal.getAttribute('withHeaders');
+    // alert('You clicked "No" without headers');   
+    info.do_copy_data(withHeaders, false)
+    closeModal();
+  });
+
+  // Function to close the modal
+  function closeModal() {
+    modal.style.display = 'none';
+  }
+
+  // Close the modal if the user clicks outside of it
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      closeModal();
+    }
+  };
+
+  module.exports = {
+    handle_copy_data
+  }
