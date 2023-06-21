@@ -77,6 +77,7 @@ const do_copy_data = function( yes_headers, yes_wkt ){
     let georeference_remarks = $('#georeference_remarks').val();
 
     var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
+
     if( yes_headers ){
         navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);    
     }else{

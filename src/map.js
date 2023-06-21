@@ -597,7 +597,7 @@ const isWKTTooBig = function(){
 }
 
 const handle_copy_data = function(withHeaders){
-  if(isWKTTooBig()){
+  if(isWKTTooBig()){    
     showModal(withHeaders);
   } else {
     info.do_copy_data(withHeaders, true);
@@ -605,7 +605,7 @@ const handle_copy_data = function(withHeaders){
 
 }
   // Get the modal element
-  const modal = document.getElementById('myModal');
+  const modal = document.getElementById('wkt_limit_box_modal');
 
   // Function to display the modal
   function showModal(withHeaders) {
@@ -614,18 +614,16 @@ const handle_copy_data = function(withHeaders){
   }
 
   // Function to handle the "Yes" button click
-  $("#handleYes").on("click", function () {     
+  $("#doCopyWKT").on("click", function () {     
     const withHeaders = modal.getAttribute('withHeaders');
-    // alert('You clicked "Yes" with headers');
     info.do_copy_data(withHeaders, true)
     closeModal();
 
   });
   
   // Function to handle the "No" button click
-  $("#handleNo").on("click", function () {     
+  $("#doNotCopyWKT").on("click", function () {     
     const withHeaders = modal.getAttribute('withHeaders');
-    // alert('You clicked "No" without headers');   
     info.do_copy_data(withHeaders, false)
     closeModal();
   });
@@ -636,11 +634,11 @@ const handle_copy_data = function(withHeaders){
   }
 
   // Close the modal if the user clicks outside of it
-  window.onclick = function(event) {
-    if (event.target === modal) {
-      closeModal();
-    }
-  };
+  // window.onclick = function(event) {
+  //   if (event.target === modal) {
+  //     closeModal();
+  //   }
+  // };
 
   module.exports = {
     handle_copy_data
