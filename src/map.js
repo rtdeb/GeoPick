@@ -624,7 +624,7 @@ const format = function(num){
 
   // Function to handle the "Yes" button click
   $("#doCopyWKT").on("click", function () {     
-    const withHeaders = modal.getAttribute('withHeaders');
+    const withHeaders = JSON.parse(modal.getAttribute('withHeaders'));
     info.do_copy_data(withHeaders, true)
     closeModal();
 
@@ -632,7 +632,7 @@ const format = function(num){
   
   // Function to handle the "No" button click
   $("#doNotCopyWKT").on("click", function () {     
-    const withHeaders = modal.getAttribute('withHeaders');
+    const withHeaders = JSON.parse(modal.getAttribute('withHeaders'));
     info.do_copy_data(withHeaders, false)
     closeModal();
   });
