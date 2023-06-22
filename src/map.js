@@ -587,30 +587,39 @@ $(document).on("keydown", function (event) {
 // const copy_wkt = true;
 
 
-const isWKTTooBig = function(){
+const wktSize = function(){
   wkt = $('#d_geojson').val();
-  too_big = false;
   if(wkt.length >= 32767){
-    too_big = true;
-  } 
-  return too_big;
+    return wkt.length;
+  } else {
+    return null;
+  }
 }
 
 const handle_copy_data = function(withHeaders){
-  if(isWKTTooBig()){    
-    showModal(withHeaders);
+  wkt_length = wktSize();
+  if(wkt_length != null){    
+    showModal(withHeaders, wkt_length);
   } else {
     info.do_copy_data(withHeaders, true);
   }
 
 }
+
+const format = function(num){
+    return String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, '$1 ');
+}
+
   // Get the modal element
   const modal = document.getElementById('wkt_limit_box_modal');
 
   // Function to display the modal
-  function showModal(withHeaders) {
+  function showModal(withHeaders, wkt_text) {
     modal.style.display = 'block';
+    message = "WARNING!\nThe size of this WKT is " + format(wkt_text) + " characters long. Usually spreadsheet applications have a limit on the maximum number of characters that are allowed per cell (e.g., Microsoft Excel: 32 767, Google Sheets: 50 000).\nDo you still want to copy the data including the WKT?"
+    document.getElementById('wkt_length_text').innerText = message;
     modal.setAttribute('withHeaders', withHeaders);
+    document.getElementById('doNotCopyWKT').focus();
   }
 
   // Function to handle the "Yes" button click

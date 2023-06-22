@@ -55,12 +55,14 @@
           <div id="wkt_limit_box_modal" class="modal">
             <div class="wkt_limit_box">
               <div id="wkt_limit_box_text">
-              <p>The WKT for this site is greater than 32 767 characters. This surpasses the length in characters permitted by spreadsheets, e.g.,
-                Microsoft Excel. Do you still want to copy the WKT data?</p>
+              <p id="wkt_length_text">
+                
+              </p>
               </div>
                 <div id="wkt_limit_box_buttons">
-                  <button id="doCopyWKT">Yes</button>
-                  <button id="doNotCopyWKT">No</button>
+                  <!-- Give tabindex since default will be 'No' and 'Yes' if user clicks tab -->
+                  <button tabindex=75 id="doCopyWKT">Yes</button>
+                  <button tabindex=74 id="doNotCopyWKT">No</button>
                 </div>
                 </div>
           </div>
