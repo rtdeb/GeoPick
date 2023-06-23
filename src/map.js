@@ -493,6 +493,17 @@ const cancel_point_kb_box = function() {
 
 $("#keyboardOK").on("click", function () { process_point_kb_box() });
 
+// Delete geometries box
+$("#cancelDeleteGeometries").on("click", function(){ 
+  $("#deleteGeometries").hide();
+  // deleteGeometries.style.display = 'none';
+});
+$("#yesDeleteGeometries").on("click", function(){ 
+  clearAllGeometries();
+  $("#deleteGeometries").hide();  
+});
+
+
 // Well-Known Text event handling
 $("#importWKT").on("click", function() { show_wkt_box() });
 const show_wkt_box = function(){
@@ -556,6 +567,8 @@ $(document).on("keydown", function (event) {
       resetDrawControls();
       $("#importWKT").show();
       $("#controlKeyboard").hide();
+    } else if ($("#deleteGeometries").is(":visible")) {
+      $("#deleteGeometries").hide();
     }
   } else if (event.ctrlKey && (event.key === "l" || event.key === "L")) {
     new L.Draw.Polyline(map).enable();
@@ -575,9 +588,8 @@ $(document).on("keydown", function (event) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
     if (site_layer.toGeoJSON().features.length > 0) {
-      if (confirm("Are you sure you want to clear all geometries?")) {
-        clearAllGeometries();
-      }
+        $('#deleteGeometries').show();
+        $('#yesDeleteGeometries').focus();
     }
   }
 });
