@@ -582,11 +582,7 @@ $(document).on("keydown", function (event) {
   }
 });
 
-
-// Handling WKT too big
-// const copy_wkt = true;
-
-
+// Checking WKT and handling data copying when WKT is too big
 const wktSize = function(){
   wkt = $('#d_geojson').val();
   if(wkt.length >= 32767){

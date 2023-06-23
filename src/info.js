@@ -65,18 +65,21 @@ const do_copy_data = function( yes_headers, yes_wkt ){
         } else {
             wkt = $('#d_geojson').val();   
         }
-    }
-    let spatial_fit = $('#spatial_fit').val();
-
+    }    
+    
     let date = new Date().toISOString();
 
-    let pointRadiusSpatialFit = spatial_fit;
+    let pointRadiusSpatialFit = $('#spatial_fit').val();
+    let footprintSpatialFit = 1;
+    if(wkt.includes("LINESTRING") || wkt.includes("POINT")){        
+        footprintSpatialFit = "";
+    }
     let source_string = p.name + ' v.' + p.version;
 
     let georeferencer_name = $('#georeferencer_name').val();
     let georeference_remarks = $('#georeference_remarks').val();
 
-    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t1\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
+    var string_template = `${centroid_x}\t${centroid_y}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t${footprintSpatialFit}\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
 
     if( yes_headers ){
         navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);    
@@ -99,6 +102,7 @@ const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_y').val( parsed_json.centroid.geometry.coordinates[1].toFixed(7) );
 
     $('#radius_m').val( parsed_json.uncertainty );
+
     $('#spatial_fit').val( parsed_json.spatial_fit );   
     
     /* The following if code is cumbersome in order to deal with inconsistencies in the geom variable between lines and polygons. For lines we needed to build the MULTILINESTRING wkt ourselves beacause the convertToWK did not like. When lines, geom arrives as an array of LINESTRINGs instead of a MULTILINESTRING, while for polygons, geom already arrives as MULTIPOLYGON, and, in this latter case, convertToWK works.
