@@ -604,6 +604,14 @@ const wktSize = function(){
   }
 }
 
+$("#cpdata").on("click", function(){
+  handle_copy_data(true);
+});
+
+$("#cpdatanh").on("click", function(){
+  handle_copy_data(false);
+});
+
 const handle_copy_data = function(withHeaders){
   wkt_length = wktSize();
   if(wkt_length != null){    
@@ -656,7 +664,3 @@ const format = function(num){
   //     closeModal();
   //   }
   // };
-
-  module.exports = {
-    handle_copy_data
-  }

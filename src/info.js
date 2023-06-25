@@ -5,7 +5,7 @@ const ui = require('jquery-ui/ui/widgets/dialog');
 const Toastr = require('toastr');
 const p = require('../package.json');
 const { convertToWK } = require('wkt-parser-helper');
-const map = require("./map");
+// const map = require("./map");
 Toastr.options = {
     "positionClass": "toast-top-center",
     "timeOut": "3000"    
@@ -89,13 +89,6 @@ const do_copy_data = function( yes_headers, yes_wkt ){
     toast_success('Data copied to clipboard!');
 };
 
-$("#cpdata").on("click", function(){
-    handle_copy_data(true);
-});
-
-$("#cpdatanh").on("click", function(){
-    handle_copy_data(false);
-});
 
 const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_x').val( parsed_json.centroid.geometry.coordinates[0].toFixed(7) );
