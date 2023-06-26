@@ -579,6 +579,7 @@ $(document).on("keydown", function (event) {
     hideLineDrawControl();
     hideCircleDrawControl();
   } else if (event.ctrlKey && (event.key === "t" || event.key === "T")) {
+    clearAllGeometries();
     new L.Draw.Circle(map).enable();
     hideLineDrawControl();
     hidePolyDrawControl();
