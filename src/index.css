@@ -23,15 +23,6 @@ div.info_box {
   padding-bottom: 15px;
 }
 
-#info {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  padding-right: 20px;
-  z-index: 9999;
-  opacity: 0.9;
-}
-
 /* Styling for the modal */
 .modal {
   display: none; /* Hidden by default */
@@ -176,7 +167,6 @@ div.info_box {
 .search {
   z-index: 1000;
   position: absolute;
-  top: 10px;
   left: 50%; /* Center the search horizontally */
   transform: translateX(-50%); /* Center the search precisely */
   display: inline-flex;
@@ -198,7 +188,7 @@ div.info_box {
 
 .wkt {
   position: absolute;
-  top: 245px;
+  top: 305px;
   left: 14px;
   padding: 10px;
   z-index: 1000;
@@ -206,7 +196,7 @@ div.info_box {
 
 .control-keyboard {
   position: absolute;
-  top: 280px;
+  top: 340px;
   left: 14px;
   padding: 10px;
   z-index: 1000;
@@ -328,7 +318,7 @@ div.info_box {
 #place_search {
   border-width: 0px;
   min-width: 225px;
-  margin: 5px;
+  margin: 5px;  
   font-size: 1.2em;
 }
 
@@ -561,3 +551,35 @@ div.info_box {
   flex-basis: 75%;
   padding-left: 10px;
 }
+
+/* New */
+#info {
+  border-radius: 5px;
+  padding: 5px;
+  position: fixed;
+  top: 20px;
+  right: 10px;
+  width: 500px;
+  height: 100px;
+  background-color: wheat;
+  transition: height 0.3s;
+  overflow: auto;
+  z-index: 9999;
+}
+#infoContent {
+  margin-left: 1rem;
+}
+
+#toggleButton {
+  width: 20%;
+  padding: 10px;
+  margin-bottom: 20px;
+  float: right;
+  display:flex;
+}
+
+#info.unfolded {
+  height: 94vh;
+  top: 10px;
+}
+

@@ -25,6 +25,16 @@ const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
 const api = require("./api");
 
+// TOGGLE BUTTON INFO BOX ======================================================== //
+document.addEventListener("DOMContentLoaded", function() {
+  const info = document.getElementById("info");
+  const toggleButton = document.getElementById("toggleButton");
+
+  toggleButton.addEventListener("click", function() {
+    info.classList.toggle("unfolded");
+  });
+});
+
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
   if (nominatim_layer.toGeoJSON().features.length == 0) {
@@ -258,7 +268,7 @@ var baseMaps = {
   "Google hybrid": googleHybrid,
 };
 
-L.control.layers(baseMaps, null, { position: "topright" }).addTo(map);
+L.control.layers(baseMaps, null, { position: "topleft" }).addTo(map);
 L.control.scale({ position: "bottomleft" }).addTo(map);
 L.control.zoom({ position: "topleft" }).addTo(map);
 
