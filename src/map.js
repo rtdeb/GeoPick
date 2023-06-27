@@ -25,7 +25,7 @@ const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
 const api = require("./api");
 
-// TOGGLE BUTTON INFO BOX ======================================================== //
+// TOGGLE INFO BOX ======================================================== //
 document.addEventListener("DOMContentLoaded", function() {
   const info = document.getElementById("info");
   const toggleButton = document.getElementById("toggleButton");
@@ -35,6 +35,19 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+var coll = document.getElementsByClassName("collapsible");
+var i;
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    } 
+  });
+}
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
   if (nominatim_layer.toGeoJSON().features.length == 0) {
@@ -556,6 +569,8 @@ $("#okWKT").on("click", function () { process_wkt_box() });
 $(document).on("keydown", function (event) {
   if (event.ctrlKey && event.key === 'h') {   
     handle_copy_data(true); 
+  } else if (event.ctrlKey && event.key === 'f') {
+    $("#toggleButton").trigger("click");
   } else if (event.ctrlKey && event.key === 'c') {
     handle_copy_data(false);
   } else if (event.ctrlKey && event.key === 'w') {    

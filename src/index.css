@@ -19,7 +19,7 @@ div.info_box {
   text-align: right;
   margin-right: 1.5rem;
   margin-bottom: 15px;
-  margin-left: 1rem;
+  margin-left: 1.7rem;
   padding-bottom: 15px;
 }
 
@@ -164,10 +164,11 @@ div.info_box {
   height: 100vh;
 }
 
-.search {
+#search_box {
+  width: 500px;
   z-index: 1000;
   position: absolute;
-  left: 50%; /* Center the search horizontally */
+  left: 48%; /* Center the search horizontally */
   transform: translateX(-50%); /* Center the search precisely */
   display: inline-flex;
   width: flex;
@@ -233,7 +234,7 @@ div.info_box {
   right: 5%;
 }
 
-#deleteGeometries{
+#deleteGeometries {
   display: block;
   width: 300px;
   height: 75px;
@@ -318,7 +319,7 @@ div.info_box {
 #place_search {
   border-width: 0px;
   min-width: 225px;
-  margin: 5px;  
+  margin: 5px;
   font-size: 1.2em;
 }
 
@@ -342,7 +343,7 @@ div.info_box {
 .pair {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .key {
@@ -424,10 +425,13 @@ div.info_box {
 .separator {
   background-color: #a26a43;
   height: 1px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   width: 95%;
 }
-
+#copy_clipboard_message {
+  font-size: 1.2em;
+  font-weight: bolder;
+}
 .button-container {
   display: flex;
   justify-content: center;
@@ -450,55 +454,8 @@ div.info_box {
   background-color: #297c82;
 }
 
-.button-noheaders {
-  background-color: ;
-}
-
 .button:hover {
   background-color: #3e8e41;
-}
-
-/* Narrow screens */
-@media only screen and (max-width: 1400px) {
-  .pair {
-    flex-direction: column;
-  }
-
-  .key {
-    display: flex;
-    margin-right: 0px;
-    margin-bottom: 10px;
-  }
-
-  .dwc_name {
-    flex: 1;
-    font-size: 0.9em;
-    font-weight: 400;
-  }
-
-  .dwc_url {
-    font-size: 0.9em;
-    font-weight: 400;
-    text-align: right;
-  }
-
-  .value {
-    width: 100%;
-    margin-top: 0px;
-  }
-
-  .button-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .button {
-    width: 100%;
-  }
-
-  .search {
-    flex-direction: column;
-  }
 }
 
 /* help */
@@ -557,29 +514,119 @@ div.info_box {
   border-radius: 5px;
   padding: 5px;
   position: fixed;
-  top: 20px;
   right: 10px;
   width: 500px;
   height: 100px;
   background-color: wheat;
-  transition: height 0.3s;
+  transition: height 0.5s;
   overflow: auto;
   z-index: 9999;
+  top: 10px;
 }
 #infoContent {
-  margin-left: 1rem;
-}
-
-#toggleButton {
-  width: 20%;
-  padding: 10px;
-  margin-bottom: 20px;
-  float: right;
-  display:flex;
+  margin-left: 0.7rem;
 }
 
 #info.unfolded {
-  height: 94vh;
+  /* height: 94vh; */
+  height:fit-content;
   top: 10px;
 }
 
+#toggleButton {
+  width: 100%;
+  height: 24px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  float: right;
+  display: flex;
+  cursor: pointer;
+  border: none;
+  justify-content: right;
+  font-weight: bolder;
+  font-size: 18px;
+  color: wheat;
+  background-color: #833904;
+
+}
+.collapsible {
+  background-color: #833904;
+}
+
+#toggleButton:hover{
+  background-color: #be5306;
+}
+.collapsible:after {
+  content: "\2212";
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+.active:after {
+  content: "\002B";
+  
+}
+
+/* Narrow screens **************************************************************** */
+@media only screen and (max-width: 1440px) {
+  #search_box {
+    left: 40%; /* Center the search horizontally */
+    transform: translateX(-50%); /* Center the search precisely */
+  }
+  .pair {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+}
+  @media only screen and (max-width: 1366px) {
+  
+  #info {
+    right: 5px;    
+  }
+
+  #map {
+    width: 100%;
+  }
+  #search_box {
+    left: 40%; /* Center the search horizontally */
+    transform: translateX(-50%); /* Center the search precisely */
+
+  }
+  #info.unfolded {
+    height: 98%;
+  }
+}
+
+@media only screen and (max-width: 1200px){
+  #map {
+    width: 99%;
+  }
+  #search_box {
+    left: 53%; /* Center the search horizontally */
+    transform: translateX(-50%); /* Center the search precisely */
+   
+  }
+  #info {
+    position: relative;
+    width: 100%;
+    height: 900px;
+    overflow: hidden;
+  }
+  
+}
+
+@media only screen and (max-width: 600px){
+  #map {
+    width: 98%;
+  }
+
+  #search_box {
+    left: 55%; /* Center the search horizontally */
+    transform: translateX(-50%); /* Center the search precisely */
+    width: 70%;
+    flex-direction: column;
+  }
+ 
+}
