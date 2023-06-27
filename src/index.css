@@ -184,7 +184,7 @@ div.info_box {
   border-style: solid;
   border-radius: 5px;
   background-color: wheat;
-  opacity: 1;
+  opacity: 0.85;
 }
 
 .wkt {
@@ -522,6 +522,7 @@ div.info_box {
   overflow: auto;
   z-index: 9999;
   top: 10px;
+  opacity: 0.85;
 }
 #infoContent {
   margin-left: 0.7rem;
