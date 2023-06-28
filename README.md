@@ -31,12 +31,12 @@ The tool uses the [OpenStreetMap Nominatim API](https://nominatim.openstreetmap.
 The map coordinates are shown when moving the cursor around, and the scale is also shown when zooming in and out. Coordinates are in decimal degrees and the scale is shown in either kilometres and miles, or metres and feet, depending on the zoom level.
 
 ### A FINAL NOTE ON UNCERTAINTY
-GeoPick gives coordinates with seven decimal places following Georeferencing Best Practices ([Chapman and Wieczorek, 2022](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision)) and Georeferencing Quick Reference Guide ([Zermoglio et al., 2022](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format)). This allows preservation of the correct coordinates in all formats regardless of how many transformations are done ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/); [Wiezorek et al., 2010](https://doi.org/10.1080/13658810412331280211)). Accordingly, GeoPick sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of the number of decimals given with the coordinates ([Darwin Core Maintenance Group, 2021](https://dwc.tdwg.org/terms/#dwc:coordinatePrecision)). Please also note that as in this version of GeoPick, 1.0, coordinate uncertainty refers only to the radius of the enclosing circle of the geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of the underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator ([Wieczorek C and Wieczorek J.R., 2021](http://georeferencing.org/georefcalculator/gc.html)) and its manual ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/)).
+GeoPick gives coordinates with seven decimal places following Georeferencing Best Practices ([Chapman and Wieczorek, 2022](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision)) and Georeferencing Quick Reference Guide ([Zermoglio et al., 2022](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format)). This allows preservation of the correct coordinates in all formats regardless of how many transformations are done ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/); [Wiezorek et al., 2010](https://doi.org/10.1080/13658810412331280211)). Accordingly, GeoPick sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of the number of decimals given with the coordinates ([Darwin Core Maintenance Group, 2021](https://dwc.tdwg.org/terms/#dwc:coordinatePrecision)). Please also note that as in this version of GeoPick, coordinate uncertainty refers only to the radius of the enclosing circle of the geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of the underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator ([Wieczorek C and Wieczorek J.R., 2021](http://georeferencing.org/georefcalculator/gc.html)) and its manual ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/)).
 
 <hr>
 
 ##### How to cite:
-Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R.(version 1.0.2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application], URL: *\<public URL in preparation\>*, GitHub: https://github.com/aescobarr/GeoPick
+Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R. (2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application, version 1.0.0], URL: *\<public URL in preparation\>*, GitHub: https://github.com/aescobarr/GeoPick
 
 <hr>
 
@@ -75,4 +75,19 @@ Once done, you can access the application at http://localhost:8085, or at the we
 
 #### DISCLAIMER
 **GeoPick** is provided "as is" without warranty or liability for any purpose. Though developed with all the good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their best to correct errors, but can not guarantee their quick resolution. The **GeoPick** application is publicly accessible on a server that can not guarantee efficient performance under high traffic conditions. The open source code is hosted on <a href="https://github.com/aescobarr/GeoPick">GitHub</a> with the license <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA</a>. The code can be downloaded and installed free of charge.
+
+<hr>
+
+### VERSIONS
+#### Version 1.0.0
+First released version
+> Point-radius and shape georeferencing methods
+> On-screen digitizing and editing of points, lines and polygons
+> Search and capture geometries from Nominatim (OpenStreetMap Data API)
+> Calculation of smallest enclosing circle (uncertainty) and corrected center
+> Well-Known Text import
+> Data export in Darwin Core format via clipboard
+> Screen responsiveness to different resolutions
+
+
 

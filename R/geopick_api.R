@@ -42,7 +42,7 @@ options <- function() {}
 
 #* @get /version
 function() {
-  "GeoPick API 1.0.2023-Beta"
+  "GeoPick API 1.0.0"
 }
 
 #* @post /mbc
