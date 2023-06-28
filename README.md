@@ -81,13 +81,13 @@ Once done, you can access the application at http://localhost:8085, or at the we
 ### VERSIONS
 #### Version 1.0.0
 First released version
-> Point-radius and shape georeferencing methods
-> On-screen digitizing and editing of points, lines and polygons
-> Search and capture geometries from Nominatim (OpenStreetMap Data API)
-> Calculation of smallest enclosing circle (uncertainty) and corrected center
-> Well-Known Text import
-> Data export in Darwin Core format via clipboard
-> Screen responsiveness to different resolutions
+> Point-radius and shape georeferencing methods  
+> On-screen digitizing and editing of points, lines and polygons  
+> Search and capture geometries from Nominatim (OpenStreetMap Data API)  
+> Calculation of smallest enclosing circle (uncertainty) and corrected center  
+> Well-Known Text import  
+> Data export in Darwin Core format via clipboard  
+> Screen responsiveness to different resolutions  
 
 
 
