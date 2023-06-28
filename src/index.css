@@ -184,7 +184,7 @@ div.info_box {
   border-style: solid;
   border-radius: 5px;
   background-color: wheat;
-  opacity: 0.85;
+  opacity: 0.95;
 }
 
 .wkt {
@@ -522,7 +522,7 @@ div.info_box {
   overflow: auto;
   z-index: 9999;
   top: 10px;
-  opacity: 0.85;
+  opacity: 0.95;
 }
 #infoContent {
   margin-left: 0.7rem;
@@ -600,7 +600,7 @@ div.info_box {
   }
 }
 
-@media only screen and (max-width: 1200px){
+@media only screen and (max-width: 1260px){
   #map {
     width: 99%;
   }
