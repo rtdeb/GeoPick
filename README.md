@@ -86,7 +86,7 @@ You can change the port by modifying the *webpack.dev.js* file before executing 
 > npm install  
 > npm run start  
 
-Once done, you can access the application at http://localhost:8085, or at the web server address where you deployed the application.
+Once done, you can access the application at `http://localhost:8085`, or at the web server address where you deployed the application.
 
 <hr>
 
