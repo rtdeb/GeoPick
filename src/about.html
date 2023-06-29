@@ -113,8 +113,8 @@
         also shown when zooming in and out. Coordinates are in decimal degrees and the scale is shown
         in
         either kilometres and miles, or metres and feet, depending on the zoom level.</p>
-    </div>    
-    
+    </div>
+
     <!-- A final note on uncertainty -->
     <div class="box">
       <p class="mt-5 is-size-5 ">A FINAL NOTE ON UNCERTAINTY:</p>
@@ -129,47 +129,57 @@
         the
         number of decimals given with the coordinates (<a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">Darwin Core
           Maintenance Group, 2021</a>). Please also note that as in this
-        version of <span class="geopick_name">GeoPick</span>, 1.0, coordinate uncertainty refers only to the radius of the enclosing circle of the
+        version of <span class="geopick_name">GeoPick</span>, <%= version %>, coordinate uncertainty refers only to the radius of the enclosing circle of the
         geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of
         the
         underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator (<a
           href="http://georeferencing.org/georefcalculator/gc.html" target="_blank">Wieczorek C and Wieczorek J.R., 2021)</a> and its manual (<a
           href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>).
-      </p>    </div>
+      </p>
+    </div>
 
     <!-- Citation -->
     <div class="box">
       <p class="is-size-5">How to cite:</p>
       <p class="is-size-6">
-        Marcer A., Escobar E., Chapman A.D. and Wieczorek J.R.(version <%= version %>). GeoPick: Enhancing georeferencing efficiency through best practices[web application], URL: &lt;public URL in preparation&gt;, GitHub: https://github.com/aescobarr/GeoPick
+        Marcer A., Escobar E., Chapman A.D. and Wieczorek J.R.(2023). GeoPick: Enhancing georeferencing efficiency through best practices [web
+        application, version <%= version %>], URL: https://geopick.gbif.org
       </p>
     </div>
-    
-    <!-- Feedback -->
+
+    <!-- License -->
     <div class="box">
-      <p class="is-size-5">Feedback</p>
-      <p class="is-size-6">You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*. We will do our best to solve any existing bugs. Please understand, though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, your input will be of much value when considering future developments. 
-      <br><br>
-        For those acquainted with GitHub, you may use GitHub's interface to raise issues. Please set the label to <span style="font-style: italic; text-decoration: underline;">Feedback from user</span>.
-      </p>
-    
-    <!-- GitHub repository -->
-    <div class="box">
-      <p class="is-size-5">GitHub repository</p>
-      <p class="is-size-6"><a href="https://github.com/aescobarr/GeoPick">https://github.com/aescobarr/GeoPick</a></p>
+      <p class="is-size-5">License</p>
+      <p class="is-size-6"><a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
+          BY-NC-SA</a></p>
     </div>
-    
+
     <!-- Disclaimer -->
     <div class="box">
       <p class="is-size-5">Disclaimer</p>
       <p class="is-size-6">
         <span class="geopick_name">GeoPick</span> is provided "as is" without warranty or liability for any purpose. Though developed with all the
         good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their
-        best to correct errors, but can not guarantee their quick resolution. The <span class="geopick_name">GeoPick</span> application is publicly
-        accessible on a server that can not guarantee efficient performance under high traffic conditions. The open source code is hosted on <a
-          href="https://github.com/aescobarr/GeoPick">GitHub</a> with the license <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC
-          BY-NC-SA</a>. The code can be downloaded and installed free of charge.
+        best to correct errors, but can not guarantee their quick resolution.
     </div>
+    <!-- Feedback -->
+    <div class="box">
+      <p class="is-size-5">Feedback</p>
+      <p class="is-size-6">You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*.
+        We will do our best to solve any existing bugs. Please understand, though, that we will not respond to all emails and will not be able to
+        satisfy all suggested enhancements. However, your input will be of much value when considering future developments.
+        <br><br>
+        For those acquainted with GitHub, you may <a target="_blank" href="https://github.com/aescobarr/GeoPick/issues">use GitHub's interface to raise issues</a>. Please set the label to <span
+          style="font-style: italic; text-decoration: underline;">Feedback from user</span>.
+      </p>
+    </div>
+    <!-- GitHub repository -->
+    <div class="box">
+      <p class="is-size-5">GitHub repository</p>
+      <p class="is-size-6"><a target="_blank" href="https://github.com/aescobarr/GeoPick">https://github.com/aescobarr/GeoPick</a></p>
+    </div>
+
+    <!-- Logos -->
     <div class="logos">
       <div id="creaf">
         <a href="https://www.creaf.cat" target="_blank"><img src=<%=require("./creaf-transparent.png")%>></a>
@@ -179,7 +189,7 @@
       </div>
     </div>
 
-  </div>
+
 </body>
 
 </html>

@@ -36,14 +36,29 @@ GeoPick gives coordinates with seven decimal places following Georeferencing Bes
 <hr>
 
 ##### How to cite:
-Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R. (2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application, version 1.0.0], URL: *\<public URL in preparation\>*, GitHub: https://github.com/aescobarr/GeoPick
+Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R. (2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application, version 1.0.0], URL: https://geopick.gbif.org
+
+<hr>
+
+##### Public URL:
+https://geopick.gbif.org
+
+<hr>
+
+##### License:
+[CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
+<hr>
+
+##### Disclaimer:
+*GeoPick* is provided *"as is"* without warranty or liability for any purpose. Though developed with all the good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their best to correct errors, but can not guarantee their quick resolution.
 
 <hr>
 
 ##### Feedback:
 You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*. We will do our best to solve any existing bugs. Please understand, though, that we will not respond to all emails and will not be able to satisfy all suggested enhancements. However, your input will be of much value when considering future developments. 
 
-For those acquainted with GitHub, you may use GitHub's interface to raise issues. Please set the label to *Feedback from user*
+For those acquainted with GitHub, you may [use GitHub's interface to raise issues](https://github.com/aescobarr/GeoPick/issues). Please set the label to *Feedback from user*
 <hr>
 
 ### HOW TO INSTALL
