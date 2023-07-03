@@ -12,8 +12,8 @@ Toastr.options = {
 }
 
 const headers = [
-    'decimalLatitude',
     'decimalLongitude',
+    'decimalLatitude',
     'geodeticDatum',
     'coordinateUncertaintyInMeters',
     'coordinatePrecision',
