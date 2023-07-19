@@ -648,17 +648,23 @@ const handle_copy_data = function(withHeaders){
 
 }
 
+// Return a number with space as thousands separator
 const format = function(num){
-    return String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, '$1 ');
+  let nf = new Intl.NumberFormat('en-US');
+  s = nf.format(num); 
+  s = s.replace(/,/g, " ");
+  return s;
+  // This regular expression did the same but is unsupported by Safari
+  // return String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, '$1 ');
 }
 
   // Get the modal element
   const modal = document.getElementById('wkt_limit_box_modal');
 
   // Function to display the modal
-  function showModal(withHeaders, wkt_text) {
+  function showModal(withHeaders, wkt_length) {
     modal.style.display = 'block';
-    message = "WARNING!\nThe size of this WKT is " + format(wkt_text) + " characters long. Usually spreadsheet applications have a limit on the maximum number of characters that are allowed per cell (e.g., Microsoft Excel: 32 767, Google Sheets: 50 000).\nDo you still want to copy the data including the WKT?"
+    message = "WARNING!\nThe size of this WKT is " + format(wkt_length) + " characters long. Usually spreadsheet applications have a limit on the maximum number of characters that are allowed per cell (e.g., Microsoft Excel: 32 767, Google Sheets: 50 000).\nDo you still want to copy the data including the WKT?"
     document.getElementById('wkt_length_text').innerText = message;
     modal.setAttribute('withHeaders', withHeaders);
     document.getElementById('doNotCopyWKT').focus();
