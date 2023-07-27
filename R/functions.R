@@ -1,28 +1,86 @@
+# ========================================================================================= #
 # Single function doing all the work:
 # 1. Receives JSON and converts to sf object
 # 2. Estimates an approximate centroid where to center the projection for calculations
 # 3. Projects site to Azimuthal Equidistance
 # 4. Calculates smallest enclosing circle (SEC) and centroid
-# 5. If centroid falls outside the georeferenced site, recalculates SEC using closest point in site
+# 5. If centroid falls outside the georeferenced site, recalculates SEC using an approximation
+#    by selecting random vertices from the geometry, determining which one delivers best SEC,
+#    and then exploring the n.nearest vertices to the selected point and again determining 
+#    which one delivers best SEC, thus improving the first random approximation.
 # 6. Calculates uncertainty as radius of SEC
 # 7. Reprojects SEC and centroid to WGS84, plus some additional data for checking purposes
 # 8. Returns list as JSON with the calculated SEC and centroid
+# Parameters:  
+#    - site.sf: sf object of the digitized site
+#    - max_points_polygon: maximum number of vertices per geometry for performance reasons\
+#    - tolerance: tolerance (in meters) used to simplify geometry if necessary
+#    - n.sample: Number of vertices to sample for a first SEC approximation
+#    - n.nearest: Number of neighbours to first SEC approximation to improve it further
 
-getGeoreference <- function(site.sf, max_points_polygon, tolerance){
+# ----------------------------------------------------------------------------------------- #
+# Help functions 
+# ----------------------------------------------------------------------------------------- #
+# Returns the necessary radius for pt to be the center of the circle encompassing all pts
+getRadius <- function(pt, pts){
+  distances <- st_distance(pt, pts)
+  radius <- distances[which.max(distances)]
+  return(radius)
+}
+
+# Returns an n number of points closest to a given point
+# site.pts is an sf object of POINT type with all the vertices of the site
+# n is the number of closest points we want
+getNearestPoints <- function(site.pts, pt, n){
+  if(n >= nrow(site.pts)){
+    cat("n is equal or greater than the number of points, will return all of them.\n")
+    n <- nrow(site.pts) - 1
+  }
+  ds <- data.frame(st_distance(site.pts, pt))
+  ds$idx <- row.names(site.pts)
+  names(ds) <- c("d", "idx")
+  ds$d <- as.double(ds$d)
+  ds <- ds[order(ds$d),]
+  ds <- ds[ds$d != 0,]
+  ds <- ds[1:n,]
+  site.pts <- site.pts[ds$idx,]
+  return(site.pts)
+}
+
+# x,y is point; ccx,ccy is circle center; r is radius
+distanceToCircle <- function(x, y, ccx, ccy, r) {
+  return(sqrt((x - ccx)^2 + (y - ccy)^2) - r)
+}
+
+# Given a set of candidate points it returns the one which is the center of a circle encompassing
+# all site.pts points and minimizing the radius.
+approximateSME <- function(site.pts, candidate.pts, center = NA, radius = 10^8){
+  sme <- list(center=center, radius=radius)
+  for(i in 1:nrow(candidate.pts)){
+    r <- as.double(getRadius(candidate.pts[i,], site.pts))
+    if(r <= sme$radius){
+      sme$radius <- r
+      sme$center <- candidate.pts[i,]
+    }
+  }
+  return(sme)
+}
+# ----------------------------------------------------------------------------------------- #
+# Main function 
+# ----------------------------------------------------------------------------------------- #
+getGeoreference <- function(site.sf, max_points_polygon, tolerance, n.sample, n.nearest){
   
   site.sf <- st_as_sf(st_combine(site.sf))
   
-  # Get Centroid to determine parameters for projecting to Azimuthal Equidistant Projection 
-  centroid <- st_centroid(site.sf)
-  
+# Get Centroid to determine lat_0 and long_0 parameters for projecting to the 
+# Azimuthal Equidistant Projection centered on the geometry
+  centroid <- st_centroid(site.sf)  
   xc <- st_coordinates(centroid)[1]
   yc <- st_coordinates(centroid)[2]
-  
-  # We use the Azimuthal Equaldistance projection to do the calculations
   crs <- paste0("+proj=aeqd +lat_0=", yc, " +lon_0=", xc, 
                 " +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs")
   
-  # Project site to parameterized LAEA
+  # Project site to parameterized AEQD
   site.tr <- site.sf %>% st_transform(crs)
   
   # Check if polygon is too large, if it has more than 10000 points. If so we 
@@ -35,22 +93,48 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance){
   mbc.tr <- st_minimum_bounding_circle(site.tr, nQuadSegs = 30)
   mbc.tr.centroid <- st_centroid(mbc.tr)
   
-  # Displace centroid outside site
-  if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
-    mbc.tr.centroid <- st_nearest_points(site.tr, mbc.tr.centroid)
-    mbc.tr.centroid <- st_sfc(st_cast(mbc.tr.centroid, "POINT")[[1]]) %>% st_set_crs(crs)
-    site.p <- st_cast(site.tr, "POINT")
-    distances <- st_distance(site.p, mbc.tr.centroid)
-    idx.furthest <- which.max(distances)
-    radius <- as.double(distances[idx.furthest])
-    p.furthest <- site.p[idx.furthest,]
-    mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
-  }
-  
   # Get uncertainty, i.e. from centroid to any point in circle
   p <- st_set_crs(st_as_sf(st_sfc(st_point(st_coordinates(mbc.tr)[1, 1:2]))), crs)
   radius <- st_distance(p, mbc.tr.centroid)
   
+  # # Displace centroid outside site
+  # if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
+  #   mbc.tr.centroid <- st_nearest_points(site.tr, mbc.tr.centroid)
+  #   mbc.tr.centroid <- st_sfc(st_cast(mbc.tr.centroid, "POINT")[[1]]) %>% st_set_crs(crs)
+  #   site.p <- st_cast(site.tr, "POINT")
+  #   distances <- st_distance(site.p, mbc.tr.centroid)
+  #   idx.furthest <- which.max(distances)
+  #   radius <- as.double(distances[idx.furthest])
+  #   p.furthest <- site.p[idx.furthest,]
+  #   mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
+  # }
+  
+  # If centroid is not on top of geometry (on top of line or inside polygon), we approximate best SME
+if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
+  site.pts <- st_cast(site.tr, "POINT") %>% mutate(idx = row.names(.))
+  # We randomly sample n points from all points, geometry vertices, to find a first approximation to
+  # which vertex optimizes the sme.
+  # For each point in nearest.pts we look for its furthest point in site.pts and record its distance
+  # We finally choose the point whose distance to the furthest point is minimized
+  if(nrow(site.pts) > n.sample){
+    point.idxs <- sample(1:nrow(site.pts), n.sample)
+    candidate.pts <- site.pts %>% slice(point.idxs)
+  } else {
+    # In the case we have less points than the number we want to sample, we deal with them all
+    candidate.pts <- site.pts    
+  }
+  sme <- approximateSME(site.pts, candidate.pts, NA, 10^8)
+
+  # Once we have a first approximation through randomization, we explore the neighbours of the selected
+  # point in order to to see if one of them still improves the sme
+  nearest.pts <- getNearestPoints(site.pts, sme$center, n.nearest)
+  sme <- approximateSME(site.pts, nearest.pts, sme$center, sme$radius)
+  radius <- sme$radius
+  mbc.tr.centroid <- sme$center %>% dplyr::select(-idx)
+
+  mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
+}
+
   # Calculate spatial fit
   spatial.fit <- round(radius^2 * pi / as.double(st_area(site.tr)), 3)
   

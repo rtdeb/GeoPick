@@ -50,7 +50,6 @@ function(req) {
   sf_use_s2(FALSE)
   site.geojson <- toJSON(req$body, digits = NA)
   site.sf <- geojson_sf(site.geojson)
-  print(st_geometry_type(site.sf))
-  response <- getGeoreference(site.sf, max_points_polygon, tolerance)  
+  response <- getGeoreference(site.sf, max_points_polygon, tolerance, 50, 10)  
   return(response)
 }
