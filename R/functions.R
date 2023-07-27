@@ -54,16 +54,16 @@ distanceToCircle <- function(x, y, ccx, ccy, r) {
 
 # Given a set of candidate points it returns the one which is the center of a circle encompassing
 # all site.pts points and minimizing the radius.
-approximateSME <- function(site.pts, candidate.pts, center = NA, radius = 10^8){
-  sme <- list(center=center, radius=radius)
+approximateSEC <- function(site.pts, candidate.pts, center = NA, radius = 10^8){
+  sec <- list(center=center, radius=radius)
   for(i in 1:nrow(candidate.pts)){
     r <- as.double(getRadius(candidate.pts[i,], site.pts))
-    if(r <= sme$radius){
-      sme$radius <- r
-      sme$center <- candidate.pts[i,]
+    if(r <= sec$radius){
+      sec$radius <- r
+      sec$center <- candidate.pts[i,]
     }
   }
-  return(sme)
+  return(sec)
 }
 # ----------------------------------------------------------------------------------------- #
 # Main function 
@@ -109,11 +109,11 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance, n.sample, n.
   #   mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
   # }
   
-  # If centroid is not on top of geometry (on top of line or inside polygon), we approximate best SME
+  # If centroid is not on top of geometry (on top of line or inside polygon), we approximate best SEC
 if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
   site.pts <- st_cast(site.tr, "POINT") %>% mutate(idx = row.names(.))
   # We randomly sample n points from all points, geometry vertices, to find a first approximation to
-  # which vertex optimizes the sme.
+  # which vertex optimizes the sec
   # For each point in nearest.pts we look for its furthest point in site.pts and record its distance
   # We finally choose the point whose distance to the furthest point is minimized
   if(nrow(site.pts) > n.sample){
@@ -123,14 +123,14 @@ if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
     # In the case we have less points than the number we want to sample, we deal with them all
     candidate.pts <- site.pts    
   }
-  sme <- approximateSME(site.pts, candidate.pts, NA, 10^8)
+  sec <- approximateSEC(site.pts, candidate.pts, NA, 10^8)
 
   # Once we have a first approximation through randomization, we explore the neighbours of the selected
-  # point in order to to see if one of them still improves the sme
-  nearest.pts <- getNearestPoints(site.pts, sme$center, n.nearest)
-  sme <- approximateSME(site.pts, nearest.pts, sme$center, sme$radius)
-  radius <- sme$radius
-  mbc.tr.centroid <- sme$center %>% dplyr::select(-idx)
+  # point in order to to see if one of them still improves the sec
+  nearest.pts <- getNearestPoints(site.pts, sec$center, n.nearest)
+  sec <- approximateSEC(site.pts, nearest.pts, sec$center, sec$radius)
+  radius <- sec$radius
+  mbc.tr.centroid <- sec$center %>% dplyr::select(-idx)
 
   mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
 }
