@@ -48,3 +48,4 @@ leaflet() %>% addTiles() %>%
   addPolylines(data=site.sf) %>% 
   addMarkers(data=centroid.4326) %>% 
   addMarkers(data=np.4326)
+

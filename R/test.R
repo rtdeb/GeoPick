@@ -1,3 +1,4 @@
+# Just a script for testing purposes ================================================= #
 library(plumber)
 library(jsonlite)
 library(sf)
