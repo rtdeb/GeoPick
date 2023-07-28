@@ -15,7 +15,10 @@ tolerance <- 500
 n.sample <- 50
 n.nearest <- 10
 
+
 test.site <- site.0
+test.site <- "LINESTRING (2 42, 12 42)"
+test.site <- "LINESTRING (2 42, 2.1 42)"
 site.sf <- st_as_sf(st_as_sfc(test.site, crs = 4326))
 
 georef <- getGeoreference(site.sf, max_points_polygon, tolerance, n.sample, n.nearest)
@@ -30,3 +33,9 @@ p <- ggplot() +
   theme_void()
 plot(p)
 print(georef$uncertainty)
+
+
+plot(mbc)
+plot(site, add = T)
+plot(centroid, add = T)
+print(st_coordinates(centroid))

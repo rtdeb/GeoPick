@@ -65,6 +65,25 @@ approximateSEC <- function(site.pts, candidate.pts, center = NA, radius = 10^8){
   }
   return(sec)
 }
+
+# Get SEC according to closest point on geometry
+# site.tr: geometry
+# pt: point from which to calculate closest point on site.tr
+# crs: reference system
+getNearestPointOnGeometry <- function(site.tr, pt, crs){
+  pt <- st_nearest_points(site.tr, pt)
+  pt <- st_sfc(st_cast(pt, "POINT")[[1]]) %>% st_set_crs(crs)
+  pt <- st_as_sf(pt)
+  site.p <- st_cast(site.tr, "POINT")
+  distances <- st_distance(site.p, pt)
+  idx.furthest <- which.max(distances)
+  radius <- as.double(distances[idx.furthest])
+  # p.furthest <- site.p[idx.furthest,]
+  sec <- st_as_sf(terra::buffer(vect(pt), radius))
+  l <- list(center=pt, radius=radius)
+  return(pt)
+}
+
 # ----------------------------------------------------------------------------------------- #
 # Main function 
 # ----------------------------------------------------------------------------------------- #
@@ -96,19 +115,7 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance, n.sample, n.
   # Get uncertainty, i.e. from centroid to any point in circle
   p <- st_set_crs(st_as_sf(st_sfc(st_point(st_coordinates(mbc.tr)[1, 1:2]))), crs)
   radius <- st_distance(p, mbc.tr.centroid)
-  
-  # # Displace centroid outside site
-  # if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
-  #   mbc.tr.centroid <- st_nearest_points(site.tr, mbc.tr.centroid)
-  #   mbc.tr.centroid <- st_sfc(st_cast(mbc.tr.centroid, "POINT")[[1]]) %>% st_set_crs(crs)
-  #   site.p <- st_cast(site.tr, "POINT")
-  #   distances <- st_distance(site.p, mbc.tr.centroid)
-  #   idx.furthest <- which.max(distances)
-  #   radius <- as.double(distances[idx.furthest])
-  #   p.furthest <- site.p[idx.furthest,]
-  #   mbc.tr <- st_as_sf(terra::buffer(vect(mbc.tr.centroid), radius))
-  # }
-  
+    
   # If centroid is not on top of geometry (on top of line or inside polygon), we approximate best SEC
 if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
   site.pts <- st_cast(site.tr, "POINT") %>% mutate(idx = row.names(.))
@@ -118,11 +125,19 @@ if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
   # We finally choose the point whose distance to the furthest point is minimized
   if(nrow(site.pts) > n.sample){
     point.idxs <- sample(1:nrow(site.pts), n.sample)
-    candidate.pts <- site.pts %>% slice(point.idxs)
+    candidate.pts <- site.pts %>% slice(point.idxs) 
   } else {
     # In the case we have less points than the number we want to sample, we deal with them all
     candidate.pts <- site.pts    
   }
+  
+  # We add the closest point from non-corrected center to site.tr, whether or not it is a vertex, as
+  # a new candidate. This is to solve cases like a site which is just a straight line between two end
+  # vertices and for which the best SEC is centered on the middle of the line segment.
+  pt <- getNearestPointOnGeometry(site.tr, mbc.tr.centroid, crs) %>% 
+    mutate(idx = max(as.numeric(candidate.pts$idx)) + 1)
+  candidate.pts <- rbind(candidate.pts, pt)
+  
   sec <- approximateSEC(site.pts, candidate.pts, NA, 10^8)
 
   # Once we have a first approximation through randomization, we explore the neighbours of the selected
