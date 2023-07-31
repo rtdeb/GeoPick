@@ -23,7 +23,6 @@ describe('api tests', function() {
       .get('version')
       .end(function(err, res) {
         expect(res).to.have.status(200);
-        console.log(res.text);
         done();
       })
     }),
@@ -37,7 +36,6 @@ describe('api tests', function() {
         expect(res).to.have.status(200);
         json_response = JSON.parse(res.text); 
         json_data = JSON.parse(json_response[0]); 
-        console.log(json_data);
         expect(json_data.mbc).to.exist;
         expect(json_data.uncertainty[0]).to.exist;
         done();
