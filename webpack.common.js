@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
 const version = require("./package.json").version;
@@ -26,6 +27,7 @@ module.exports = {
     maxAssetSize: 512000,
   },
   plugins: [
+    new NodePolyfillPlugin(),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "src/index.html",
