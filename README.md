@@ -46,7 +46,7 @@ https://geopick.gbif.org
 <hr>
 
 ### LICENSE:
-[CC BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+[AGPLv3](https://www.gnu.org/licenses/agpl-3.0.en.html)
 
 <hr>
 
