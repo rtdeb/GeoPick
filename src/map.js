@@ -17,6 +17,7 @@ require("leaflet-defaulticon-compatibility");
 require("leaflet/dist/leaflet.css");
 require("leaflet-draw/dist/leaflet.draw.css");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css");
+require('leaflet-bing-layer');
 require("./index.css");
 require("./mystyle.scss");
 require('jquery-ui/ui/widgets/autocomplete');
@@ -24,6 +25,7 @@ require('jquery-ui/ui/widgets/autocomplete');
 const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
 const api = require("./api");
+const bing_api_key = process.env.BING_API_KEY;
 
 // TOGGLE INFO BOX ======================================================== //
 document.addEventListener("DOMContentLoaded", function() {
@@ -208,46 +210,37 @@ var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
 });
 
-var googleSat = L.tileLayer(
-  "https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+var bing_aerial = L.tileLayer.bing(
   {
-    maxZoom: 20,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    attribution: "Google Maps",
+      'bingMapsKey':bing_api_key
   }
 );
 
-var googleStreets = L.tileLayer(
-  "https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+var bing_aerial_labels = L.tileLayer.bing(
   {
-    maxZoom: 20,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    attribution: "Google Maps",
+      'bingMapsKey':bing_api_key,
+      'imagerySet':'AerialWithLabels'
   }
 );
 
-var googleHybrid = L.tileLayer(
-  "https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}",
+var bing_roads = L.tileLayer.bing(
   {
-    maxZoom: 20,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    attribution: "Google Maps",
+      'bingMapsKey':bing_api_key,
+      'imagerySet':'Road'
   }
 );
 
-var googleTerrain = L.tileLayer(
-  "https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}",
+var bing_roads_dark = L.tileLayer.bing(
   {
-    maxZoom: 20,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"],
-    attribution: "Google Maps",
+      'bingMapsKey':bing_api_key,
+      'imagerySet':'CanvasDark'
   }
 );
 
 var map = L.map("map", {
   center: [51.505, -0.09],
-  zoom: 3,
-  layers: [osm, googleHybrid],
+  zoom: 3,  
+  layers: [osm],
   zoomControl: false,
   dragging: !L.Browser.mobile, 
 });
@@ -275,10 +268,10 @@ map.addLayer(nominatim_layer);
 
 var baseMaps = {
   OpenStreetMap: osm,
-  "Google default view": googleStreets,
-  "Google terrain": googleTerrain,
-  "Google satellite": googleSat,
-  "Google hybrid": googleHybrid,
+  "Aerial": bing_aerial,
+  "Aerial+roads": bing_aerial_labels,
+  "Roads": bing_roads,
+  "Roads dark": bing_roads_dark,
 };
 
 L.control.layers(baseMaps, null, { position: "topleft" }).addTo(map);
