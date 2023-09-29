@@ -268,10 +268,10 @@ map.addLayer(nominatim_layer);
 
 var baseMaps = {
   OpenStreetMap: osm,
-  "Aerial": bing_aerial,
-  "Aerial+roads": bing_aerial_labels,
-  "Roads": bing_roads,
-  "Roads dark": bing_roads_dark,
+  "Bing Aerial": bing_aerial,
+  "Bing Aerial+roads": bing_aerial_labels,
+  "Bing Roads": bing_roads,
+  "Bing Roads dark": bing_roads_dark,
 };
 
 L.control.layers(baseMaps, null, { position: "topleft" }).addTo(map);
