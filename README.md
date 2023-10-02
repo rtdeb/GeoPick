@@ -91,6 +91,9 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### VERSIONS
+#### Version 1.0.1
+> Bing Maps layers
+  
 #### Version 1.0.0
 First released version
 > Point-radius and shape georeferencing methods  
