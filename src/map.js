@@ -341,6 +341,12 @@ var coordControl = L.control.coordinates({
 });
 map.addControl(coordControl);
 
+var div = L.DomUtil.get('place_search');
+L.DomEvent.on(div, 'mousewheel', L.DomEvent.stopPropagation);
+L.DomEvent.on(div, 'mousedown', L.DomEvent.stopPropagation);
+L.DomEvent.on(div, 'click', L.DomEvent.stopPropagation);
+L.DomEvent.on(div, 'dblclick', L.DomEvent.stopPropagation);
+
 // Map events ···································································· //
 map.on(L.Draw.Event.CREATED, function (e) {
   var type = e.layerType;
