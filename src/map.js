@@ -240,7 +240,7 @@ var bing_roads_dark = L.tileLayer.bing(
 var map = L.map("map", {
   center: [51.505, -0.09],
   zoom: 3,  
-  layers: [osm],
+  layers: [bing_aerial_labels],
   zoomControl: false,
   dragging: !L.Browser.mobile, 
 });
