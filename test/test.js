@@ -23,6 +23,7 @@ describe('api tests', function() {
       .get('version')
       .end(function(err, res) {
         expect(res).to.have.status(200);
+        console.log(res.text);
         done();
       })
     }),
