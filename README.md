@@ -91,6 +91,9 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### VERSIONS
+#### Version 1.0.2
+- Changed language in html file form 'es' to 'en' to prevent browsers from prompting to translate from spanish.
+  
 #### Version 1.0.1
 > Bing Maps layers
   
