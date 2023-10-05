@@ -108,5 +108,3 @@ First released version
 > Data export in Darwin Core format via clipboard  
 > Screen responsiveness to different resolutions  
 
-
-
