@@ -1,35 +1,15 @@
-# ========================================================================================= #
-# Single function doing all the work:
-# 1. Receives JSON and converts to sf object
-# 2. Estimates an approximate centroid where to center the projection for calculations
-# 3. Projects site to Azimuthal Equidistance
-# 4. Calculates smallest enclosing circle (SEC) and centroid
-# 5. If centroid falls outside the georeferenced site, recalculates SEC using an approximation
-#    by selecting random vertices from the geometry, determining which one delivers best SEC,
-#    and then exploring the n.nearest vertices to the selected point and again determining 
-#    which one delivers best SEC, thus improving the first random approximation.
-# 6. Calculates uncertainty as radius of SEC
-# 7. Reprojects SEC and centroid to WGS84, plus some additional data for checking purposes
-# 8. Returns list as JSON with the calculated SEC and centroid
-# Parameters:  
-#    - site.sf: sf object of the digitized site
-#    - max_points_polygon: maximum number of vertices per geometry for performance reasons\
-#    - tolerance: tolerance (in meters) used to simplify geometry if necessary
-#    - n.sample: Number of vertices to sample for a first SEC approximation
-#    - n.nearest: Number of neighbours to first SEC approximation to improve it further
-
 # ----------------------------------------------------------------------------------------- #
-# Help functions 
+# Helping functions 
 # ----------------------------------------------------------------------------------------- #
-# Returns the necessary radius for pt to be the center of the circle encompassing all pts
+# Returns the radius as the maximum distance between point (pt) and a set of points (pts) encompassing all pts
 getRadius <- function(pt, pts){
   distances <- st_distance(pt, pts)
   radius <- distances[which.max(distances)]
   return(radius)
 }
 
-# Returns an n number of points closest to a given point
-# site.pts is an sf object of POINT type with all the vertices of the site
+# Returns the n number of points from a set of points, site.pts, that are closest to point pt
+# site.pts is an sf object of POINT type representing all the vertices of the site
 # n is the number of closest points we want
 getNearestPoints <- function(site.pts, pt, n){
   if(n >= nrow(site.pts)){
@@ -46,6 +26,7 @@ getNearestPoints <- function(site.pts, pt, n){
   site.pts <- site.pts[ds$idx,]
   return(site.pts)
 }
+
 
 # x,y is point; ccx,ccy is circle center; r is radius
 distanceToCircle <- function(x, y, ccx, ccy, r) {
@@ -74,18 +55,27 @@ getNearestPointOnGeometry <- function(site.tr, pt, crs){
   pt <- st_nearest_points(site.tr, pt)
   pt <- st_sfc(st_cast(pt, "POINT")[[1]]) %>% st_set_crs(crs)
   pt <- st_as_sf(pt)
-  site.p <- st_cast(site.tr, "POINT")
-  distances <- st_distance(site.p, pt)
-  idx.furthest <- which.max(distances)
-  radius <- as.double(distances[idx.furthest])
-  # p.furthest <- site.p[idx.furthest,]
-  sec <- st_as_sf(terra::buffer(vect(pt), radius))
-  l <- list(center=pt, radius=radius)
   return(pt)
 }
 
-# ----------------------------------------------------------------------------------------- #
-# Main function 
+# ========================================================================================= #
+#  Main function 
+#  Steps:
+#  1. Transform site to Azimuthal Equidistance centered on site's centroid in order to minimize
+#     distortions.
+#  2. Calculate smallest enclosing circle (SEC) and its center as centroid.
+#  3. If the centroid falls outside the georeferenced site, we recalculate SEC using an approximation
+#     by selecting random vertices from the geometry, determining which one delivers best SEC,
+#     and then exploring the n.nearest vertices to the selected point and again determining 
+#     which one delivers best SEC, thus improving the first random approximation.
+#  4. Once we have the definitive centroid we calculate the value of the radius as uncertainty.
+#  5. Reproject back to WGS84 and return for displaying in Leaflet
+#  Parameters:  
+#    - site.sf: sf object of the digitized site
+#    - max_points_polygon: maximum number of vertices per geometry for performance reasons\
+#    - tolerance: tolerance (in meters) used to simplify geometry if necessary
+#    - n.sample: Number of vertices to sample for a first SEC approximation
+#    - n.nearest: Number of neighbours to first SEC approximation to improve it further
 # ----------------------------------------------------------------------------------------- #
 getGeoreference <- function(site.sf, max_points_polygon, tolerance, n.sample, n.nearest){
   
@@ -108,11 +98,11 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance, n.sample, n.
     site.tr <- st_simplify(site.tr, preserveTopology = TRUE, dTolerance = tolerance)
   }
   
-  # Calculate MBC and centroid on projected site
+  # Calculate SEC and centroid on projected site
   mbc.tr <- st_minimum_bounding_circle(site.tr, nQuadSegs = 30)
   mbc.tr.centroid <- st_centroid(mbc.tr)
   
-  # Get uncertainty, i.e. from centroid to any point in circle
+  # Get uncertainty, i.e. from centroid to any point in circle, e.g. point at index = 1
   p <- st_set_crs(st_as_sf(st_sfc(st_point(st_coordinates(mbc.tr)[1, 1:2]))), crs)
   radius <- st_distance(p, mbc.tr.centroid)
     
@@ -132,8 +122,7 @@ if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
   }
   
   # We add the closest point from non-corrected center to site.tr, whether or not it is a vertex, as
-  # a new candidate. This is to solve cases like a site which is just a straight line between two end
-  # vertices and for which the best SEC is centered on the middle of the line segment.
+  # a new candidate, since it may well be a good candidate.
   pt <- getNearestPointOnGeometry(site.tr, mbc.tr.centroid, crs) %>% 
     mutate(idx = max(as.numeric(candidate.pts$idx)) + 1)
   candidate.pts <- rbind(candidate.pts, pt)
@@ -153,11 +142,11 @@ if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
   # Calculate spatial fit
   spatial.fit <- round(radius^2 * pi / as.double(st_area(site.tr)), 3)
   
-  # Transform mbc back to wgs84
+  # Transform mbc back to wgs84 in geojson
   mbc.4326 <- st_transform(mbc.tr, 4326)
   mbc.json <- sf_geojson(mbc.4326)
   
-  # Centre
+  # Transform centroid back to wgs84 in geojson
   centroid <- st_as_sf(mbc.tr.centroid) %>% st_transform(4326)
   centroid.json <- sf_geojson(centroid)
 
