@@ -163,29 +163,51 @@ div.info_box {
 #map {
   height: 100vh;
 }
+.clipboard-icon {
+  font-size: 18px;
+}
+#search_table {
+  width: 100%;
+}
 
+/* Style for table cells */
+#search_table_label {
+  vertical-align:middle; /* Vertically align all table cells to the middle */
+  text-align: right;
+  font-size: 1.2em;   
+}
+
+#search_table_input {
+  vertical-align: middle; /* Vertically align all table cells to the middle */
+}
+
+#search_table_button{
+  flex:1;
+  text-align: center;  
+}
+#search_row{
+  display: flex;
+  align-items: center;
+
+}
 #search_box {
-  width: 500px;
+  max-width: 500px;
+  width: 475px;
   z-index: 1000;
   position: absolute;
-  left: 48%; /* Center the search horizontally */
-  transform: translateX(-50%); /* Center the search precisely */
-  display: inline-flex;
-  width: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
+  left: 48%;
+  transform: translateX(-50%);
+  background-color: wheat;
+  opacity: 0.95; 
   margin-top: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
+  padding: 3px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   border-width: 1px;
   border-color: black;
   border-style: solid;
   border-radius: 5px;
-  background-color: wheat;
-  opacity: 0.95;
 }
+
 
 .wkt {
   position: absolute;
@@ -323,8 +345,14 @@ div.info_box {
   font-size: 1.2em;
 }
 
-#search_label {
+#latest_search{
+  color: #262628c6;
+  font-style: italic;
+  min-width: 225px;
+  margin: 5px;
   font-size: 1.2em;
+  background-color: wheat;
+  vertical-align: bottom;
 }
 
 #import {
@@ -333,11 +361,6 @@ div.info_box {
   color: white;
   border: 1px;
   border-color: black;
-}
-
-.search-element {
-  flex: 1;
-  text-align: center;
 }
 
 .pair {

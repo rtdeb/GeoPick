@@ -38,253 +38,279 @@
     <!-- MAP -->
     <div id="map">
       <!-- SEARCH BOX -->
-      <div class="search" id="search_box">
-        <div class="search-element"><label id="search_label">Location search:&nbsp;</label></div>
-        <div class="search-element"><input id="place_search" placeholder="through OpenStreetMap Nominatim" /></div>
-        <div class="search-element"><button id="importNominatim" class="button">Import location</button></div>
+      <div id="search_box">
+        <table id="search_table">
+          <tr>
+            <td id="search_table_label">
+                <label id="search_label">Location search:&nbsp;</label>
+            </td>
+            <td id="search_table_input">
+                <input id="place_search" placeholder="through OpenStreetMap Nominatim" />
+            </td>
+            <td id="search_table_button">
+                <button id="importNominatim" class="button">Import location</button>
+            </td>
+          </tr>
+          <tr>
+            <td id="search_table_label">
+              <div>
+                <label id="search_label">Latest search:&nbsp;</label>
+              </div>
+            </td>
+            <td id="search_table_input">                
+                <label id="latest_search"></label>
+                <input hidden id="latest_search_hidden" />
+            </td>
+            <td id="search_table_button">
+              <button id="latest_search_copy" class="button">Copy</button>
+            </td>
+          </tr>
+        </table>
       </div>
+    </div>
 
-      <!-- ADDITIONAL EDITING CONTROLS -->
-      <div class="wkt">
-        <input id="importWKT" src=<%=require("./wkt.png")%> type="image" title="Import from Well Known Text" width = "30px">
-      </div>
-      <div class="control-keyboard">
-        <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via keyboard" width = "30px">
-      </div>
 
-      <!-- HIDDEN DIALOG BOX CONTROLS -->
-      <div id="wkt_limit_box_modal" class="modal">
-        <div class="wkt_limit_box">
-          <div id="wkt_limit_box_text">
-            <p id="wkt_length_text">
 
-            </p>
-          </div>
-          <div id="wkt_limit_box_buttons">
-            <!-- Give tabindex since default will be 'No' and 'Yes' if user clicks tab -->
-            <button tabindex=75 id="doCopyWKT">Yes</button>
-            <button tabindex=74 id="doNotCopyWKT">No</button>
-          </div>
-        </div>
-      </div>
+    <!-- ADDITIONAL EDITING CONTROLS -->
+    <div class="wkt">
+      <input id="importWKT" src=<%=require("./wkt.png")%> type="image" title="Import from Well Known Text" width = "30px">
+    </div>
+    <div class="control-keyboard">
+      <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via keyboard" width = "30px">
+    </div>
 
-      <div id="deleteGeometries" style="display: none;">
-        <div style="text-align: justify; font-size: 1.2em;">Are you sure you want to clear all geometries?</div>
-        <div id="buttonsDeleteGeometries">
-          <button id="cancelDeleteGeometries">Cancel</button>
-          <button id="yesDeleteGeometries">Yes</button>
-        </div>
-      </div>
+    <!-- HIDDEN DIALOG BOX CONTROLS -->
+    <div id="wkt_limit_box_modal" class="modal">
+      <div class="wkt_limit_box">
+        <div id="wkt_limit_box_text">
+          <p id="wkt_length_text">
 
-      <div id="controlTextWKT" style="display: none;">
-        <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
-        <textarea id="textareaWKT" rows="9" name="text"></textarea>
-        <div id="buttonsWKT">
-          <button id="cancelWKT">Cancel</button>
-          <button id="okWKT">OK</button>
+          </p>
         </div>
-        <div id="infoDivBox" style="display: none;">
-          <textarea id="errorWKT" name="text"></textarea>
-        </div>
-      </div>
-
-      <div id="controlKeyboard" style="display: none;">
-        <div style="text-align: justify; font-size: 1.2em; margin-bottom: 10px;">Please enter latitude, longitude and uncertainty
-        </div>
-        <div>
-          <div style="margin-top: 5px;font-size: 1.2em;">Latitude (in decimal degrees, WGS84)</div>
-          <input id="keyboardLatitude" class="input is-small" type="text" placeholder="latitude" size="11" , maxlength="12">
-          <div style="margin-top: 5px;font-size: 1.2em;">Longitude (in decimal degrees, WGS84)</div>
-          <input id="keyboardLongitude" class="input is-small" type="text" placeholder="longitude">
-          <div style="margin-top: 5px;font-size: 1.2em;">Coordinate uncertainty (in meters)</div>
-          <input id="keyboardUncertainty" class="input is-small" type="text" placeholder="Uncertainty in meters">
-        </div>
-        <div id="buttonsKeyboard">
-          <button id="keyboardCancel">Cancel</button>
-          <button id="keyboardOK">OK</button>
-        </div>
-      </div>
-      <div id="wktTooBigDialog" style="display: none;">
-        <div style="text-align: justify; font-size: 1.2em;">
-          <p>The geometry is too complex to be handled by a spreadsheet. Would you like to copy the footprintWKT field with your data or dismiss
-            this field?</p>
-        </div>
-        <div id="buttonsWKT">
-          <button id="doNotCopyWKT">No</button>
-          <button id="copyWKT">Yes</button>
+        <div id="wkt_limit_box_buttons">
+          <!-- Give tabindex since default will be 'No' and 'Yes' if user clicks tab -->
+          <button tabindex=75 id="doCopyWKT">Yes</button>
+          <button tabindex=74 id="doNotCopyWKT">No</button>
         </div>
       </div>
     </div>
 
-    <!-- INFO BOX -->
-    <div id="info" class="unfolded">
-      <button id="toggleButton" class="collapsible"></button>
-      <!-- <button id="toggleButton">Toggle Sidebar</button>     -->
-      <!-- ABOUT -->
-      <div class="about">
-        <div class="columns">
-          <div class="column has-text-left is-one-third pl-2">
-            <div class="columns">
+    <div id="deleteGeometries" style="display: none;">
+      <div style="text-align: justify; font-size: 1.2em;">Are you sure you want to clear all geometries?</div>
+      <div id="buttonsDeleteGeometries">
+        <button id="cancelDeleteGeometries">Cancel</button>
+        <button id="yesDeleteGeometries">Yes</button>
+      </div>
+    </div>
+
+    <div id="controlTextWKT" style="display: none;">
+      <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
+      <textarea id="textareaWKT" rows="9" name="text"></textarea>
+      <div id="buttonsWKT">
+        <button id="cancelWKT">Cancel</button>
+        <button id="okWKT">OK</button>
+      </div>
+      <div id="infoDivBox" style="display: none;">
+        <textarea id="errorWKT" name="text"></textarea>
+      </div>
+    </div>
+
+    <div id="controlKeyboard" style="display: none;">
+      <div style="text-align: justify; font-size: 1.2em; margin-bottom: 10px;">Please enter latitude, longitude and uncertainty
+      </div>
+      <div>
+        <div style="margin-top: 5px;font-size: 1.2em;">Latitude (in decimal degrees, WGS84)</div>
+        <input id="keyboardLatitude" class="input is-small" type="text" placeholder="latitude" size="11" , maxlength="12">
+        <div style="margin-top: 5px;font-size: 1.2em;">Longitude (in decimal degrees, WGS84)</div>
+        <input id="keyboardLongitude" class="input is-small" type="text" placeholder="longitude">
+        <div style="margin-top: 5px;font-size: 1.2em;">Coordinate uncertainty (in meters)</div>
+        <input id="keyboardUncertainty" class="input is-small" type="text" placeholder="Uncertainty in meters">
+      </div>
+      <div id="buttonsKeyboard">
+        <button id="keyboardCancel">Cancel</button>
+        <button id="keyboardOK">OK</button>
+      </div>
+    </div>
+    <div id="wktTooBigDialog" style="display: none;">
+      <div style="text-align: justify; font-size: 1.2em;">
+        <p>The geometry is too complex to be handled by a spreadsheet. Would you like to copy the footprintWKT field with your data or dismiss
+          this field?</p>
+      </div>
+      <div id="buttonsWKT">
+        <button id="doNotCopyWKT">No</button>
+        <button id="copyWKT">Yes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO BOX -->
+  <div id="info" class="unfolded">
+    <button id="toggleButton" class="collapsible"></button>
+    <!-- <button id="toggleButton">Toggle Sidebar</button>     -->
+    <!-- ABOUT -->
+    <div class="about">
+      <div class="columns">
+        <div class="column has-text-left is-one-third pl-2">
+          <div class="columns">
+            <div class="column has-text-left is-full">
+              <span class="is-size-6 has-text-weight-bold">
+                <a href="/about.html" target="_blank">About</a>
+              </span>
+              <span class="is-size-6 has-text-weight-bold">
+                |
+              </span>
+              <span class="is-size-6 has-text-weight-bold">
+                <a href="/help.html" target="_blank">Help</a>
+              </span>
               <div class="column has-text-left is-full">
-                <span class="is-size-6 has-text-weight-bold">
-                  <a href="/about.html" target="_blank">About</a>
+                <span class="is-size-7 is-full">
+                  v.<%= version %>
                 </span>
-                <span class="is-size-6 has-text-weight-bold">
-                  |
-                </span>
-                <span class="is-size-6 has-text-weight-bold">
-                  <a href="/help.html" target="_blank">Help</a>
-                </span>
-                <div class="column has-text-left is-full">
-                  <span class="is-size-7 is-full">
-                    v.<%= version %>
-                  </span>
-                </div>
               </div>
             </div>
           </div>
-          <div class="column has-text-right pl-4 pt-3 pb-4">
-            <img src=<%=require("./geopick-logo.png")%> width = "180px" alt="MDN">
-          </div>
         </div>
-      </div>
-
-      <div id="infoContent">
-        <!-- CORRECTED CENTER: LATITUDE/LONGITUDE -->
-        <!-- <div class="separator"></div> -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">LATITUDE, LONGITUDE</div>
-            <div class="dwc_url">
-              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLatitude" target="_blank"
-                title="Go to Darwin Core definition">[dwc:decimalLatitude]</a>,
-              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLongitude" target="_blank"
-                title="Go to Darwin Core definition">[dwc:decimalLongitude]</a>
-            </div>
-          </div>
-          <div class="value">
-            <input class="non-editable" readonly id="centroid_y" type="text" placeholder="" size="11">
-            <input class="non-editable" readonly id="centroid_x" type="text" placeholder="" size="11">
-          </div>
-        </div>
-        <!-- COORDINATE UNCERTAINTY -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">COORDINATE UNCERTAINTY (m)</div>
-            <div class="dwc_url"><a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:coordinateUncertaintyInMeters]</span></a>
-            </div>
-          </div>
-          <div class="value">
-            <input class="non-editable" readonly id="radius_m" type="text" placeholder="" size="15">
-          </div>
-        </div>
-        <!-- GEODETIC DATUM -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">GEODETIC DATUM</div>
-            <div class="dwc_url"><a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:geodeticDatum]</a>
-            </div>
-          </div>
-          <div class="value">
-            <input class="non-editable" readonly id="geodetic_datum" type="text" placeholder="" value="EPSG: 4326 (WGS84)">
-          </div>
-        </div>
-        <!-- POINT-RADIUS SPATIAL FIT -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">POINT RADIUS SPATIAL FIT</div>
-            <div class="dwc_url">
-              <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank" title="Go to Darwin Core definition">
-                [dwc:pointRadiusSpatialFit]</a>
-            </div>
-          </div>
-          <div class="value">
-            <input class="non-editable" readonly id="spatial_fit" type="text" placeholder="" size="8">
-          </div>
-        </div>
-        <!-- COORDINATE PRECISION -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">PRECISION</div>
-            <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:coordinatePrecision]</a>
-            </div>
-          </div>
-          <div class="value">
-            <input class="non-editable" readonly id="coordinate_precision" type="text" placeholder="" value="0.0000001">
-          </div>
-        </div>
-        <!-- GEOREFERENCE PROTOCOL -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">GEOREFERENCE PROTOCOL</div>
-            <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:georeferenceProtocol]</a>
-            </div>
-          </div>
-          <div class="value">
-            <textarea readonly class="non-editable" id="georeference_protocol" type="text" placeholder="" value=""
-              rows="2">Georeferencing Quick Reference Guide (Zermoglio et al. 2020)</textarea>
-          </div>
-        </div>
-        <!-- GEOREFERENCE SOURCES -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">GEOREFERENCE SOURCES</div>
-            <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:georeferenceSources]</a>
-            </div>
-          </div>
-          <div class="value">
-            <textarea readonly class="non-editable" id="georeference_sources" type="text" placeholder="" value=""
-              rows="2">GeoPick v.<%= version %></textarea>
-          </div>
-        </div>
-        <!-- GEOREFERENCED BY -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">GEOREFERENCED BY</div>
-            <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferencedBy" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:georeferencedBy]</a></div>
-          </div>
-          <div class="value">
-            <input class="editable" id="georeferencer_name" class="input" type="text" placeholder="Please enter your name(s)" />
-          </div>
-        </div>
-        <!-- GEOREFERENCE REMARKS -->
-        <div class="pair">
-          <div class="key">
-            <div class="dwc_name">GEOREFERENCE REMARKS</div>
-            <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceRemarks" target="_blank"
-                title="Go to Darwin Core definition">
-                [dwc:georeferenceRemarks]</a>
-            </div>
-          </div>
-          <div class="value">
-            <textarea class="editable" id="georeference_remarks" name="story" rows="4" cols="33"
-              placeholder="Please add notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to those formalized in the method referred to in georeferenceProtocol."></textarea>
-          </div>
-
-          <!-- COPY BUTTON -->
-          <div class="separator"></div>
-          <div class="button-container">
-            <!-- <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase">Copy data to clipboard</div> -->
-            <div id="copy_clipboard_message">Copy to clipboard:</div>
-            <button class="button button-headers" id="cpdata">With headers</button>
-            <button class="button button-noheaders" id="cpdatanh">Without headers</button>
-          </div>
-          <input type="hidden" id="d_geojson">
+        <div class="column has-text-right pl-4 pt-3 pb-4">
+          <img src=<%=require("./geopick-logo.png")%> width = "180px" alt="MDN">
         </div>
       </div>
     </div>
+
+    <div id="infoContent">
+      <!-- CORRECTED CENTER: LATITUDE/LONGITUDE -->
+      <!-- <div class="separator"></div> -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">LATITUDE, LONGITUDE</div>
+          <div class="dwc_url">
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLatitude" target="_blank"
+              title="Go to Darwin Core definition">[dwc:decimalLatitude]</a>,
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLongitude" target="_blank"
+              title="Go to Darwin Core definition">[dwc:decimalLongitude]</a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="centroid_y" type="text" placeholder="" size="11">
+          <input class="non-editable" readonly id="centroid_x" type="text" placeholder="" size="11">
+        </div>
+      </div>
+      <!-- COORDINATE UNCERTAINTY -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">COORDINATE UNCERTAINTY (m)</div>
+          <div class="dwc_url"><a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:coordinateUncertaintyInMeters]</span></a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="radius_m" type="text" placeholder="" size="15">
+        </div>
+      </div>
+      <!-- GEODETIC DATUM -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">GEODETIC DATUM</div>
+          <div class="dwc_url"><a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank" title="Go to Darwin Core definition">
+              [dwc:geodeticDatum]</a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="geodetic_datum" type="text" placeholder="" value="EPSG: 4326 (WGS84)">
+        </div>
+      </div>
+      <!-- POINT-RADIUS SPATIAL FIT -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">POINT RADIUS SPATIAL FIT</div>
+          <div class="dwc_url">
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank" title="Go to Darwin Core definition">
+              [dwc:pointRadiusSpatialFit]</a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="spatial_fit" type="text" placeholder="" size="8">
+        </div>
+      </div>
+      <!-- COORDINATE PRECISION -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">PRECISION</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:coordinatePrecision]</a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="coordinate_precision" type="text" placeholder="" value="0.0000001">
+        </div>
+      </div>
+      <!-- GEOREFERENCE PROTOCOL -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">GEOREFERENCE PROTOCOL</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:georeferenceProtocol]</a>
+          </div>
+        </div>
+        <div class="value">
+          <textarea readonly class="non-editable" id="georeference_protocol" type="text" placeholder="" value=""
+            rows="2">Georeferencing Quick Reference Guide (Zermoglio et al. 2020)</textarea>
+        </div>
+      </div>
+      <!-- GEOREFERENCE SOURCES -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">GEOREFERENCE SOURCES</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:georeferenceSources]</a>
+          </div>
+        </div>
+        <div class="value">
+          <textarea readonly class="non-editable" id="georeference_sources" type="text" placeholder="" value=""
+            rows="2">GeoPick v.<%= version %></textarea>
+        </div>
+      </div>
+      <!-- GEOREFERENCED BY -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">GEOREFERENCED BY</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferencedBy" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:georeferencedBy]</a></div>
+        </div>
+        <div class="value">
+          <input class="editable" id="georeferencer_name" class="input" type="text" placeholder="Please enter your name(s)" />
+        </div>
+      </div>
+      <!-- GEOREFERENCE REMARKS -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">GEOREFERENCE REMARKS</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceRemarks" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:georeferenceRemarks]</a>
+          </div>
+        </div>
+        <div class="value">
+          <textarea class="editable" id="georeference_remarks" name="story" rows="4" cols="33"
+            placeholder="Please add notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to those formalized in the method referred to in georeferenceProtocol."></textarea>
+        </div>
+
+        <!-- COPY BUTTON -->
+        <div class="separator"></div>
+        <div class="button-container">
+          <!-- <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase">Copy data to clipboard</div> -->
+          <div id="copy_clipboard_message">Copy to clipboard:</div>
+          <button class="button button-headers" id="cpdata">With headers</button>
+          <button class="button button-noheaders" id="cpdatanh">Without headers</button>
+        </div>
+        <input type="hidden" id="d_geojson">
+      </div>
+    </div>
+  </div>
   </div>
 
 

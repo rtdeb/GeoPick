@@ -89,7 +89,10 @@ const do_copy_data = function( yes_headers, yes_wkt ){
     toast_success('Data copied to clipboard!');
 };
 
-
+const copy_latest_search = function(latest_search){
+    navigator.clipboard.writeText(latest_search);    
+    toast_success('Latest search copied to clipboard!');
+}
 const show_api_centroid_data = function(parsed_json, geom){
     $('#centroid_x').val( parsed_json.centroid.geometry.coordinates[0].toFixed(7) );
     $('#centroid_y').val( parsed_json.centroid.geometry.coordinates[1].toFixed(7) );
@@ -152,6 +155,7 @@ module.exports = {
     clear_centroid_data,
     show_api_centroid_data,
     show_centroid_data,
-    do_copy_data
+    do_copy_data,
+    copy_latest_search
 }
 

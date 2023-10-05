@@ -177,7 +177,7 @@ const init_autocomplete = function(map, input_id, nominatim_layer){
               polygon_geojson: 1
           },
           success: function(data) {
-              var results = $.map(data.features, function(item) {
+              var results = $.map(data.features, function(item) {                
                   return item;
               });
               response(results);
@@ -190,10 +190,17 @@ const init_autocomplete = function(map, input_id, nominatim_layer){
         const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
         map.fitBounds( [ne,sw] );
         nominatim_layer.clearLayers();
-        nominatim_layer.addData( ui.item.geometry );
+        nominatim_layer.addData( ui.item.geometry );     
+        $("#latest_search_hidden").val(ui.item.properties.display_name);   
+        if(ui.item.properties.display_name.length > 32){
+          $("#latest_search").text(ui.item.properties.display_name.substr(0,32) + " ..."); 
+        } else {
+          $("#latest_search").text(ui.item.properties.display_name); 
+        }
+        
       },
       create: function () {
-        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {          
             return $('<li>')
                 .append('<a>' + item.properties.display_name + '</a>')
                 .appendTo(ul);
@@ -490,6 +497,11 @@ const resetDrawControls = function(){
 init_autocomplete(map, "place_search", nominatim_layer);
 $("#importNominatim").on("click", function () {  importNominatim() });
 
+//Copying latest search on Nominatim
+$("#latest_search_copy").on("click", function() {
+    info.copy_latest_search($("#latest_search_hidden").val());
+ });
+
 // Keyboard point editting handling
 $("#keyboardEdit").on("click", function(){ show_point_kb_box() });
 const show_point_kb_box = function(){
@@ -616,6 +628,8 @@ $(document).on("keydown", function (event) {
         $('#deleteGeometries').show();
         $('#yesDeleteGeometries').focus();
     }
+  } else if (event.ctrlKey && (event.key === "b" || event.key === "B")){
+    info.copy_latest_search($("#latest_search_hidden").val());
   }
 });
 
