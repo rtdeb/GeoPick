@@ -575,7 +575,9 @@ $("#okWKT").on("click", function () { process_wkt_box() });
 // CTRL-t or CTRL-T: Start drawing a circle
 // CTRL-s or CTRL-S: Search Nominatim
 // CTRL-i or CTRL-I: Import from Nominatim
+// CTRL-b or CTRL-B: Copy latest string from Nominatim
 // CTRL-d or CTRL-D: Delete all
+
 // ESC: Closes div dialogs
 $(document).on("keydown", function (event) {
   if (event.ctrlKey && event.key === 'h') {   
