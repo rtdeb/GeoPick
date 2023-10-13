@@ -106,7 +106,7 @@ getGeoreference <- function(site.sf, max_points_polygon, tolerance, n.sample, n.
   p <- st_set_crs(st_as_sf(st_sfc(st_point(st_coordinates(mbc.tr)[1, 1:2]))), crs)
   radius <- st_distance(p, mbc.tr.centroid)
     
-  # If centroid is not on top of geometry (on top of line or inside polygon), we approximate best SEC
+# If centroid is not on top of geometry (on top of line or inside polygon), we approximate best SEC
 if(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid)))){
   site.pts <- st_cast(site.tr, "POINT") %>% mutate(idx = row.names(.))
   # We randomly sample n points from all points, geometry vertices, to find a first approximation to

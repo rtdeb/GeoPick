@@ -1,0 +1,12 @@
+---
+title: "R Notebook"
+output: notebook
+---
+
+```{r, mtcars-plots, results='asis'}
+
+print("kk")
+cat('\n\n# Summary of the variable `', '`\n\n')
+plot(cars)
+
+```
