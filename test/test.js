@@ -28,7 +28,7 @@ describe('api tests', function() {
       })
     }),
     it('should respond with sec info', function(done){
-      const geojson = wkt_parser.parseFromWK('LINESTRING(2 42,3 45,5 50)');
+      const geojson = wkt_parser.parseFromWK('POLYGON((0.0 0.0, 2.0 0.0, 2.0 2.0, 0.0 2.0, 0.0 0.0))');
       chai.request( process.env.API_URL )
       .post('mbc')
       .set('Content-Type','application/json; charset=UTF-8')
@@ -39,6 +39,9 @@ describe('api tests', function() {
         json_data = JSON.parse(json_response[0]); 
         expect(json_data.mbc).to.exist;
         expect(json_data.uncertainty[0]).to.exist;
+        //console.log(json_data);
+        centroid_data = JSON.parse(json_data.centroid[0]);
+        assert.equal( centroid_data.coordinates[0], 1 );
         done();
       })
     })
