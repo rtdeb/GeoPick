@@ -4,7 +4,7 @@ output:
   html_notebook:
     code_folding: hide 
 ---
-
+This Notebook illustrates how GeoPick calculates the smallest enclosing circle of a geometry, i.e. its uncertainty. The example given below is for a polygon with a corrected center ([Chapman & Wilczorek, 2020](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center), [Zermoglio et al., 2020](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-corrected-center)). For line, polyline and multipolygon geometries the calculation is analogous.
 ```{r message=FALSE}
 library(jsonlite)
 library(sf)
@@ -17,29 +17,21 @@ library(gridExtra)
 library(leaflet)
 library(dplyr)
 source("functions.R")
-source("llivia.R")
+source("capdecreus.R")
 f <- "../data/CNTR_RG_01M_2020_4326.geojson"
 world.4326 <- geojson_sf(f)["ISO3_CODE"]
 ```
 
-# asdlkfhj
-a;sdofjas;
 
-
-## 1 - Digitize the specimen's location on top of the map
-With GeoPick we can digitize the geometry resulting from the interpretation of a specimen label. Here is an example.
-```{r site, echo=TRUE, message=FALSE}
-# site.wkt <- "POLYGON ((80.068359 9.795678, 79.650879 7.928675, 80.332031 5.659719, 81.782227 6.686431, 82.001953 7.471411, 80.837402 9.253936, 80.068359 9.795678))"
-# site.wkt <- "POLYGON ((3.263626 42.23716, 3.247833 42.241227, 3.243027 42.250631, 3.258133 42.252664, 3.252983 42.244277, 3.266716 42.243006, 3.263626 42.23716))"
-# site.wkt <- "POLYGON ((127.067871 72.429732, 126.735535 72.433048, 126.620178 72.420609, 126.661377 72.38241, 126.812439 72.314117, 126.897583 72.321625, 126.730042 72.392383, 126.77536 72.40235, 126.837158 72.408162, 126.945648 72.408577, 127.006073 72.407747, 127.065125 72.404011, 127.067871 72.429732))"
-```
+## 1 - Specimen's locality interpretation
+The polygon below represents the geometry resulting from retrospective georeferencing, the process by which the locality where a specimen was collected is interpreted over a map from the description in the specimen's associated metadata (tag, field notebook, etc.).
 
 ```{r message=FALSE, warning=FALSE, fig.width=10, fig.height=6}
 site.sf <- st_as_sf(st_as_sfc(site.wkt, crs = 4326))
 site.sf <- st_as_sf(st_combine(site.sf))
 leaflet() %>% 
   addTiles() %>% 
-  addPolygons(data=site.sf)
+  addPolygons(data=site.sf, col = "red")
 ```
 ## 2 - Azimuth Equal-Area projection centered on site's centroid
 We need to reproject the geometry from WGS84, which results from digitizing with GeoPick, into a projection which does not distort distances in order to correctly apply the minimum bounding circle, _aka_ smallest enclosing circle, algorithm. GeoPick uses the [Azimuthal Equal Area (AEQD) projection](https://proj.org/en/9.3/operations/projections/aeqd.html) for this purpose. GeoPick calculates the centroid of the digitized site in WGS84 as an approximation to the center on which to focus the projection.
@@ -52,7 +44,7 @@ crs <- paste0("+proj=aeqd +lat_0=", yc, " +lon_0=", xc,
 site.tr <- site.sf %>% st_transform(crs)
 ```
 For the given example, the parameterized projection is `r crs`. Below we can see the Earth projected with our site at its center.
-```{r warning=FALSE, message=FALSE}
+```{r warning=FALSE, message=FALSE, fig.width=10}
 world.tr <- world.4326 %>% st_transform(crs)
 bbox <- st_bbox(site.tr)
 buf <- 25
@@ -82,7 +74,7 @@ if(npts(site.tr) > as.integer(max_points_polygon)){
 
 ## 4- Calculate SEC and centroid
 With the site projected in AEQD, GeoPick calculates the Smallest Enclosing Circle and its corresponding centroid and radius of uncertainty.
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, fig.width=10}
 mbc.tr <- st_minimum_bounding_circle(site.tr, nQuadSegs = 30)
 mbc.tr.centroid <- st_centroid(mbc.tr)
 xc <- st_coordinates(mbc.tr.centroid)[1]
@@ -103,7 +95,7 @@ p <- ggplot() +
 p
 ```
 ## 5 - Correct center if necessary, if not go to 6
-When the centroid falls outside the geometry, GeoPick calculates the corrected center ([Chapman & Wilczorek, 2020](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center), [Zermoglio et al., 2020](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-corrected-center)) instead.
+When the centroid falls outside the geometry, GeoPick calculates the corrected center instead ([Chapman & Wilczorek, 2020](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center), [Zermoglio et al., 2020](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-corrected-center)). It follows these steps.
 
 ```{r message=FALSE, warning=FALSE, results='asis'}
 need.cc <- ifelse(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid))), T, F)
@@ -134,56 +126,114 @@ if(need.cc){
   mbc.tr.corrected <- st_as_sf(terra::buffer(vect(mbc.tr.corrected.centroid), radius.final))
 }
 ```
-Projected site with all its vertices.
-```{r warning=FALSE, message=FALSE}
+### 1) Candidates to become the new corrected center
+GeoPick creates a list of possible candidates to the new corrected center by taking a sample c) from a) plus b) (see below).
+
+#### a) Nearest point (green dot) to the centroid (blue cross). 
+
+```{r message=FALSE, warning=FALSE, fig.width=10}
+if(need.cc){
+  p <- ggplot() + 
+  geom_sf(data=site.tr, aes(fill="red")) +
+  geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 3) +
+  geom_sf(data=mbc.tr.centroid, shape = '+', colour = "blue", size = 7) +
+  geom_segment(aes(x = st_coordinates(pt)[1], y = st_coordinates(pt)[2],
+                   xend = st_coordinates(mbc.tr.centroid)[1], yend = st_coordinates(mbc.tr.centroid)[2]),
+               linetype = "dotted") +
+  theme_void() + theme(legend.position = "None")
+p
+}
+```
+
+#### b) Geometry vertices (black dots). 
+```{r warning=FALSE, message=FALSE, fig.width=10}
+if(need.cc){
+p <- ggplot() + 
+  geom_sf(data=site.tr, aes(fill="red")) +
+  geom_sf(data=mbc.tr.centroid, shape = '+', colour = "blue", size = 7) +
+  geom_sf(data=site.pts) + 
+  geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 5) +
+    geom_segment(aes(x = st_coordinates(pt)[1], y = st_coordinates(pt)[2],
+                   xend = st_coordinates(mbc.tr.centroid)[1], yend = st_coordinates(mbc.tr.centroid)[2]),
+               linetype = "dotted") +
+  theme_void() + theme(legend.position = "None")
+p
+}
+```
+#### c) Final sample (yellow dots) of candidate points.
+For performance reasons, GeoPick takes a sample of 50 points from all candidate points.
+```{r message=FALSE, warning=FALSE, fig.width=10}
+if(need.cc){
+p <- ggplot() + 
+  geom_sf(data=site.tr, aes(fill="red")) +
+  geom_sf(data=mbc.tr.centroid, shape = '+', colour = "blue", size = 7) +
+  geom_sf(data=site.pts) + 
+    geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 5) +
+  geom_sf(data=candidate.pts, shape = 19, colour = "yellow", size = 2) +
+  theme_void() + theme(legend.position = "none")
+p
+}
+```
+### 2) - Calculation of corrected 
+#### a) - First approximation
+GeoPick now selects among the candidate points (yellow dots) which is the best candidate for the corrected center, i.e. the one minimizing uncertainty (red cross).
+```{r message=FALSE, warning=FALSE, fig.width=10}
+if(need.cc){
+p <- ggplot() + 
+  geom_sf(data=site.tr, aes(fill="red")) +
+  geom_sf(data=mbc.tr.centroid, shape = '+', colour = "blue", size = 7) +
+  geom_sf(data=site.pts) + 
+    geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 5) +
+  geom_sf(data=candidate.pts, shape = 19, colour = "yellow", size = 2) +
+  geom_sf(data=sec$center, shape = '+', colour = "red", size = 7) +
+  theme_void() + theme(legend.position = "none")
+p
+}
+```
+#### b) Second approximation
+To further explore possible better alternative corrected centers, GeoPick explores the 10 neighbours of the firs approximated centroid, in order to find still a better candidate as center of the smallest enclosing circle. In this first approximation, the candidate for the corrected center is shown as a red cross.
+```{r message=FALSE, warning=FALSE, fig.width=10}
 if(need.cc){
 p <- ggplot() + 
   geom_sf(data=site.tr, aes(fill="red")) +
   geom_sf(data=mbc.tr.centroid, shape = 3, colour = "blue", size = 5) +
   geom_sf(data=site.pts) + 
-  theme_void() + theme(legend.position = "None")
+    geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 5) +
+  geom_sf(data=candidate.pts, shape = 19, colour = "yellow", size = 2) +
+  geom_sf(data=sec$center, shape = '+', colour = "red", size = 7) +
+  geom_sf(data=nearest.pts, shape = 21, colour = "blue", size = 5) +
+  xlim(c(-70, 180)) +
+  ylim(c(-80, 70)) +
+  theme_void() + theme(legend.position = "none")
 p
+
 }
 ```
-Nearest point in geometry
-```{r message=FALSE, warning=FALSE}
+#### c) Final selection of best corrected center.
+Finally, GeoPick uses the final best candidate vertex (blue dot) from the process.
+
+```{r message=FALSE, warning=FALSE, fig.width=10}
 if(need.cc){
-  p <- p + 
-  geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 3)
+  p <- ggplot() + 
+  geom_sf(data=site.tr, aes(fill="red")) +
+  geom_sf(data=mbc.tr.centroid, shape = 3, colour = "blue", size = 5) +
+  geom_sf(data=site.pts) + 
+    geom_sf(data=pt, colour = "green", shape = 21, fill = "green", size = 5) +
+  geom_sf(data=candidate.pts, shape = 19, colour = "yellow", size = 2) +
+  geom_sf(data=sec$center, shape = '+', colour = "red", size = 7) +
+
+  geom_sf(data=sec.final$center, shape = 20, colour = "blue", size = 6) +
+    xlim(c(-70, 180)) +
+  ylim(c(-80, 70)) +
+  theme_void() + theme(legend.position = "none")
+p
+
 p
 }
 ```
-Sample of candidate points from all site points plus the nearest point to the first centroid.
-```{r message=FALSE, warning=FALSE}
-if(need.cc){
-p <- p +
-  geom_sf(data=candidate.pts, shape = 19, colour = "yellow", size = 2)
-p
-}
-```
-GeoPick now calculates the best centroid from all candidate points
-```{r message=FALSE, warning=FALSE}
-if(need.cc){
-p <- p + geom_sf(data=sec$center, shape = 3, colour = "red", size = 5)
-p
-}
-```
-To approximate it further, GeoPick explores the N neighbours of the firs approximated centroid to find if there is another one which improves the smallest enclosing circle.
-```{r message=FALSE, warning=FALSE}
-if(need.cc){
-p <- p + geom_sf(data=nearest.pts, shape = 21, colour = "blue", size = 5)
-p
-}
-```
-And, finally, GeoPick uses the final best candidate vertex from the process.
-```{r message=FALSE, warning=FALSE}
-if(need.cc){
-p <- p + geom_sf(data=sec.final$center, shape = 20, colour = "blue", size = 5)
-p
-}
-```
-In this particular example, the final result is:
-```{r message=FALSE, warning=FALSE}
+### 3) - Final corrected center and associated uncertainty (in AEQD projection).
+The distance from the corrected center to the furthest vertex in the geometry defines the smallest enclosing circle and, thus, the uncertainty.
+```{r message=FALSE, warning=FALSE, fig.width=10}
 if(need.cc){
 xc.tr <- st_coordinates(sec.final$center)[1]
 yc.tr <- st_coordinates(sec.final$center)[2]
@@ -203,7 +253,7 @@ ggplot() +
 }
 ```
 
-## 6 - Reproject SEC and centroid back to WGS84
+## 6 - Reprojection back to WGS84
 ```{r message=FALSE, warning=FALSE, fig.width=10, fig.height=6}
 # Transform mbc back to wgs84 in geojson
 if(need.cc){
@@ -218,9 +268,10 @@ centroid <- st_as_sf(mbc.tr.centroid) %>% st_transform(4326)
 
 leaflet() %>% 
   addTiles() %>% 
-  addPolygons(data=mbc.4326) %>% 
-  addPolygons(data=site.sf) %>% 
-  addCircles(data=centroid)  
+  addPolygons(data=mbc.4326, opacity = 0.25) %>% 
+  addPolygons(data=site.sf, col = "red") %>% 
+  # addCircleMarkers(data=centroid, color = "red", radius = 1)
+  addMarkers(data=centroid)
 ```
 __Site's centroid__  
 _Latitude, Longitude (dd):_ `r paste(round(st_coordinates(centroid)[2], 7), round(st_coordinates(centroid)[1], 7))`  
