@@ -17,16 +17,18 @@ library(gridExtra)
 library(leaflet)
 library(dplyr)
 source("functions.R")
+source("llivia.R")
 f <- "../data/CNTR_RG_01M_2020_4326.geojson"
 world.4326 <- geojson_sf(f)["ISO3_CODE"]
 ```
 
+
 ## 1 - Digitize the specimen's location on top of the map
 With GeoPick we can digitize the geometry resulting from the interpretation of a specimen label. Here is an example.
 ```{r site, echo=TRUE, message=FALSE}
-site.wkt <- "POLYGON ((80.068359 9.795678, 79.650879 7.928675, 80.332031 5.659719, 81.782227 6.686431, 82.001953 7.471411, 80.837402 9.253936, 80.068359 9.795678))"
-site.wkt <- "POLYGON ((3.263626 42.23716, 3.247833 42.241227, 3.243027 42.250631, 3.258133 42.252664, 3.252983 42.244277, 3.266716 42.243006, 3.263626 42.23716))"
-site.wkt <- "POLYGON ((127.067871 72.429732, 126.735535 72.433048, 126.620178 72.420609, 126.661377 72.38241, 126.812439 72.314117, 126.897583 72.321625, 126.730042 72.392383, 126.77536 72.40235, 126.837158 72.408162, 126.945648 72.408577, 127.006073 72.407747, 127.065125 72.404011, 127.067871 72.429732))"
+# site.wkt <- "POLYGON ((80.068359 9.795678, 79.650879 7.928675, 80.332031 5.659719, 81.782227 6.686431, 82.001953 7.471411, 80.837402 9.253936, 80.068359 9.795678))"
+# site.wkt <- "POLYGON ((3.263626 42.23716, 3.247833 42.241227, 3.243027 42.250631, 3.258133 42.252664, 3.252983 42.244277, 3.266716 42.243006, 3.263626 42.23716))"
+# site.wkt <- "POLYGON ((127.067871 72.429732, 126.735535 72.433048, 126.620178 72.420609, 126.661377 72.38241, 126.812439 72.314117, 126.897583 72.321625, 126.730042 72.392383, 126.77536 72.40235, 126.837158 72.408162, 126.945648 72.408577, 127.006073 72.407747, 127.065125 72.404011, 127.067871 72.429732))"
 ```
 
 ```{r message=FALSE, warning=FALSE, fig.width=10, fig.height=6}
@@ -92,7 +94,7 @@ p <- ggplot() +
   geom_sf(data=mbc.tr.centroid, shape = '+', col = "blue", size = 7, linewidth = 2) +
   geom_sf(data=radius.line, linewidth = 0.5, linetype = "dotted") +
   geom_label(aes(x = xc + (st_bbox(mbc.tr)["xmax"] - xc)/2, y = yc), 
-             label = paste(round(st_length(radius)), "m")) +
+             label = paste(round(st_length(radius.line)), "m")) +
   theme_void() +
   theme(legend.position = "None")
 p
