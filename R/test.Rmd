@@ -22,6 +22,7 @@ f <- "../data/CNTR_RG_01M_2020_4326.geojson"
 world.4326 <- geojson_sf(f)["ISO3_CODE"]
 ```
 
+# asdlkfhj
 
 ## 1 - Digitize the specimen's location on top of the map
 With GeoPick we can digitize the geometry resulting from the interpretation of a specimen label. Here is an example.
