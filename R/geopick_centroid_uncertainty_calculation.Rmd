@@ -1,0 +1,275 @@
+---
+title: "GeoPick: Centroid and uncertainty calculation"
+# author: "Marcer A., Escobar A., Chapman A.D. and Wieczore, J.R."
+date: October 17, 2023
+output:
+  html_notebook:
+    code_folding: show 
+---
+
+---
+
+This Notebook illustrates how __GeoPick__ v1.0.3 applies the point-radius method [[1]](#w2004)
+to calculate the centroid (Darwin Core's [decimalLatitude](http://rs.tdwg.org/dwc/terms/decimalLatitude) and [decimalLongitude](http://rs.tdwg.org/dwc/terms/decimalLongitude)) and uncertainty (Darwin Core's [coordinateUncertaintyInMeters](http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters)) associated with a georeferenced locality description (Darwin Core's [verbatimLocality](http://rs.tdwg.org/dwc/terms/verbatimLocality)) by approximating the smallest enclosing circle of a geometry. The example given below is for a polygon with a corrected center [[2](#cw2020), [3](#z2020)]. For line, polyline and multipolygon geometries the calculation is analogous. GeoPick follows steps 1 to 6 to deliver the final results. The case in which the centroid falls on top of the geometry when calculating its smallest enclosing circle would be a simplified version of the process here described, i.e. step 5 below would not be needed. 
+
+```{r message=FALSE}
+library(jsonlite)
+library(sf)
+library(geojsonsf)
+library(lwgeom)
+library(terra)
+library(mapview)
+library(ggplot2)
+library(gridExtra)
+library(leaflet)
+library(dplyr)
+source("functions.R")
+site.colour <- "#e2565b"
+vertex.colour <- "black"
+candidate1.colour <- "yellow"
+candidate2.colour <- "purple"
+nearest.colour <- "darkgreen"
+centroid1.colour <- "darkgreen"
+centroid2.colour <- "blue"
+```
+
+## 1 - Specimen's locality interpretation
+The polygon below represents the geometry resulting from retrospective georeferencing, the process by which the textual description of a locality where a specimen was collected is interpreted over a map. This locality description (Darwin Core's [verbatimLocality](http://rs.tdwg.org/dwc/terms/verbatimLocality)) was available on a specimen's associated metadata, i.e. tag, field notebook, etc. The geometry can be directly digitized with __GeoPick__, imported as [Well-Known Text (WKT)](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry), or captured from a search to the OpenStreetMap data [Nominatim service](https://nominatim.openstreetmap.org/ui/search.html). The example below corresponds to a locality description of the collection site of a plant in the Cap de Creus area, in northeastern Catalonia, Spain.
+
+```{r message=FALSE, warning=FALSE, fig.width=9.5, fig.height=6}
+source("wkt_example.R")
+site.sf <- st_as_sf(st_as_sfc(site.wkt, crs = 4326))
+site.sf <- st_as_sf(st_combine(site.sf))
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data=site.sf, col = site.colour)
+```
+## 2 - Azimuth Equal-Area projection centered on the locality
+In order to correctly calculate the smallest enclosing circle, __GeoPick__ needs to work with an equidistant projection which does not distort distances. GeoPick uses the [Azimuthal Equal Area (AEQD) projection](https://proj.org/en/9.3/operations/projections/aeqd.html) for which all points on the map are at proportionally correct distances from the center. Thus, __GeoPick__ first reprojects the georeferenced geometry from [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) to [AEQD](https://proj.org/en/9.3/operations/projections/aeqd.html), using the centroid corresponding to the locality in [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) as an approximation to the center on which to focus the [AEQD](https://proj.org/en/9.3/operations/projections/aeqd.html) projection.
+
+```{r warning=FALSE, message=FALSE}
+centroid <- st_centroid(site.sf)  
+xc <- st_coordinates(centroid)[1]
+yc <- st_coordinates(centroid)[2]
+crs <- paste0("+proj=aeqd +lat_0=", yc, " +lon_0=", xc, 
+              " +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs")
+site.tr <- site.sf %>% st_transform(crs)
+```
+For the given example, the parameterized projection is _"`r crs`"_. Below we can see the Earth projected with our site at its center (red cross).
+```{r warning=FALSE, message=FALSE, fig.width=11}
+f <- "../data/CNTR_RG_01M_2020_4326.geojson"
+world.4326 <- geojson_sf(f)["ISO3_CODE"]
+world.tr <- world.4326 %>% st_transform(crs)
+p.world <- ggplot() + 
+  geom_sf(data=world.tr, fill="grey40", linewidth=0) + 
+  geom_point(aes(x=xc, y=yc), col=site.colour, shape='+', size=9) +
+  theme_void()
+p.world
+```
+
+## 3 - Eventual geometry simplification
+If the number of vertices in the geometry is too large, __GeoPick__ simplifies it for performance reasons. Currently, __GeoPick__ sets the maximum number of vertices to 10 000. For geometries above this threshold, a maximum tolerance of 500m between vertices is applied. 
+```{r message=FALSE, warning=FALSE, results='asis'}
+max_points_polygon <- 10000
+tolerance <- 500
+if(npts(site.tr) > as.integer(max_points_polygon)){
+  site.tr <- st_simplify(site.tr, preserveTopology = TRUE, dTolerance = tolerance)
+  cat("In our example, the geometry HAS BEEN SIMPLIFIED since it had", npts(site.tr), "vertices\n")
+} else {
+    cat("In our example, the geometry HAS NOT BEEN SIMPLIFIED since it had", npts(site.tr), "vertices\n")
+}
+```
+
+## 4 - Calculate SEC and centroid
+With the site projected in [AEQD](https://proj.org/en/9.3/operations/projections/aeqd.html), __GeoPick__ calculates the smallest enclosing circle with its corresponding centroid and radius of uncertainty. __GeoPick__ uses the _st_minimum_bounding_circle_ function of the R package _lwgeom_ [[4]](#lwgeom2022), which in turn uses the _liblwgeom_ light-weight geometry library of [PostGIS](https://postgis.net), to approximate the smallest enclosing circle.
+
+```{r, message=FALSE, warning=FALSE, fig.width=11}
+mbc.tr <- st_minimum_bounding_circle(site.tr, nQuadSegs = 30)
+mbc.tr.centroid <- st_centroid(mbc.tr)
+xc <- st_coordinates(mbc.tr.centroid)[1]
+yc <- st_coordinates(mbc.tr.centroid)[2]
+radius.line <- st_as_sfc(paste0("LINESTRING (", xc, " ", yc, ", ", 
+                                st_bbox(mbc.tr)["xmax"], " ", yc, ")")) %>% 
+  st_set_crs(crs)
+uncertainty1 <- paste(round(st_length(radius.line)), "m")
+p <- ggplot() + 
+  geom_sf(data=mbc.tr, fill=NA, col = centroid2.colour, linewidth = 1.5, linetype = "dashed") +
+  geom_sf(data=site.tr, fill=site.colour) +
+  geom_sf(data=mbc.tr.centroid, shape = '+', col = centroid2.colour, size = 7, linewidth = 2) +
+  geom_sf(data=radius.line, linewidth = 0.5, linetype = "dotted") +
+  geom_label(aes(x = xc + (st_bbox(mbc.tr)["xmax"] - xc)/2, y = yc), 
+             label = uncertainty1) +
+  theme_void() +
+  theme(legend.position = "None")
+p
+```
+## 5 - Correct center if necessary
+When the centroid falls outside the geometry, as is the case in our example above, __GeoPick__ calculates the corrected center instead [[2](#cw2020), [3](#z2020)]. If the centroid had fallen on top of the geometry, __GeoPick__ would skip this step and go directly to step [6](#reprojection-back-to-wgs84). 
+
+To correct the center, __GeoPick__ follows the substeps 5.1 to 5.3:
+
+### 5.1 - Candidates to become the new corrected center
+When calculating the corrected center, __GeoPick__ gathers a list of candidate points by selecting the vertices of the geometry (5.1.1 black dots). For performance reasons, __GeoPick__ restricts this list of candidate points to a sample of 50 (5.1.1 yellow dots) in the case the number of vertices was greater than that. Then, it finds the nearest point on the geometry's perimeter (5.1.2 green dot) to the centroid that fell outside (5.1.2 blue cross), which may not correspond to an existing geometry vertex, and adds it to the final candidate list (5.1.3 yellow dots).
+
+#### 5.1.1 - Sample of geometry vertices (black dots) as candidate points (yellow dots). 
+```{r message=FALSE, warning=FALSE, results='asis', fig.width=11}
+# Check if center correction is needed
+need.cc <- ifelse(is.na(as.integer(st_intersects(site.tr, mbc.tr.centroid))), T, F)
+if(need.cc){
+  # Gather a sample of 50 points from the location's geometry
+  n.sample <- 50
+  site.pts <- st_cast(site.tr, "POINT") %>% mutate(idx = row.names(.))
+  if(nrow(site.pts) > n.sample){
+    point.idxs <- sample(1:nrow(site.pts), n.sample)
+    candidate.pts <- site.pts %>% slice(point.idxs) 
+  } else {
+    candidate.pts <- site.pts    
+  }
+  p <- ggplot() + 
+    geom_sf(data=site.tr, fill=site.colour) +
+    geom_sf(data=candidate.pts, shape = 19, colour = candidate1.colour, size = 4) +
+    geom_sf(data=site.pts, shape = 19, colour = vertex.colour, size = 1) + 
+    theme_void() + theme(legend.position = "None")
+  p
+}
+```
+#### 5.1.2 - Nearest point (green dot) to the centroid (blue cross). 
+```{r message=FALSE, warning=FALSE, results='asis', fig.width=11}
+pt <- getNearestPointOnGeometry(site.tr, mbc.tr.centroid, crs) %>% 
+  mutate(idx = max(as.numeric(candidate.pts$idx)) + 1)
+
+p <- ggplot() + 
+  geom_sf(data=site.tr, fill=site.colour) +
+  geom_sf(data=pt, shape = 19, colour = nearest.colour, size = 5) +
+  geom_sf(data=mbc.tr.centroid, shape = '+', colour = centroid2.colour, size = 7) +
+  geom_segment(aes(x = st_coordinates(pt)[1], 
+                   y = st_coordinates(pt)[2],
+                   xend = st_coordinates(mbc.tr.centroid)[1], 
+                   yend = st_coordinates(mbc.tr.centroid)[2]),
+               colour = centroid2.colour,
+               linetype = "dotted") +
+  theme_void() + theme(legend.position = "None")
+p
+```
+#### 5.1.3 - Candidate points = geometry vertices sample + nearest point
+```{r message=FALSE, warning=FALSE, results='asis', fig.width=11}
+if(need.cc){
+  candidate.pts <- rbind(candidate.pts, pt)
+    p <- ggplot() + 
+      geom_sf(data=site.tr, aes(fill=site.colour)) +
+      geom_sf(data=candidate.pts, shape = 19, colour = candidate1.colour, size = 4) +
+      theme_void() + theme(legend.position = "None")
+    p
+}
+```
+
+### 5.2 - Calculation of corrected center
+To calculate the corrected center, __GeoPick__ proceeds in two steps.  
+
+In a _first approximation_ step it finds out which is the best candidate for the corrected center (5.2.1 green cross), i.e. which one minimizes uncertainty, among the candidate points (5.2.1 yellow dots).  
+
+Then, in a _second approximation_ step, it explores whether it still can find out a better candidate among the nearest vertices (5.2.2 purple dots) to the point selected in the _first approximation_ (5.2.1 green cross). These nearest vertices (5.2.2 purple dots) that are potential new candidates are drawn from the geometry vertices, which might not have been selected as candidates by the sampling process (5.1.1 black dots). _GeoPick_ considers that within the _zone_ where the _first approximation_ found a candidate corrected center there might be a neighbour geometry vertex which can still improve the uncertainty.  
+
+In this example, the resulting corrected center (5.2.3 and 5.3 green cross) corresponds to the one found in the _first approximation_ since the _second approximation_ did not improve the uncertainty.
+
+#### 5.2.1 - First approximation step
+```{r message=FALSE, warning=FALSE, fig.width=11}
+if(need.cc){
+  sec <- approximateSEC(site.pts, candidate.pts, NA, 10^8)
+  p <- ggplot() + 
+    geom_sf(data=site.tr, aes(fill=site.colour)) +
+    geom_sf(data=candidate.pts, shape = 19, colour = candidate1.colour, size = 4) +
+    geom_sf(data=sec$center, shape = '+', colour = centroid1.colour, size = 9) +
+    theme_void() + theme(legend.position = "none")
+  p
+}
+```
+#### 5.2.2 - Second approximation
+```{r message=FALSE, warning=FALSE, fig.width=11}
+if(need.cc){
+  n.nearest <- 10
+  # Once we have a first approximation through randomization, we explore the neighbours of the selected
+  # point in order to to see if one of them still improves the sec
+  nearest.pts <- getNearestPoints(site.pts, sec$center, n.nearest)
+  sec.final <- approximateSEC(site.pts, nearest.pts, sec$center, sec$radius)
+  radius.final <- sec$radius
+  mbc.tr.corrected.centroid <- sec.final$center %>% dplyr::select(-idx)
+  v <- terra::buffer(vect(mbc.tr.corrected.centroid), radius.final)
+  mbc.tr.corrected <- st_as_sf(v)
+  
+  p <- ggplot() + 
+    geom_sf(data=site.tr, fill=site.colour) +
+    geom_sf(data=nearest.pts, shape = 19, colour = candidate2.colour, size = 5) +
+    geom_sf(data=site.pts, colour = vertex.colour, shape = 19, size = 2) +
+    geom_sf(data=sec$center, shape = '+', colour = centroid1.colour, size = 9) +
+    xlim(c(-70, 180)) +
+    ylim(c(-80, 70)) +
+    theme_void() + theme(legend.position = "none")
+  p
+}
+```
+#### 5.2.3 - Final selection of best corrected center.
+```{r message=FALSE, warning=FALSE, fig.width=10}
+if(need.cc){
+  p <- ggplot() + 
+    geom_sf(data=site.tr, fill=site.colour) +
+    geom_sf(data=sec.final$center, shape = '+', colour = centroid1.colour, size = 12) +
+    xlim(c(-70, 180)) +
+    ylim(c(-80, 70)) +
+    theme_void() + theme(legend.position = "none")
+  p
+  
+  xc.tr <- st_coordinates(sec.final$center)[1]
+  yc.tr <- st_coordinates(sec.final$center)[2]
+  radius.line <- st_as_sfc(paste0("LINESTRING (", xc.tr, " ", yc.tr, ", ", 
+                                  st_bbox(mbc.tr.corrected)["xmax"], " ", yc.tr, ")")) %>% 
+    st_set_crs(crs)
+  uncertainty2 <- paste(round(st_length(radius.line)), "m")
+}
+```
+### 5.3 - Final corrected center and associated uncertainty (in AEQD projection).
+The distance from the corrected center to the furthest vertex in the geometry defines the smallest enclosing circle and, thus, the uncertainty. Note that the uncertainty (`r paste(uncertainty2, "m")`) of the corrected center is greater than the uncertainty (`r paste(uncertainty1, "m")`) of the non-corrected center in step [4 - Calculate SEC and centroid](#calculate-sec-and-centroid).
+
+```{r message=FALSE, warning=FALSE, fig.width=10}
+if(need.cc){
+p <- ggplot() +
+  geom_sf(data=mbc.tr.corrected, colour = centroid1.colour, 
+          fill = centroid1.colour, alpha = 0.1, linetype = "dashed") +
+  geom_sf(data=site.tr, aes(fill=site.colour)) +
+  geom_sf(data=sec.final$center, shape = "+", colour = centroid1.colour, size = 7) + 
+  geom_sf(data=radius.line, linewidth = 0.5, linetype = "dotted", colour = centroid1.colour) +
+  geom_label(aes(x = xc.tr + (st_bbox(mbc.tr.corrected)["xmax"] - xc.tr)/2, y = yc.tr), 
+             label = uncertainty2) +
+  theme_void() + 
+  theme(legend.position = "none")
+p
+}
+```
+
+## 6 - Reprojection back to WGS84
+Once __GeoPick__ has determined which is the best candidate for the corrected center, it reprojects the results back to [WGS84](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS84) and offers them to the user.
+```{r message=FALSE, warning=FALSE, fig.width=9.5, fig.height=6}
+if(need.cc){
+  mbc.4326 <- st_transform(mbc.tr.corrected, 4326)
+  centroid <- st_as_sf(mbc.tr.corrected.centroid) %>% st_transform(4326)
+} else {
+  mbc.4326 <- st_transform(mbc.tr, 4326)
+  centroid <- st_as_sf(mbc.tr.centroid) %>% st_transform(4326)
+}
+
+leaflet() %>% 
+  addTiles() %>% 
+  addPolygons(data=mbc.4326, opacity = 0.25) %>% 
+  addPolygons(data=site.sf, col = site.colour) %>% 
+  addMarkers(data=centroid)
+```
+__Site's centroid__  
+_Latitude, Longitude (dd):_ `r paste(round(st_coordinates(centroid)[2], 7), round(st_coordinates(centroid)[1], 7))`  
+_Uncertainty (m):_ `r paste(round(st_length(radius.line)), "m")`
+
+## References
+<a name="w2004">[1]</a> Wieczorek J, Guo Q, Hijmans R. (2004) The point-radius method for georeferencing locality descriptions and calculating associated uncertainty. International Journal of Geographical Information Science. 18:745--767. [https://doi.org/10.1080/13658810412331280211](https://doi.org/10.1080/13658810412331280211).
+<a name="cw2020">[2]</a> Chapman AD & Wieczorek JR (2020) Georeferencing Best Practices. Copenhagen: GBIF Secretariat.
+[https://doi.org/10.35035/e09p-h128](https://doi.org/10.15468/doc-gg7h-s853)  
+<a name="z2020">[3]</a> Zermoglio PF, Chapman AD, Wieczorek JR, Luna MC & Bloom DA (2020) Georeferencing Quick Reference Guide. Copenhagen: GBIF Secretariat. [https://doi.org/10.35035/e09p-h128](https://doi.org/10.35035/e09p-h128)  
+<a name="lwgeom2022">[4]</a> Pebesma, E. (2022). lwgeom: Bindings to Selected 'liblwgeom' Functions for Simple Features. R package version 0.2-10. [https://CRAN.R-project.org/package=lwgeom](https://CRAN.R-project.org/package=lwgeom)  
