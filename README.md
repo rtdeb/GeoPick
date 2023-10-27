@@ -91,6 +91,10 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### VERSIONS
+#### Version 1.0.4
+- Corrected misplacement of warning message box when copying data if the WKT text is too large.
+- Changed github address in about.html.
+  
 #### Version 1.0.3
 - Documented new shortcuts in Help.
 - Solved regression misplacing WKT and Delete dialog boxes.

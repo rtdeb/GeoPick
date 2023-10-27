@@ -28,6 +28,7 @@ div.info_box {
   display: none; /* Hidden by default */
   position: relative; /* Stay in place */
   z-index: 9999; /* Sit on top */
+  left: 50%; /* Center the search horizontally */
   transform: translateX(-50%);
   top: 0;
   width: 100%; /* Full width */
