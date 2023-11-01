@@ -39,9 +39,10 @@ def get_aeqd_proj(location_wgs84):
   return aeqd_proj
 
 def simplify_geometry(location):
-  def count_vertices(geometry):
-      return len(geometry.exterior.coords)
-  n = location.geometry.apply(count_vertices).iloc[0]
+  # Note: For each polygon it counts twice the starting vertex since it is also the ending one
+  #       However, that does not matter for our purposes
+  n = len(location.get_coordinates())
+  
   if(n > max_points_polygon):
     location = location.simplify(tolerance)
   return location
