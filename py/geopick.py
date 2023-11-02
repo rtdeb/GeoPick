@@ -63,7 +63,6 @@ def get_candidate_vertices(df_vertices_all):
     df = df_vertices_all.sample(n = n_candidates_sample, random_state = random_seed)
   else:
     df = df_vertices_all
-  print(type(df))
   geometry = [shapely.geometry.Point(x, y) for x, y in zip(df['x'], df['y'])]
   gdf = gpd.GeoDataFrame(df, geometry = geometry)  
   return gdf
@@ -79,8 +78,8 @@ def get_nearest_point(centroid, location, proj):
 
 def get_minimum_distance_candidate(candidates, vertices):
   distance = float(4 * 10**8)
-  for i in range(0, len(candidates) - 1):
-    geometry = candidates.iloc[i]['geometry']
+  for i in range(0, len(candidates)):
+    geometry = candidates.loc[i]['geometry']
     d = max(geometry.distance(vertices['geometry']))  
     if(d < distance):
       distance = d
@@ -99,6 +98,10 @@ def get_nearest_n_vertices(vertices, point, n):
   return nearest_points
 
 def get_georeference(location_wgs84):
+  # If geometry is of type POINT return None
+  if(location_wgs84.iloc[0].geom_type == 'Point'):
+    return None
+
   # Get SEC and centroid
   sec_wgs84 = get_sec(location_wgs84)
   centroid_wgs84 = get_sec_centroid(sec_wgs84, 4326)
@@ -119,7 +122,9 @@ def get_georeference(location_wgs84):
 
   centroid_inside = is_centroid_inside(centroid_aeqd, location_aeqd)
 
-  if not centroid_inside: 
+  if centroid_inside: 
+    candidate = [centroid_aeqd, 1000]
+  else:
     # Get candidate vertices
     gdf_vertices_all = get_all_vertices(location_aeqd)
     gdf = get_candidate_vertices(gdf_vertices_all)
