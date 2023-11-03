@@ -4,6 +4,7 @@ import pyproj
 import shapely
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 max_points_polygon =10000
 tolerance = 500
@@ -123,7 +124,12 @@ def get_georeference(location_wgs84):
   centroid_inside = is_centroid_inside(centroid_aeqd, location_aeqd)
 
   if centroid_inside: 
-    candidate = [centroid_aeqd, 1000]
+    vertex_x = sec_aeqd.get_coordinates().iloc[0]["x"]
+    vertex_y = sec_aeqd.get_coordinates().iloc[0]["y"]
+    vertex = gpd.GeoSeries(shapely.geometry.Point(vertex_x, vertex_y))
+    vertex.crs = aeqd_proj
+    uncertainty = sec_centroid_aeqd.distance(vertex)
+    candidate = [centroid_aeqd, uncertainty]
   else:
     # Get candidate vertices
     gdf_vertices_all = get_all_vertices(location_aeqd)
@@ -151,6 +157,37 @@ def get_georeference(location_wgs84):
 
   # Reproject back to WGS84
   centroid = gpd.GeoSeries(sec_centroid_aeqd.to_crs(crs="EPSG:4326"))
-  sec = gpd.GeoSeries(sec_aeqd.to_crs(crs="EPSG:4326"))
-  return centroid, candidate[1], sec
+
+  # When dealing with MULTIPOLYGON candidate[1] is a float, when dealing with a POLYGON it is a Series
+  if isinstance(candidate[1], float):
+    uncertainty = candidate[1]
+  else:
+    uncertainty = candidate[1][0]
+  return centroid, uncertainty
+
+def get_json_georeference(location):
+  georef = get_georeference(location)
+  if georef is not None:
+    centroid = georef[0]
+    uncertainty = round(georef[1])
+    coordinates = centroid.get_coordinates()
+    longitude = round(coordinates.iloc[0].x, 7)
+    latitude = round(coordinates.iloc[0].y, 7)
+    data = {
+      "decimalLongitude": longitude,
+      "decimalLatitude": latitude,
+      "coordinateUncertaintyInMeters": uncertainty,
+    }
+  else:
+    data = {"georef": "None"}
+  return json.dumps(data)
+
+def json_to_geoseries(json):
+  location = gpd.read_file(json, driver = 'GeoJSON')
+  location.crs = 4326
+  location = location["geometry"]
+  return location
+
+
+
 

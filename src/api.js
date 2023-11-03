@@ -49,7 +49,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
             geom = turf.multiPolygon(coords);
         }        
     }
-
+    
     const fetchdata = {
         method: 'POST',
         body: JSON.stringify(geom),
@@ -101,8 +101,7 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
         if( geom_type == 'Polygon'){
             geom = turf.multiPolygon(coords);
         }                
-    }
-    
+    }    
     const fetchdata = {
         method: 'POST',
         body: JSON.stringify(geom),
