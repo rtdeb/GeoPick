@@ -5,6 +5,7 @@ import shapely
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import math
 
 max_points_polygon =10000
 tolerance = 500
@@ -16,15 +17,12 @@ def get_sec(location):
   sec = location.geometry.minimum_bounding_circle()
   return sec
 
-def get_sec_centroid(sec, epsg):
+def get_sec_centroid(sec):
   centroid = sec.geometry.iloc[0].centroid
   centroid = gpd.GeoSeries([centroid])
-  centroid.crs = "EPSG:" + str(epsg)
   return centroid
 
-def get_aeqd_proj(location_wgs84):
-  sec_wgs84 = get_sec(location_wgs84)
-  centroid_wgs84 = get_sec_centroid(sec_wgs84, 4326)
+def get_proj_aeqd(centroid_wgs84):
   y, x = centroid_wgs84.geometry.y.iloc[0], centroid_wgs84.geometry.x.iloc[0]
   aeqd_params = {
     'proj': 'aeqd',
@@ -36,8 +34,8 @@ def get_aeqd_proj(location_wgs84):
     '+units': "m",
     'ellps': 'WGS84'
   }
-  aeqd_proj = pyproj.CRS.from_dict(aeqd_params)
-  return aeqd_proj
+  proj_aeqd = pyproj.CRS.from_dict(aeqd_params)
+  return proj_aeqd
 
 def simplify_geometry(location):
   # Note: For each polygon it counts twice the starting vertex since it is also the ending one
@@ -49,15 +47,15 @@ def simplify_geometry(location):
   return location
 
 def is_centroid_inside(centroid, location):
-  centroid_inside = centroid.within(location)
-  return centroid_inside.all()  
+  centroid_inside = location.contains(centroid).all()
+  return centroid_inside
 
 def get_all_vertices(location):
   df_vertices_all = location.get_coordinates()
   geometry_vertices = [shapely.geometry.Point(x, y) for x, y in zip(df_vertices_all['x'], df_vertices_all['y'])]
-  gdf_vertices_all = gpd.GeoDataFrame(df_vertices_all, geometry = geometry_vertices)
-  gdf_vertices_all.crs = location.crs
-  return gdf_vertices_all
+  vertices = gpd.GeoDataFrame(df_vertices_all, geometry = geometry_vertices)
+  vertices.crs = location.crs
+  return vertices
 
 def get_candidate_vertices(df_vertices_all):
   if(len(df_vertices_all) > n_candidates_sample):
@@ -98,89 +96,108 @@ def get_nearest_n_vertices(vertices, point, n):
   nearest_points = sorted_gdf.head(n)
   return nearest_points
 
+def get_spatial_fit(location, uncertainty):
+  if(location.type[0].lower() == 'multipolygon' or location.type[0].lower() == 'polygon'):
+    spatial_fit = round(uncertainty**2 * math.pi / location.area[0], 3)
+  else:
+    spatial_fit = ""
+  return spatial_fit
+
 def get_georeference(location_wgs84):
   # If geometry is of type POINT return None
   if(location_wgs84.iloc[0].geom_type == 'Point'):
     return None
 
-  # Get SEC and centroid
-  sec_wgs84 = get_sec(location_wgs84)
-  centroid_wgs84 = get_sec_centroid(sec_wgs84, 4326)
+  # Get AEQD projection focused on WGS84 centroid
+  centroid_wgs84 = location_wgs84.centroid
+  proj_aeqd = get_proj_aeqd(centroid_wgs84)
 
-  # Get parameterized AEQD
-  aeqd_proj = get_aeqd_proj(location_wgs84)
+  # Project location to AEQD
+  location_aeqd = location_wgs84.to_crs(proj_aeqd)
+  centroid_aeqd = centroid_wgs84.to_crs(proj_aeqd)
 
-  # Project to AEQD
-  location_aeqd = location_wgs84.to_crs(aeqd_proj)
-  centroid_aeqd = centroid_wgs84.to_crs(crs = aeqd_proj)
-
-  # Simplify geometry
+  # Simplify geometry if needed
   location_aeqd = simplify_geometry(location_aeqd)
 
-  # Get SEC and centroid
+  # Calculate SEC and its centroid
   sec_aeqd = get_sec(location_aeqd)
-  sec_centroid_aeqd = sec_aeqd.centroid
+  centroid_aeqd = get_sec_centroid(sec_aeqd)
+  centroid_aeqd.crs = proj_aeqd
 
   centroid_inside = is_centroid_inside(centroid_aeqd, location_aeqd)
-
+  
   if centroid_inside: 
     vertex_x = sec_aeqd.get_coordinates().iloc[0]["x"]
     vertex_y = sec_aeqd.get_coordinates().iloc[0]["y"]
     vertex = gpd.GeoSeries(shapely.geometry.Point(vertex_x, vertex_y))
-    vertex.crs = aeqd_proj
-    uncertainty = sec_centroid_aeqd.distance(vertex)
-    candidate = [centroid_aeqd, uncertainty]
+    vertex.crs = proj_aeqd
+    uncertainty = centroid_aeqd.distance(vertex)[0]
+    centroid_final = centroid_aeqd
+    sec_final = gpd.GeoSeries(centroid_final.buffer(uncertainty))
   else:
-    # Get candidate vertices
-    gdf_vertices_all = get_all_vertices(location_aeqd)
-    gdf = get_candidate_vertices(gdf_vertices_all)
+    # Get all vertices of location
+    vertices = get_all_vertices(location_aeqd)
     # Calculate nearest point from centroid to geometry
-    gdf_np = get_nearest_point(centroid_aeqd, location_aeqd, aeqd_proj)
+    np = get_nearest_point(centroid_aeqd, location_aeqd, proj_aeqd)
+    # Get candidate vertices
+    candidates = get_candidate_vertices(vertices)
     # Add nearest point to candidate points
-    gdf_candidates = pd.concat([gdf_np, gdf], ignore_index=True)
-    # First approximation SEC and centroid
-    candidate_fa = get_minimum_distance_candidate(gdf_candidates, gdf_vertices_all)
-    # plotResult(location_aeqd, gdf_candidates, candidate_fa[0], candidate_fa[1], aeqd_proj)
-    # Second approximation SEC and centroid
-    nearest_vertices = get_nearest_n_vertices(gdf_vertices_all, sec_centroid_aeqd, sa_nearest_n)
-    candidate_sa = get_minimum_distance_candidate(nearest_vertices, gdf_vertices_all)
-    # plotResult(location_aeqd, nearest_vertices, candidate_sa[0], candidate_sa[1], aeqd_proj)
-    if(candidate_sa[1] < candidate_fa[1]):
-      candidate = candidate_sa
+    candidates = pd.concat([candidates, np], ignore_index=True)
+    candidates = candidates.reset_index(drop=True)
+    # FIRST APPROXIMATION
+    fa = get_minimum_distance_candidate(candidates, vertices)
+    centroid_fa = gpd.GeoSeries(fa[0])
+    centroid_fa.crs = proj_aeqd
+    radius_fa = fa[1]
+    sec_fa = gpd.GeoSeries(centroid_fa.buffer(radius_fa))
+    sec_fa.crs = proj_aeqd
+    # SECOND APPROXIMATION
+    np_centroid_fa = get_nearest_n_vertices(vertices, centroid_fa, 10)
+    sa = get_minimum_distance_candidate(np_centroid_fa, vertices)
+    centroid_sa = gpd.GeoSeries(sa[0])
+    centroid_sa.crs = proj_aeqd
+    radius_sa = sa[1]
+    sec_sa = gpd.GeoSeries(centroid_fa.buffer(radius_sa))
+    sec_sa.crs = proj_aeqd
+    # Compare uncertainty of first and second approximations
+    if(radius_sa < radius_fa):
+      sec_final = sa
     else:
-      candidate = candidate_fa
+      sec_final = fa
 
-  sec_centroid_aeqd = gpd.GeoSeries(candidate[0])
-  sec_centroid_aeqd.crs = aeqd_proj
-  sec_aeqd = sec_centroid_aeqd.buffer(candidate[1])
-  sec_aeqd.crs = aeqd_proj
+    uncertainty = sec_final[1]
 
-  # Reproject back to WGS84
-  centroid = gpd.GeoSeries(sec_centroid_aeqd.to_crs(crs="EPSG:4326"))
+    centroid_final = gpd.GeoSeries(sec_final[0])
+    centroid_final.crs = proj_aeqd
+    sec_final = gpd.GeoSeries(centroid_final.buffer(uncertainty))
 
-  # When dealing with MULTIPOLYGON candidate[1] is a float, when dealing with a POLYGON it is a Series
-  if isinstance(candidate[1], float):
-    uncertainty = candidate[1]
-  else:
-    uncertainty = candidate[1][0]
-  return centroid, uncertainty
+  # Calculate spatial fit
+  spatial_fit = get_spatial_fit(location_aeqd, uncertainty)
+
+  # Project back to WGS84
+  centroid = centroid_final.to_crs(4326)
+  sec = sec_final.to_crs(4326)
+
+  response = centroid, uncertainty, sec, spatial_fit    
+  return response
 
 def get_json_georeference(location):
   georef = get_georeference(location)
   if georef is not None:
     centroid = georef[0]
     uncertainty = round(georef[1])
-    coordinates = centroid.get_coordinates()
-    longitude = round(coordinates.iloc[0].x, 7)
-    latitude = round(coordinates.iloc[0].y, 7)
+    sec = georef[2]
+    spatial_fit = georef[3]
     data = {
-      "decimalLongitude": longitude,
-      "decimalLatitude": latitude,
-      "coordinateUncertaintyInMeters": uncertainty,
+      "mbc": json.loads(sec.to_json()),
+      "site": json.loads(location.to_json()),
+      "centroid": json.loads(centroid.to_json()),
+      "uncertainty": uncertainty,
+      "spatial_fit": spatial_fit
     }
   else:
     data = {"georef": "None"}
-  return json.dumps(data)
+  return data
 
 def json_to_geoseries(json):
   location = gpd.read_file(json, driver = 'GeoJSON')

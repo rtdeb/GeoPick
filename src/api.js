@@ -17,22 +17,21 @@ const spin_opts = {
 }
 
 const parse_api_data = function(data){    
-    const all_data = JSON.parse(data[0]);
-    const mbc = JSON.parse(all_data.mbc[0]);
-    const site = JSON.parse(all_data.site[0]);
-    const centroid = JSON.parse(all_data.centroid[0]);
+    const mbc = data.mbc;
+    const site = data.site;
+    const centroid = data.centroid;
     var spatial_fit;
-    if( all_data.spatial_fit[0] == 'Inf' ){
+    if( data.spatial_fit == 'Inf' ){
         spatial_fit = '';
     }else{
-        spatial_fit = JSON.parse(all_data.spatial_fit[0]);        
+        spatial_fit = data.spatial_fit;        
     }     
     return {
         centroid: { type: 'Feature', 'geometry': centroid },
         mbc: { type: 'Feature', 'geometry': mbc },
         site: site,
         spatial_fit: spatial_fit,
-        uncertainty: all_data.uncertainty[0]
+        uncertainty: data.uncertainty
     };
 }
 
@@ -60,7 +59,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
     }
 
     map.spin(true, spin_opts);    
-    fetch( api_base_url + 'mbc',fetchdata)
+    fetch( api_base_url + 'sec',fetchdata)
     .then(function(response){
         return response.json();
     })
@@ -112,11 +111,12 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
     }
     
     map.spin(true, spin_opts);
-    fetch( api_base_url + 'mbc',fetchdata)
-    .then(function(response){        
+    // alert(api_base_url + 'sec' + JSON.stringify(geom));
+    fetch( api_base_url + 'sec', fetchdata)
+    .then(function(response){         
         return response.json();
     })
-    .then(function(data){              
+    .then(function(data){   
         const parsed_json = parse_api_data(data);                
         map.spin(false);        
         mbc_layer.addData( parsed_json.mbc );
