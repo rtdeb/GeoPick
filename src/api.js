@@ -111,7 +111,6 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
     }
     
     map.spin(true, spin_opts);
-    // alert(api_base_url + 'sec' + JSON.stringify(geom));
     fetch( api_base_url + 'sec', fetchdata)
     .then(function(response){         
         return response.json();
