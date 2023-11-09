@@ -2,7 +2,6 @@ import geopandas as gpd
 import pandas as pd
 import pyproj
 import shapely
-import matplotlib.pyplot as plt
 import numpy as np
 import json
 import math
@@ -11,7 +10,7 @@ max_points_polygon =10000
 tolerance = 500
 n_candidates_sample = 50
 sa_nearest_n = 10
-random_seed = 33
+random_seed = 42
 
 def get_sec(location):
   sec = location.geometry.minimum_bounding_circle()
@@ -58,6 +57,7 @@ def get_all_vertices(location):
   return vertices
 
 def get_candidate_vertices(df_vertices_all):
+  random_seed = 42
   if(len(df_vertices_all) > n_candidates_sample):
     df = df_vertices_all.sample(n = n_candidates_sample, random_state = random_seed)
   else:
@@ -137,46 +137,53 @@ def get_georeference(location_wgs84):
   else:
     # Get all vertices of location
     vertices = get_all_vertices(location_aeqd)
-    # Calculate nearest point from centroid to geometry
-    np = get_nearest_point(centroid_aeqd, location_aeqd, proj_aeqd)
+    
     # Get candidate vertices
     candidates = get_candidate_vertices(vertices)
+    
+    # Calculate nearest point from centroid to location
+    np = get_nearest_point(centroid_aeqd, location_aeqd, proj_aeqd)
+    
     # Add nearest point to candidate points
     candidates = pd.concat([candidates, np], ignore_index=True)
     candidates = candidates.reset_index(drop=True)
+    
     # FIRST APPROXIMATION
     fa = get_minimum_distance_candidate(candidates, vertices)
     centroid_fa = gpd.GeoSeries(fa[0])
     centroid_fa.crs = proj_aeqd
-    radius_fa = fa[1]
-    sec_fa = gpd.GeoSeries(centroid_fa.buffer(radius_fa))
+    uncertainty_fa = fa[1]
+    sec_fa = gpd.GeoSeries(centroid_fa.buffer(uncertainty_fa))
     sec_fa.crs = proj_aeqd
+    
     # SECOND APPROXIMATION
     np_centroid_fa = get_nearest_n_vertices(vertices, centroid_fa, 10)
     sa = get_minimum_distance_candidate(np_centroid_fa, vertices)
     centroid_sa = gpd.GeoSeries(sa[0])
     centroid_sa.crs = proj_aeqd
-    radius_sa = sa[1]
-    sec_sa = gpd.GeoSeries(centroid_fa.buffer(radius_sa))
+    uncertainty_sa = sa[1]
+    sec_sa = gpd.GeoSeries(centroid_fa.buffer(uncertainty_sa))
     sec_sa.crs = proj_aeqd
+    
     # Compare uncertainty of first and second approximations
-    if(radius_sa < radius_fa):
-      sec_final = sa
+    if(uncertainty_sa < uncertainty_fa):
+      centroid = sa[0]
+      uncertainty = sa[1]
+      sec = sec_sa
     else:
-      sec_final = fa
+      centroid = fa[0]
+      uncertainty = fa[1]
+      sec = sec_fa
 
-    uncertainty = sec_final[1]
-
-    centroid_final = gpd.GeoSeries(sec_final[0])
-    centroid_final.crs = proj_aeqd
-    sec_final = gpd.GeoSeries(centroid_final.buffer(uncertainty))
+    centroid = gpd.GeoSeries(centroid)
+    centroid.crs = proj_aeqd
 
   # Calculate spatial fit
   spatial_fit = get_spatial_fit(location_aeqd, uncertainty)
 
   # Project back to WGS84
-  centroid = centroid_final.to_crs(4326)
-  sec = sec_final.to_crs(4326)
+  centroid = centroid.to_crs(4326)
+  sec = sec.to_crs(4326)
 
   response = centroid, uncertainty, sec, spatial_fit    
   return response
@@ -205,6 +212,18 @@ def json_to_geoseries(json):
   location = location["geometry"]
   return location
 
-
-
-
+def print_georeference(georeference, markdown = True):
+  centroid = georeference[0].iloc[0]
+  uncertainty = georeference[1]
+  spatial_fit = georeference[3]
+  if markdown:
+    tab = "    "
+    br = "<br>"
+  else:
+    tab = "\t"
+    br = "\n"
+  georeference_string = "**LOCATION'S CENTROID:** " + br + br + tab + \
+    "Latitude, Longitude: " + str(round(centroid.y, 7)) + ", " + str(round(centroid.x, 7)) + \
+    br + tab + "Uncertainty: " + str(round(uncertainty)) + "m" + br + tab + \
+    "Spatial fit: " + str(spatial_fit)
+  return georeference_string

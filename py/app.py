@@ -1,5 +1,5 @@
 from flask import Flask, request
-import geopick as gp
+import py.geopick as gp
 from flask_cors import CORS
 
 app = Flask(__name__)

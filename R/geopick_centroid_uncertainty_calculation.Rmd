@@ -37,7 +37,7 @@ centroid2.colour <- "blue"
 The polygon below represents the geometry resulting from retrospective georeferencing, the process by which the textual description of a locality where a specimen was collected is interpreted over a map. This locality description (Darwin Core's [verbatimLocality](http://rs.tdwg.org/dwc/terms/verbatimLocality)) was available on a specimen's associated metadata, i.e. tag, field notebook, etc. The geometry can be directly digitized with __GeoPick__, imported as [Well-Known Text (WKT)](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry), or captured from a search to the OpenStreetMap data [Nominatim service](https://nominatim.openstreetmap.org/ui/search.html). The example below corresponds to a locality description of the collection site of a plant in the Cap de Creus area, in northeastern Catalonia, Spain.
 
 ```{r message=FALSE, warning=FALSE, fig.width=9.5, fig.height=6}
-source("wkt_example_2.R")
+source("wkt_example.R")
 site.sf <- st_as_sf(st_as_sfc(site.wkt, crs = 4326))
 site.sf <- st_as_sf(st_combine(site.sf))
 leaflet() %>% 
@@ -211,14 +211,6 @@ if(need.cc){
 #### 5.2.3 - Final selection of best corrected center.
 ```{r message=FALSE, warning=FALSE, fig.width=10}
 if(need.cc){
-  p <- ggplot() + 
-    geom_sf(data=site.tr, fill=site.colour) +
-    geom_sf(data=sec.final$center, shape = '+', colour = centroid1.colour, size = 12) +
-    xlim(c(-70, 180)) +
-    ylim(c(-80, 70)) +
-    theme_void() + theme(legend.position = "none")
-  p
-  
   xc.tr <- st_coordinates(sec.final$center)[1]
   yc.tr <- st_coordinates(sec.final$center)[2]
   radius.line <- st_as_sfc(paste0("LINESTRING (", xc.tr, " ", yc.tr, ", ", 
