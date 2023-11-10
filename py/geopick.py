@@ -5,6 +5,8 @@ import shapely
 import numpy as np
 import json
 import math
+import matplotlib.pyplot as plt
+import location_wkt as loc
 
 max_points_polygon =10000
 tolerance = 500
@@ -227,3 +229,45 @@ def print_georeference(georeference, markdown = True):
     br + tab + "Uncertainty: " + str(round(uncertainty)) + "m" + br + tab + \
     "Spatial fit: " + str(spatial_fit)
   return georeference_string
+
+def get_radius_line(center, circle):
+    coords1 = center.get_coordinates()
+    p1 = [coords1["x"][0], coords1["y"][0]]
+    coords2 = circle.get_coordinates().iloc[0]
+    p2 = [max(circle.get_coordinates()["x"]), coords2["y"]]
+    length = str(round((max(circle.get_coordinates()["x"]) - coords1["x"])[0])) + "m"
+    radius_line = gpd.GeoSeries(
+        [
+            shapely.geometry.LineString([(p1[0], p1[1]), (p2[0], p2[1])]),
+        ],
+        crs=center.crs
+    )
+    return radius_line, length
+
+def extract_wkt(items):
+    wkt = None
+    for item in items:
+        if item.startswith("POINT") or item.startswith("LINESTRING") or \
+          item.startswith("MULTILINESTRING") or item.startswith("POLYGON") or \
+          item.startswith("MULTIPOLYGON"):
+            wkt = item
+            break  # Stop searching once a match is found
+    return wkt
+
+def get_location():
+    items = loc.capdecreus_wkt.split("\t")
+    location_wkt = extract_wkt(items)
+    if location_wkt.startswith("POINT"):
+        if len(items) == 1:
+            print("POINT geometry, uncertainty not specified.\n")
+        else:
+            print("POINT geometry.\n")
+            print("Latitude:", items[0], ", Longitude:", items[1], ", Uncertainty:", items[3])
+        class StopExecution(Exception):
+            def _render_traceback_(self):
+                return []
+        raise StopExecution
+
+    location_wgs84 = gpd.GeoSeries(shapely.wkt.loads(location_wkt))
+    location_wgs84.crs = "EPSG:4326"
+    return location_wgs84
