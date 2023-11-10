@@ -112,7 +112,7 @@ def get_georeference(location_wgs84):
   centroid_wgs84 = location_wgs84.centroid
   proj_aeqd = get_proj_aeqd(centroid_wgs84)
 
-  # Project location to AEQD
+  # Project location to AEQD projection
   location_aeqd = location_wgs84.to_crs(proj_aeqd)
   centroid_aeqd = centroid_wgs84.to_crs(proj_aeqd)
 
@@ -181,7 +181,7 @@ def get_georeference(location_wgs84):
   # Calculate spatial fit
   spatial_fit = get_spatial_fit(location_aeqd, uncertainty)
 
-  # Project back to WGS84
+  # Project back to WGS84 projection
   centroid = centroid.to_crs(4326)
   sec = sec.to_crs(4326)
 
