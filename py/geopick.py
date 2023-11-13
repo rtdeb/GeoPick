@@ -5,7 +5,6 @@ import shapely
 import numpy as np
 import json
 import math
-import matplotlib.pyplot as plt
 import location_wkt as loc
 
 max_points_polygon =10000
