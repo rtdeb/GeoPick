@@ -22,4 +22,6 @@ ui.js
 ui.css
 ui.md
 .vscode
-py/__pycache__/
+py/__pycache__/*
+py/.idea/
+py/db

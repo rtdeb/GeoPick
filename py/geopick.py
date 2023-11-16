@@ -41,7 +41,7 @@ def simplify_geometry(location):
   # Note: For each polygon it counts twice the starting vertex since it is also the ending one
   #       However, that does not matter for our purposes
   n = len(location.get_coordinates())
-  
+
   if(n > max_points_polygon):
     location = location.simplify(tolerance)
   return location
@@ -64,7 +64,7 @@ def get_candidate_vertices(df_vertices_all):
   else:
     df = df_vertices_all
   geometry = [shapely.geometry.Point(x, y) for x, y in zip(df['x'], df['y'])]
-  gdf = gpd.GeoDataFrame(df, geometry = geometry)  
+  gdf = gpd.GeoDataFrame(df, geometry = geometry)
   return gdf
 
 def get_nearest_point(centroid, location, proj):
@@ -80,7 +80,7 @@ def get_minimum_distance_candidate(candidates, vertices):
   distance = float(4 * 10**8)
   for i in range(0, len(candidates)):
     geometry = candidates.loc[i]['geometry']
-    d = max(geometry.distance(vertices['geometry']))  
+    d = max(geometry.distance(vertices['geometry']))
     if(d < distance):
       distance = d
       idx = i
@@ -126,29 +126,29 @@ def get_georeference(location_wgs84):
   centroid_aeqd.crs = proj_aeqd
 
   centroid_inside = is_centroid_inside(centroid_aeqd, location_aeqd)
-  
-  if centroid_inside: 
+
+  if centroid_inside:
     vertex_x = sec_aeqd.get_coordinates().iloc[0]["x"]
     vertex_y = sec_aeqd.get_coordinates().iloc[0]["y"]
     vertex = gpd.GeoSeries(shapely.geometry.Point(vertex_x, vertex_y))
     vertex.crs = proj_aeqd
     uncertainty = centroid_aeqd.distance(vertex)[0]
-    centroid_final = centroid_aeqd
-    sec_final = gpd.GeoSeries(centroid_final.buffer(uncertainty))
+    centroid = centroid_aeqd
+    sec = gpd.GeoSeries(centroid.buffer(uncertainty))
   else:
     # Get all vertices of location
     vertices = get_all_vertices(location_aeqd)
-    
+
     # Get candidate vertices
     candidates = get_candidate_vertices(vertices)
-    
+
     # Calculate nearest point from centroid to location
     np = get_nearest_point(centroid_aeqd, location_aeqd, proj_aeqd)
-    
+
     # Add nearest point to candidate points
     candidates = pd.concat([candidates, np], ignore_index=True)
     candidates = candidates.reset_index(drop=True)
-    
+
     # FIRST APPROXIMATION
     fa = get_minimum_distance_candidate(candidates, vertices)
     centroid_fa = gpd.GeoSeries(fa[0])
@@ -156,7 +156,7 @@ def get_georeference(location_wgs84):
     uncertainty_fa = fa[1]
     sec_fa = gpd.GeoSeries(centroid_fa.buffer(uncertainty_fa))
     sec_fa.crs = proj_aeqd
-    
+
     # SECOND APPROXIMATION
     np_centroid_fa = get_nearest_n_vertices(vertices, centroid_fa, 10)
     sa = get_minimum_distance_candidate(np_centroid_fa, vertices)
@@ -165,7 +165,7 @@ def get_georeference(location_wgs84):
     uncertainty_sa = sa[1]
     sec_sa = gpd.GeoSeries(centroid_fa.buffer(uncertainty_sa))
     sec_sa.crs = proj_aeqd
-    
+
     # Compare uncertainty of first and second approximations
     if(uncertainty_sa < uncertainty_fa):
       centroid = sa[0]
@@ -186,7 +186,7 @@ def get_georeference(location_wgs84):
   centroid = centroid.to_crs(4326)
   sec = sec.to_crs(4326)
 
-  response = centroid, uncertainty, sec, spatial_fit    
+  response = centroid, uncertainty, sec, spatial_fit
   return response
 
 def get_json_georeference(location):
