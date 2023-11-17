@@ -5,7 +5,7 @@ import shapely
 import numpy as np
 import json
 import math
-import location_wkt as loc
+import flask_api.location_wkt as loc
 
 max_points_polygon =10000
 tolerance = 500

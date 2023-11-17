@@ -2,7 +2,7 @@ import datetime
 
 from flask import Flask, request, jsonify, g
 import sqlite3
-import geopick as gp
+import flask_api.geopick as gp
 from flask_cors import CORS
 from os.path import join, dirname
 from pathlib import Path
@@ -11,7 +11,7 @@ import os
 import json
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_jwt_extended import get_jwt_identity
-from dbutils import db_create_user, db_get_user, db_get_user_by_id
+from flask_api.dbutils import db_create_user, db_get_user, db_get_user_by_id
 
 
 upper_dir = (Path(dirname(__file__))).parent.absolute()
@@ -95,12 +95,12 @@ def create_user():
         try:
             user_id = db_create_user(get_db(),username, password)
         except sqlite3.IntegrityError as i:
-            return json.dumps({"success": False, "message": "username exists"}), 400, {'ContentType': 'application/json'}
+            return json.dumps({"success": False, "msg": "username exists"}), 400, {'ContentType': 'application/json'}
         except Exception as e:
-            return json.dumps({"success": False, "message": str(e)}), 400, {'ContentType': 'application/json'}
-        return jsonify({"success": True, "message": "User created", "id": user_id})
+            return json.dumps({"success": False, "msg": str(e)}), 400, {'ContentType': 'application/json'}
+        return jsonify({"success": True, "msg": "User created", "id": user_id})
     else:
-        return jsonify({"success": False, "message": "Not allowed"}), 401
+        return jsonify({"success": False, "msg": "Not allowed"}), 401
 
 
 @app.route("/auth", methods=["POST"])
@@ -110,9 +110,9 @@ def auth_user():
     user = db_get_user(get_db(), username, password)
     if user is not None:
         access_token = create_access_token(identity=user[0], expires_delta=datetime.timedelta(days=1))
-        return jsonify({"success": True, "message": "User retrieved", "id": user[0], "token": access_token})
+        return jsonify({"success": True, "msg": "User retrieved", "id": user[0], "token": access_token})
     else:
-        return json.dumps({"success": False, "message": "No user with these credentials exist"}), 404, {'ContentType': 'application/json'}
+        return json.dumps({"success": False, "msg": "No user with these credentials exist"}), 404, {'ContentType': 'application/json'}
 
 
 if __name__ == '__main__':
