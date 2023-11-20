@@ -18,7 +18,7 @@ upper_dir = (Path(dirname(__file__))).parent.absolute()
 
 dotenv_path = join(upper_dir, '.env')
 package_path = join(upper_dir, 'package.json')
-database_file = os.path.join(dirname(__file__), 'db')
+database_file = os.environ.get('DATABASE_FILE')
 
 
 load_dotenv(dotenv_path)
@@ -73,7 +73,7 @@ def middleware():
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token
 
 
-@app.route('/sec', methods=['POST'])
+@app.route('/v1/sec', methods=['POST'])
 @jwt_required()
 def sec():
     json_location = request.get_json()
@@ -86,13 +86,13 @@ def sec():
     response = georeference_json
     return response
 
-@app.route('/version', methods=['GET'])
+@app.route('/v1/version', methods=['GET'])
 @jwt_required()
 def version():
     return jsonify({'version': v})
 
 
-@app.route("/user", methods=["POST"])
+@app.route("/v1/user", methods=["POST"])
 @jwt_required()
 def create_user():
     username = request.json.get("username", None)
@@ -111,7 +111,7 @@ def create_user():
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
 
-@app.route("/auth", methods=["POST"])
+@app.route("/v1/auth", methods=["POST"])
 def auth_user():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
@@ -124,5 +124,5 @@ def auth_user():
 
 
 if __name__ == '__main__':
-    app.run(debug=False, port=os.environ.get('PORT'))
+    app.run(debug=False, port=os.environ.get('API_PORT'))
 

@@ -4,9 +4,9 @@ const info = require('./info');
 require('leaflet-spin');
 const turf = require('@turf/turf');
 
-const api_base_url = process.env.API_URL;
-const api_username = process.env.USERNAME;
-const api_pwd = process.env.PASSWORD;
+const api_base_url = process.env.API_URL + 'v1/';
+//const api_username = process.env.USERNAME;
+//const api_pwd = process.env.PASSWORD;
 
 const spin_opts = {
     lines: 13, 
@@ -35,6 +35,7 @@ const parse_api_data = function(data){
     };
 }
 
+/*
 const auth = function() {
     if(sessionStorage.getItem('token') != null){
         return new Promise((resolve, reject) => {
@@ -81,7 +82,7 @@ const auth = function() {
         });
     }
 }
-
+*/
 
 const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_layer, centroid_layer, map){
     var geom = nominatim_layer.toGeoJSON().features;
