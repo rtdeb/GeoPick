@@ -96,8 +96,45 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
             geom = turf.multiPolygon(coords);
         }        
     }
+
+    const fetchdata = {
+        method: 'POST',
+        body: JSON.stringify(geom),
+        headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8',
+            //'Authorization': 'Bearer ' + token            
+        })        
+    }
+    fetch( api_base_url + 'sec',fetchdata)
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(data){     
+        site_layer.clearLayers();
+        mbc_layer.clearLayers();
+        centroid_layer.clearLayers();
+        nominatim_layer.clearLayers();
+
+        const parsed_json = parse_api_data(data);        
+        map.spin(false);
+        mbc_layer.addData( parsed_json.mbc );
+        centroid_layer.addData( parsed_json.centroid );
+        map.fitBounds(mbc_layer.getBounds());
+        info.show_api_centroid_data( parsed_json, geom );        
+        var layer = L.geoJSON(parsed_json.site);        
+        layer.eachLayer(
+        function(l){
+            site_layer.addLayer(l);
+        });
+        site_layer.bringToFront();        
+    })
+    .catch(function(error){
+        info.toast_error(error);
+        map.spin(false);
+    });        
         
 
+    /*
     map.spin(true, spin_opts);
     auth()
     .then(function(token){
@@ -136,7 +173,8 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
             info.toast_error(error);
             map.spin(false);
         });        
-    })    
+    })
+    */
 }
 
 const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
@@ -151,8 +189,35 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
         if( geom_type == 'Polygon'){
             geom = turf.multiPolygon(coords);
         }                
-    }        
+    }
+
+    const fetchdata = {
+        method: 'POST',
+        body: JSON.stringify(geom),
+        headers: new Headers({
+            'Content-Type': 'application/json; charset=UTF-8',
+            //'Authorization': 'Bearer ' + token
+        })        
+    }
+    fetch( api_base_url + 'sec', fetchdata)
+    .then(function(response){         
+        return response.json();
+    })
+    .then(function(data){   
+        const parsed_json = parse_api_data(data);                
+        map.spin(false);        
+        mbc_layer.addData( parsed_json.mbc );
+        centroid_layer.addData( parsed_json.centroid );
+        map.fitBounds(mbc_layer.getBounds());
     
+        info.show_api_centroid_data( parsed_json, geom );
+    })
+    .catch(function(error){
+        info.toast_error(error);
+        map.spin(false);
+    });
+    
+    /*
     map.spin(true, spin_opts);
     auth()
     .then( function(token){
@@ -181,7 +246,8 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
             info.toast_error(error);
             map.spin(false);
         });
-    })    
+    })
+    */    
 }
 
 module.exports = {

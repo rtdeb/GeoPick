@@ -64,6 +64,13 @@ def close_connection(exception):
 if not os.path.exists(database_file):
     init_db()
 
+@app.before_request
+def middleware():
+    if request.environ['REQUEST_METHOD'] != 'OPTIONS':
+        if os.environ.get('API_REQUEST_ORIGINS') == request.environ['HTTP_ORIGIN']:
+            access_token = create_access_token(identity=1, expires_delta=datetime.timedelta(days=1))
+            request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token
+
 
 @app.route('/sec', methods=['POST'])
 @jwt_required()
