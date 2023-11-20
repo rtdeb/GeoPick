@@ -66,8 +66,9 @@ if not os.path.exists(database_file):
 
 @app.before_request
 def middleware():
+    http_origin = request.environ.get('HTTP_ORIGIN','')
     if request.environ['REQUEST_METHOD'] != 'OPTIONS':
-        if os.environ.get('API_REQUEST_ORIGINS') == request.environ['HTTP_ORIGIN']:
+        if os.environ.get('API_REQUEST_ORIGINS') == http_origin:
             access_token = create_access_token(identity=1, expires_delta=datetime.timedelta(days=1))
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token
 
