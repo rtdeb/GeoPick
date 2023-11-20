@@ -18,10 +18,9 @@ upper_dir = (Path(dirname(__file__))).parent.absolute()
 
 dotenv_path = join(upper_dir, '.env')
 package_path = join(upper_dir, 'package.json')
-database_file = os.environ.get('DATABASE_FILE')
-
 
 load_dotenv(dotenv_path)
+database_file = os.environ.get('DATABASE_FILE')
 
 f = open(package_path)
 package_json = json.load(f)

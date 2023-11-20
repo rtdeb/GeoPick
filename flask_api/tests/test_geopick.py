@@ -21,18 +21,18 @@ def test_api_version():
     package_json = json.load(f)
     v = package_json['version']
     with t.test_client() as c:
-        rv = c.post('/auth', json={
+        rv = c.post('/v1/auth', json={
             'username': os.environ.get('USERNAME'), 'password': os.environ.get('PASSWORD')
         })
         json_response = json.loads(rv.data)
         token = json_response['token']
-        rversion = c.get('/version', headers={'Authorization' : 'Bearer ' + token})
+        rversion = c.get('/v1/version', headers={'Authorization' : 'Bearer ' + token})
         json_response = json.loads(rversion.data)
         assert json_response['version'] == v
 
 def test_api_auth():
     with t.test_client() as c:
-        rv = c.post('/auth', json={
+        rv = c.post('/v1/auth', json={
             'username': os.environ.get('USERNAME'), 'password': os.environ.get('PASSWORD')
         })
         json_response = json.loads(rv.data)
