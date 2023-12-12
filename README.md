@@ -110,6 +110,9 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### VERSIONS
+#### Version 1.1.1
+- Restored progress wheel.  
+
 #### Version 1.1.0
 - API converted to Python, performance improved.  
   
