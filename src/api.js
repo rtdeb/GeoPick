@@ -106,6 +106,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
             //'Authorization': 'Bearer ' + token            
         })        
     }
+    map.spin(true);
     fetch( api_base_url + 'sec',fetchdata)
     .then(function(response){
         return response.json();
