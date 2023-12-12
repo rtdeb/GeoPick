@@ -70,12 +70,31 @@ Requirements: git
 > git clone https://github.com/aescobarr/GeoPick.git  
 
 #### 2 Set up the server API
-Requirements: R version 4.2.1 (packages: plumber 1.2.1, jsonlite 1.8.4, sf 1.0-9, geojsonsf 2.0.3, lwgeom 0.2-10, terra 1.6-53, mapview 2.11.0)
+Requirements: Python version 3.11
 
 You can configure some API parameters by setting an *.env* file at the GeoPick's root directory. You can see an example of it in this repo's *.env_example*
 
-> cd R  
-> Rscript geopick_server.R
+##### 2.1 Create python virtual environment
+
+From the root project folder, run:
+
+> python -m venv venv
+
+This will create a folder named venv containing an empty python virtual environment folder.
+
+##### 2.2 Activate virtual environment and install dependencies
+
+To activate the virtual environment, do
+
+> source venv/bin/activate  
+> pip install -r requirements.txt
+
+##### 2.3 Start up development API server
+
+From the root directory, and with the recently created virtual environment active, do
+
+> cd venv  
+> flask run
 
 #### 3 Set up the client side  
 Requirements: node v16.16.0
