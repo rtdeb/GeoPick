@@ -94,8 +94,9 @@ const copy_latest_search = function(latest_search){
     toast_success('Latest search copied to clipboard!');
 }
 const show_api_centroid_data = function(parsed_json, geom){
-    $('#centroid_x').val( parsed_json.centroid.geometry.coordinates[0].toFixed(7) );
-    $('#centroid_y').val( parsed_json.centroid.geometry.coordinates[1].toFixed(7) );
+    geometry = parsed_json.centroid.geometry.features[0].geometry;
+    $('#centroid_x').val( geometry.coordinates[0].toFixed(7) );
+    $('#centroid_y').val( geometry.coordinates[1].toFixed(7) );
 
     $('#radius_m').val( parsed_json.uncertainty );
 

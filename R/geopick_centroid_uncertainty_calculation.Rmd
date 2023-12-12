@@ -211,14 +211,6 @@ if(need.cc){
 #### 5.2.3 - Final selection of best corrected center.
 ```{r message=FALSE, warning=FALSE, fig.width=10}
 if(need.cc){
-  p <- ggplot() + 
-    geom_sf(data=site.tr, fill=site.colour) +
-    geom_sf(data=sec.final$center, shape = '+', colour = centroid1.colour, size = 12) +
-    xlim(c(-70, 180)) +
-    ylim(c(-80, 70)) +
-    theme_void() + theme(legend.position = "none")
-  p
-  
   xc.tr <- st_coordinates(sec.final$center)[1]
   yc.tr <- st_coordinates(sec.final$center)[2]
   radius.line <- st_as_sfc(paste0("LINESTRING (", xc.tr, " ", yc.tr, ", ", 

@@ -22,3 +22,6 @@ ui.js
 ui.css
 ui.md
 .vscode
+flask_api/__pycache__/*
+flask_api/.idea/
+flask_api/db
