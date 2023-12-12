@@ -1,4 +1,4 @@
-FROM python:3.10-slim AS api
+FROM python:3.11-slim AS api
 
 COPY requirements.txt package.json /srv/
 COPY flask_api /srv/flask_api/
