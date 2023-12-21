@@ -93,7 +93,7 @@ To activate the virtual environment, do
 
 From the root directory, and with the recently created virtual environment active, do
 
-> cd venv  
+> cd flask_api  
 > flask run
 
 #### 3 Set up the client side  
@@ -110,6 +110,9 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### VERSIONS
+#### Version 1.1.1
+- Restored progress wheel.  
+
 #### Version 1.1.0
 - API converted to Python, performance improved.  
   
