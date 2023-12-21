@@ -26,3 +26,6 @@ flask_api/__pycache__/*
 /flask_api/tests/__pycache__/
 flask_api/.idea/
 flask_api/db
+flask_api/commands/__pycache__/
+flask_api/migrations/__pycache__/
+flask_api/migrations/versions/__pycache__/
