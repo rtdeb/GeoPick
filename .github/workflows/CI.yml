@@ -35,5 +35,5 @@ jobs:
       run: pip install -r requirements.txt
 
     - name: Run Test # running tests
-      working-directory: ./GeoPick/flask_api
+      working-directory: ./flask_api
       run: pytest
