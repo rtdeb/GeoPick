@@ -26,3 +26,5 @@ flask_api/__pycache__/*
 flask_api/.idea/
 flask_api/db
 venv
+flask_api/commands
+flask_api/migrations
