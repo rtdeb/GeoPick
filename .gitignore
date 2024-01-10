@@ -28,3 +28,5 @@ flask_api/db
 venv
 flask_api/commands
 flask_api/migrations
+
+
