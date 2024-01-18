@@ -25,6 +25,7 @@ require('jquery-ui/ui/widgets/autocomplete');
 const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
 const api = require("./api");
+const urlparams = require("./urlparams");
 const bing_api_key = process.env.BING_API_KEY;
 
 // TOGGLE INFO BOX ======================================================== //
@@ -35,6 +36,20 @@ document.addEventListener("DOMContentLoaded", function() {
   toggleButton.addEventListener("click", function() {
     info.classList.toggle("unfolded");
   });
+
+  const queryString = window.location.search;  
+  const urlParams = new URLSearchParams(queryString);
+  const action = urlparams.urlParamsActions(urlParams);
+  if(action.status === 'KO'){
+    console.log(action.message);
+  }else{    
+    if(action.opcode === urlparams.opcodes.OPCODE_LATLONUNC){      
+      addPointCircleToMap( action.params.lat, action.params.lon, action.params.unc );
+      window.history.pushState({}, document.title, "/");
+    }else if(action.opcode === urlparams.opcodes.OPCODE_SHARE){
+      //console.log("Do share");
+    }
+  }
 });
 
 var coll = document.getElementsByClassName("collapsible");

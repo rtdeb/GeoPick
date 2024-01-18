@@ -60,8 +60,8 @@ def close_connection(exception):
         db.close()
 
 
-if not os.path.exists(database_file):
-    init_db()
+#if not os.path.exists(database_file):
+#init_db()
 
 @app.before_request
 def middleware():
