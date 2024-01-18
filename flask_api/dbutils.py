@@ -1,10 +1,19 @@
 import hashlib
-from flask_api.models import User
+from flask_api.models import User, SharedGeoreference
 
 def hash_password(password):
     password_bytes = password.encode('utf-8')
     hash_object = hashlib.sha256(password_bytes)
     return hash_object.hexdigest()
+
+def db_create_georef(db, geopick_id, georef_data):
+    georef = SharedGeoreference(
+        geopick_id=geopick_id,
+        georef_data=georef_data
+    )
+    db.session.add(georef)
+    db.session.commit()
+    return georef
 
 def db_create_user(db, username, password):
     user = User(

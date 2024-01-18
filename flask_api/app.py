@@ -11,11 +11,12 @@ import os
 import json
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_jwt_extended import get_jwt_identity
-from flask_api.dbutils import db_create_user, db_get_user
+from flask_api.dbutils import db_create_user, db_get_user, db_create_georef
 from flask_api.models import User, db
 from flask_migrate import Migrate
 from flask_api.commands import custom_commands
 from sqlalchemy.exc import IntegrityError
+import time
 
 
 upper_dir = (Path(dirname(__file__))).parent.absolute()
@@ -47,6 +48,17 @@ def middleware():
         if os.environ.get('API_REQUEST_ORIGINS') == http_origin:
             access_token = create_access_token(identity=1, expires_delta=datetime.timedelta(days=1))
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token
+
+
+@app.route('/v1/georeference', methods=['POST'])
+@jwt_required()
+def georeference():
+    current_date = datetime.datetime.now().strftime("%Y%m%d")
+    current_timestamp_ms = int(time.time() * 1000)
+    geopick_id = "geopick-v{0}-{1}-{2}".format(v,current_date,current_timestamp_ms)
+    georef_data = request.json.get("georef_data", None)
+    georef = db_create_georef(db, geopick_id, georef_data)
+    return jsonify({"success": True, "msg": "Georef created", "id": georef.id, "shortcode": georef.geopick_id})
 
 
 @app.route('/v1/sec', methods=['POST'])
