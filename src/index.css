@@ -257,6 +257,26 @@ div.info_box {
   right: 5%;
 }
 
+#showShareLink {
+  display: block;
+  width: 350px;
+  height: 125px;
+  /* height: 300px; */
+  z-index: 1000;
+  position: relative;
+  top: 200px;
+  left: 50%; /* Center the search horizontally */
+  transform: translateX(-50%); /* Center the search precisely */
+  padding: 10px;
+  z-index: 1000;
+  background-color: wheat;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-width: 1px;
+  border-color: black;
+  border-style: solid;
+  border-radius: 5px;
+}
+
 #deleteGeometries {
   display: block;
   width: 300px;
@@ -462,6 +482,10 @@ div.info_box {
   align-items: center;
   margin-left: 20px;
   margin-right: 20px;
+}
+#share_message {
+  font-size: 1.2em;
+  font-weight: bolder;
 }
 
 .button {

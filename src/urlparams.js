@@ -14,7 +14,7 @@ const schema_latlonunc = Joi.object({
 })
 
 const schema_share = Joi.object({
-    share: Joi.string().alphanum().length(6).required(),
+    share: Joi.string().length(37).required(),
 })
 
 const urlParamsActions = function(urlParams){
@@ -47,7 +47,8 @@ const urlParamsActions = function(urlParams){
             retVal.message = value.error;
         }else{            
             retVal.status = 'OK';
-            retVal.opcode = opcodes.OPCODE_SHARE;            
+            retVal.opcode = opcodes.OPCODE_SHARE;
+            retVal.params = {'share': share};
         }
     } else {
         retVal.status = 'KO';

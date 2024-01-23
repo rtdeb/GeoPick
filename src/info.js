@@ -50,11 +50,13 @@ const clear_centroid_data = function(){
         $('#' + e).val("");
     });    
 }
-const do_copy_data = function( yes_headers, yes_wkt ){
-    if( empty_controls() ){        
-        toast_warning('Nothing to copy!');
-        return;
-    }
+
+const format_georef_data = function(georef_data){
+    var template = `${georef_data.centroid_y}\t${georef_data.centroid_x}\tepsg:4326\t${georef_data.radius_m}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.wkt}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.georeferencer_name}\t${georef_data.date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.source_string}\t${georef_data.georeference_remarks}`;
+    return template;
+}
+
+const get_ui_data = function(yes_wkt){
     let centroid_x = $('#centroid_x').val();
     let centroid_y = $('#centroid_y').val();
     let radius_m = $('#radius_m').val();
@@ -65,10 +67,8 @@ const do_copy_data = function( yes_headers, yes_wkt ){
         } else {
             wkt = $('#d_geojson').val();   
         }
-    }    
-    
+    }
     let date = new Date().toISOString();
-
     let pointRadiusSpatialFit = $('#spatial_fit').val();
     let footprintSpatialFit = 1;
     if(wkt.includes("LINESTRING") || wkt.includes("POINT")){        
@@ -78,8 +78,28 @@ const do_copy_data = function( yes_headers, yes_wkt ){
 
     let georeferencer_name = $('#georeferencer_name').val();
     let georeference_remarks = $('#georeference_remarks').val();
+    return {
+        'centroid_y': centroid_y,
+        'centroid_x': centroid_x,
+        'radius_m': radius_m,
+        'pointRadiusSpatialFit': pointRadiusSpatialFit,
+        'wkt': wkt,
+        'footprintSpatialFit': footprintSpatialFit,
+        'georeferencer_name': georeferencer_name,
+        'date': date,
+        'source_string': source_string,
+        'georeference_remarks': georeference_remarks
+    }
+}
 
-    var string_template = `${centroid_y}\t${centroid_x}\tepsg:4326\t${radius_m}\t0.0000001\t${pointRadiusSpatialFit}\t${wkt}\tepsg:4326\t${footprintSpatialFit}\t${georeferencer_name}\t${date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${source_string}\t${georeference_remarks}`;
+const do_copy_data = function( yes_headers, yes_wkt ){
+    if( empty_controls() ){        
+        toast_warning('Nothing to copy!');
+        return;
+    }        
+
+    const georef_data = get_ui_data(yes_wkt);    
+    var string_template = format_georef_data(georef_data);
 
     if( yes_headers ){
         navigator.clipboard.writeText(headers.join('\t') + '\n' + string_template);    
@@ -133,6 +153,10 @@ const show_centroid_data = function(lat,lng,radius){
     }
 }
 
+const showShareLink = function(shareLink){
+    $('#showShareLink').show();
+}
+
 // Notification functions
 const toast_error = function(message){
     Toastr.error(message);
@@ -157,6 +181,8 @@ module.exports = {
     show_api_centroid_data,
     show_centroid_data,
     do_copy_data,
-    copy_latest_search
+    get_ui_data,
+    copy_latest_search,
+    showShareLink
 }
 

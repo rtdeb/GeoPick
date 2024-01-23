@@ -11,7 +11,7 @@ import os
 import json
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_jwt_extended import get_jwt_identity
-from flask_api.dbutils import db_create_user, db_get_user, db_create_georef
+from flask_api.dbutils import db_create_user, db_get_user, db_create_georef, db_get_georef
 from flask_api.models import User, db
 from flask_migrate import Migrate
 from flask_api.commands import custom_commands
@@ -52,13 +52,21 @@ def middleware():
 
 @app.route('/v1/georeference', methods=['POST'])
 @jwt_required()
-def georeference():
+def write_georeference():
     current_date = datetime.datetime.now().strftime("%Y%m%d")
     current_timestamp_ms = int(time.time() * 1000)
     geopick_id = "geopick-v{0}-{1}-{2}".format(v,current_date,current_timestamp_ms)
     georef_data = request.json.get("georef_data", None)
-    georef = db_create_georef(db, geopick_id, georef_data)
+    georef_data_str = json.dumps(georef_data)
+    georef = db_create_georef(db, geopick_id, georef_data_str)
     return jsonify({"success": True, "msg": "Georef created", "id": georef.id, "shortcode": georef.geopick_id})
+
+
+@app.route('/v1/georeference/<geopick_id>', methods=['GET'])
+@jwt_required()
+def read_georeference(geopick_id):
+    shared_georef = db_get_georef(db, geopick_id)
+    return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data })
 
 
 @app.route('/v1/sec', methods=['POST'])

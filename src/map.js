@@ -40,14 +40,14 @@ document.addEventListener("DOMContentLoaded", function() {
   const queryString = window.location.search;  
   const urlParams = new URLSearchParams(queryString);
   const action = urlparams.urlParamsActions(urlParams);
-  if(action.status === 'KO'){
-    console.log(action.message);
-  }else{    
+  if(action.status != 'KO'){    
     if(action.opcode === urlparams.opcodes.OPCODE_LATLONUNC){      
       addPointCircleToMap( action.params.lat, action.params.lon, action.params.unc );
       window.history.pushState({}, document.title, "/");
     }else if(action.opcode === urlparams.opcodes.OPCODE_SHARE){
       //console.log("Do share");
+      api.load_share(action.params.share, site_layer, nominatim_layer, mbc_layer, centroid_layer, map);
+      window.history.pushState({}, document.title, "/");
     }
   }
 });
@@ -677,6 +677,19 @@ const handle_copy_data = function(withHeaders){
   }
 
 }
+
+$("#share").on("click", function(){
+  const geodata = $('#d_geojson').val();
+  console.log(centroid_layer.toGeoJSON());  
+  console.log(centroid_layer.toGeoJSON().features.length);
+  if( (geodata===null || geodata==='') && centroid_layer.toGeoJSON().features.length == 0){
+    info.toast_error('Nothing to share!');
+    return;
+  }
+  const ui_data = info.get_ui_data(true);  
+  ui_data.geojson_mbc = mbc_layer.toGeoJSON().features;
+  api.write_share(ui_data);
+});
 
 // Return a number with space as thousands separator
 const format = function(num){
