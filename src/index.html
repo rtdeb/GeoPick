@@ -184,7 +184,7 @@
       </div>
     </div>
 
-    <div id="infoContent">
+    <div id="infoContent">      
       <!-- CORRECTED CENTER: LATITUDE/LONGITUDE -->
       <!-- <div class="separator"></div> -->
       <div class="pair">
@@ -264,7 +264,7 @@
         </div>
         <div class="value">
           <textarea readonly class="non-editable" id="georeference_protocol" type="text" placeholder="" value=""
-            rows="2">Georeferencing Quick Reference Guide (Zermoglio et al. 2020)</textarea>
+            rows="1">Georeferencing Quick Reference Guide (Zermoglio et al. 2020)</textarea>
         </div>
       </div>
       <!-- GEOREFERENCE SOURCES -->
@@ -278,9 +278,21 @@
         </div>
         <div class="value">
           <textarea readonly class="non-editable" id="georeference_sources" type="text" placeholder="" value=""
-            rows="2">GeoPick v.<%= version %></textarea>
+            rows="1">GeoPick v.<%= version %></textarea>
         </div>
       </div>
+      <!-- LOCALITY -->
+      <div class="pair" style="">
+        <div class="key">
+          <div class="dwc_name">LOCALITY</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/locality" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:locality]</a></div>
+        </div>
+        <div class="value">
+          <input class="editable" id="locality_description" class="input" type="text" placeholder="Please type or paste the locality description" />
+        </div>
+      </div>     
       <!-- GEOREFERENCED BY -->
       <div class="pair">
         <div class="key">
@@ -309,17 +321,16 @@
 
         <!-- COPY BUTTON -->
         <div class="separator"></div>
+        <label class="checkbox" id="share_checkbox">
+          <input type="checkbox">
+          Share
+        </label>
         <div class="button-container">
-          <!-- <div class="is-size-10 has-text-centered has-text-weight-bold is-uppercase">Copy data to clipboard</div> -->
           <div id="copy_clipboard_message">Copy to clipboard:</div>
           <button class="button button-headers" id="cpdata">With headers</button>
           <button class="button button-noheaders" id="cpdatanh">Without headers</button>          
         </div>
-        <div class="separator"></div>
-        <div class="button-container">
-          <div id="share_message">Share georeference data:</div>
-          <button class="button button-share" id="share">Share</button>
-        </div>
+      </div>
         <input type="hidden" id="d_geojson">
       </div>
     </div>

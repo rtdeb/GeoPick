@@ -18,7 +18,7 @@ div.info_box {
 .about {
   text-align: right;
   margin-right: 1.5rem;
-  margin-bottom: 15px;
+  margin-bottom: 3px;
   margin-left: 1.7rem;
   padding-bottom: 15px;
 }
@@ -393,6 +393,7 @@ div.info_box {
 .key {
   width: 95%;
   display: flex;
+  margin-top: 0px;
   margin-right: 0px;
   margin-bottom: 0px;
 }
@@ -458,6 +459,12 @@ div.info_box {
   width: 40%;
 }
 
+#locality_description{
+  width: 95%;
+  text-align: left;
+  resize: none;
+
+}
 #georeference_protocol,
 #georeference_sources {
   width: 95%;
@@ -486,6 +493,12 @@ div.info_box {
 #share_message {
   font-size: 1.2em;
   font-weight: bolder;
+}
+#share_checkbox{
+  font-weight: bold;
+}
+#share_url{
+  font-weight: 400;
 }
 
 .button {

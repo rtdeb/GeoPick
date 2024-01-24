@@ -53,7 +53,7 @@ const parse_share_api_data = function(data){
                 }
             ]
     }    
-    const mbc = null;
+    var mbc = null;
     if( parsed_json.geojson_mbc.length != 0 ){            
         mbc = { type: 'Feature', 'geometry': parsed_json.geojson_mbc[0].geometry };
     }
