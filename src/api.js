@@ -131,8 +131,7 @@ const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, m
     .then(function(response){         
         return response.json();
     })
-    .then(function(data){
-        console.log(data);
+    .then(function(data){        
         const parsed_json = parse_share_api_data(data);
         site_layer.clearLayers();
         mbc_layer.clearLayers();
@@ -187,10 +186,9 @@ const write_share = function(share_data, map){
     .then(function(response){         
         return response.json();
     })
-    .then(function(data){
-        console.log(data.shortcode);
+    .then(function(data){        
         map.spin(false);
-        info.showShareLink();
+        info.showShareLink(data.shortcode);
     })
     .catch(function(error){
         map.spin(false);

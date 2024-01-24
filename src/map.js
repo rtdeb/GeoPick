@@ -44,8 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if(action.opcode === urlparams.opcodes.OPCODE_LATLONUNC){      
       addPointCircleToMap( action.params.lat, action.params.lon, action.params.unc );
       window.history.pushState({}, document.title, "/");
-    }else if(action.opcode === urlparams.opcodes.OPCODE_SHARE){
-      //console.log("Do share");
+    }else if(action.opcode === urlparams.opcodes.OPCODE_SHARE){      
       api.load_share(action.params.share, site_layer, mbc_layer, centroid_layer, map);
       window.history.pushState({}, document.title, "/");
     }
