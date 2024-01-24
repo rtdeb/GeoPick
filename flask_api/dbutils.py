@@ -22,6 +22,11 @@ def db_create_georef(db, geopick_id, georef_data):
     db.session.commit()
     return georef
 
+def db_get_georef_page(db, page, per_page):
+    query =  db.session.query(SharedGeoreference)
+    query = query.paginate(page=page, per_page=per_page)
+    return query
+
 def db_create_user(db, username, password):
     user = User(
         username=username,

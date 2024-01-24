@@ -11,7 +11,7 @@ import os
 import json
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_jwt_extended import get_jwt_identity
-from flask_api.dbutils import db_create_user, db_get_user, db_create_georef, db_get_georef
+from flask_api.dbutils import db_create_user, db_get_user, db_create_georef, db_get_georef, db_get_georef_page
 from flask_api.models import User, db
 from flask_migrate import Migrate
 from flask_api.commands import custom_commands
@@ -66,8 +66,32 @@ def write_georeference():
 @jwt_required()
 def read_georeference(geopick_id):
     shared_georef = db_get_georef(db, geopick_id)
-    return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data })
+    if shared_georef:
+        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data })
+    else:
+        return jsonify({"success": False, "msg": "Not found"}), 404
 
+@app.route('/v1/georeference', methods=['GET'])
+@jwt_required()
+def list_georeferences():
+    current_user_id = get_jwt_identity()
+    author = db.get_or_404(User, current_user_id)
+    if author.username == os.environ.get('USERNAME'):
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per-page", 100, type=int)
+        georefs = db_get_georef_page(db, page, per_page)
+        results = {
+            "results": [{"id": g.id, "geopick_id": g.geopick_id, "georef_data": g.georef_data} for g in georefs.items],
+            "pagination": {
+                "count": georefs.total,
+                "page": page,
+                "per_page": per_page,
+                "pages": georefs.pages,
+            },
+        }
+        return jsonify(results)
+    else:
+        return jsonify({"success": False, "msg": "Not allowed"}), 401
 
 @app.route('/v1/sec', methods=['POST'])
 @jwt_required()

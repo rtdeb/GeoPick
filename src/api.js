@@ -52,10 +52,14 @@ const parse_share_api_data = function(data){
                     }
                 }
             ]
+    }    
+    const mbc = null;
+    if( parsed_json.geojson_mbc.length != 0 ){            
+        mbc = { type: 'Feature', 'geometry': parsed_json.geojson_mbc[0].geometry };
     }
     return {
         centroid: { type: 'Feature', 'geometry': centroid },
-        mbc: { type: 'Feature', 'geometry': parsed_json.geojson_mbc[0].geometry },
+        mbc: mbc,
         site: site,
         spatial_fit: parsed_json.pointRadiusSpatialFit,
         uncertainty: parsed_json.radius_m,
@@ -122,6 +126,7 @@ const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, m
             'Content-Type': 'application/json; charset=UTF-8',            
         })        
     }
+    map.spin(true);
     fetch( api_base_url + 'georeference/' + share_code, fetchdata)
     .then(function(response){         
         return response.json();
@@ -133,23 +138,43 @@ const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, m
         mbc_layer.clearLayers();
         centroid_layer.clearLayers();        
 
-        mbc_layer.addData( parsed_json.mbc );
-        centroid_layer.addData( parsed_json.centroid );
-        map.fitBounds(mbc_layer.getBounds());
-        info.show_api_centroid_data_wkt( parsed_json, parsed_json.wkt );
-        var layer = L.geoJSON(parsed_json.site);        
-        layer.eachLayer(
-        function(l){
-            site_layer.addLayer(l);
-        });
-        site_layer.bringToFront();        
+        map.spin(false);
+
+        // There is actually a sec geometry
+        if( parsed_json.mbc ){
+            mbc_layer.addData( parsed_json.mbc );
+            centroid_layer.addData( parsed_json.centroid );
+            map.fitBounds(mbc_layer.getBounds());
+            info.show_api_centroid_data_wkt( parsed_json, parsed_json.wkt );
+            var layer = L.geoJSON(parsed_json.site);        
+            layer.eachLayer(
+            function(l){
+                site_layer.addLayer(l);
+            });
+            site_layer.bringToFront();        
+        }else{ // If there is no sec geometry it's a point radius feature, must rebuild
+            centroid_layer.addData( parsed_json.centroid );
+            const long = parseFloat(parsed_json.centroid.geometry.features[0].geometry.coordinates[1]);
+            const lat = parseFloat(parsed_json.centroid.geometry.features[0].geometry.coordinates[0]);
+            const radius = parseFloat(parsed_json.uncertainty);
+            circle = L.circle([long, lat], radius, {
+                color: "blue",
+                fillColor: "blue",
+            });
+            map.addLayer(circle);
+            site_layer.addLayer(circle);
+            centroid_layer.addData(site_layer.toGeoJSON());
+            info.show_centroid_data(lat, long, radius);
+            map.fitBounds(circle.getBounds());
+        }
         
     }).catch(function(error){
         info.toast_error(error);        
+        map.spin(false);
     });
 }
 
-const write_share = function(share_data){
+const write_share = function(share_data, map){
     const fetchdata = {
         method: 'POST',
         body: JSON.stringify({'georef_data': share_data}),
@@ -157,15 +182,18 @@ const write_share = function(share_data){
             'Content-Type': 'application/json; charset=UTF-8',            
         })        
     }
+    map.spin(true);
     fetch( api_base_url + 'georeference', fetchdata)
     .then(function(response){         
         return response.json();
     })
     .then(function(data){
         console.log(data.shortcode);
+        map.spin(false);
         info.showShareLink();
     })
     .catch(function(error){
+        map.spin(false);
         info.toast_error(error);        
     });        
 }
@@ -191,6 +219,7 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
             'Content-Type': 'application/json; charset=UTF-8',            
         })        
     }
+    map.spin(true);
     fetch( api_base_url + 'sec', fetchdata)
     .then(function(response){         
         return response.json();

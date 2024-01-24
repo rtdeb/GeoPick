@@ -679,16 +679,14 @@ const handle_copy_data = function(withHeaders){
 }
 
 $("#share").on("click", function(){
-  const geodata = $('#d_geojson').val();
-  console.log(centroid_layer.toGeoJSON());  
-  console.log(centroid_layer.toGeoJSON().features.length);
+  const geodata = $('#d_geojson').val();  
   if( (geodata===null || geodata==='') && centroid_layer.toGeoJSON().features.length == 0){
     info.toast_error('Nothing to share!');
     return;
   }
-  const ui_data = info.get_ui_data(true);  
-  ui_data.geojson_mbc = mbc_layer.toGeoJSON().features;
-  api.write_share(ui_data);
+  const ui_data = info.get_ui_data(true);      
+  ui_data.geojson_mbc = mbc_layer.toGeoJSON().features;  
+  api.write_share(ui_data, map);
 });
 
 // Return a number with space as thousands separator
