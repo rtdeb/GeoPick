@@ -36,7 +36,7 @@ const parse_api_data = function(data){
 
 const parse_share_api_data = function(data){
     const parsed_json = JSON.parse(data.data);
-    const site = parseFromWK(parsed_json.wkt);
+    const site = parseFromWK(parsed_json.wkt);    
     const centroid = {
         "type": "FeatureCollection",
             "features": [
@@ -58,7 +58,8 @@ const parse_share_api_data = function(data){
         mbc: { type: 'Feature', 'geometry': parsed_json.geojson_mbc[0].geometry },
         site: site,
         spatial_fit: parsed_json.pointRadiusSpatialFit,
-        uncertainty: parsed_json.radius_m
+        uncertainty: parsed_json.radius_m,
+        wkt: parsed_json.wkt
     };
 }
 
@@ -114,7 +115,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
     });
 }
 
-const load_share = function(share_code, site_layer, nominatim_layer, mbc_layer, centroid_layer, map){
+const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, map){    
     const fetchdata = {
         method: 'GET',        
         headers: new Headers({
@@ -130,12 +131,12 @@ const load_share = function(share_code, site_layer, nominatim_layer, mbc_layer, 
         const parsed_json = parse_share_api_data(data);
         site_layer.clearLayers();
         mbc_layer.clearLayers();
-        centroid_layer.clearLayers();
-        nominatim_layer.clearLayers();                
+        centroid_layer.clearLayers();        
 
         mbc_layer.addData( parsed_json.mbc );
         centroid_layer.addData( parsed_json.centroid );
-        map.fitBounds(mbc_layer.getBounds());        
+        map.fitBounds(mbc_layer.getBounds());
+        info.show_api_centroid_data_wkt( parsed_json, parsed_json.wkt );
         var layer = L.geoJSON(parsed_json.site);        
         layer.eachLayer(
         function(l){

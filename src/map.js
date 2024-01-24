@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function() {
       window.history.pushState({}, document.title, "/");
     }else if(action.opcode === urlparams.opcodes.OPCODE_SHARE){
       //console.log("Do share");
-      api.load_share(action.params.share, site_layer, nominatim_layer, mbc_layer, centroid_layer, map);
+      api.load_share(action.params.share, site_layer, mbc_layer, centroid_layer, map);
       window.history.pushState({}, document.title, "/");
     }
   }

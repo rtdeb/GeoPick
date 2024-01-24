@@ -113,6 +113,19 @@ const copy_latest_search = function(latest_search){
     navigator.clipboard.writeText(latest_search);    
     toast_success('Latest search copied to clipboard!');
 }
+
+const show_api_centroid_data_wkt = function(parsed_json, wkt){
+    geometry = parsed_json.centroid.geometry.features[0].geometry;
+    $('#centroid_x').val( geometry.coordinates[0].toFixed(7) );
+    $('#centroid_y').val( geometry.coordinates[1].toFixed(7) );
+
+    $('#radius_m').val( parsed_json.uncertainty );
+
+    $('#spatial_fit').val( parsed_json.spatial_fit );   
+        
+    $('#d_geojson').val( wkt );        
+}
+
 const show_api_centroid_data = function(parsed_json, geom){
     geometry = parsed_json.centroid.geometry.features[0].geometry;
     $('#centroid_x').val( geometry.coordinates[0].toFixed(7) );
@@ -179,6 +192,7 @@ module.exports = {
     toast_warning,
     clear_centroid_data,
     show_api_centroid_data,
+    show_api_centroid_data_wkt,
     show_centroid_data,
     do_copy_data,
     get_ui_data,
