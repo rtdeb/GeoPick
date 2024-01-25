@@ -339,14 +339,16 @@
             <a class="share_link" id="share_link" href=""></a><button id="copy_link" class="button copy_link" title="Copy share link to clipboard" style="outline-style: none; background: url(<%=require("./copy.png")%>) no-repeat 0 0 scroll;"></button>
           </div>
         </label> -->
-
-        <div class="button-container" id="copy_buttons">
+        <div id="info_controls">
+        <div id="validate_button_container">
           <button class="button button-headers" id="validate_georeference">Validate</button>
-            <div id="copy_clipboard_message">Copy to<br> clipboard:</div>
-            <button class="button button-headers" id="cpdata">With headers</button>
-            <button class="button button-noheaders" id="cpdatanh">Without headers</button>
-          </div>
-
+        </div>
+        <div id="copy_buttons_container" class="disabled-div">
+          <div id="copy_clipboard_message">Copy to<br> clipboard:</div>
+          <button class="button button-headers" id="cpdata">With headers</button>
+          <button class="button button-noheaders" id="cpdatanh">Without headers</button>
+        </div>
+      </div>
       </div>
       <input type="hidden" id="d_geojson">
     </div>

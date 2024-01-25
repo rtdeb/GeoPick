@@ -136,14 +136,6 @@ div.info_box {
   border-width: 0px;
 }
 
-/* .button_container {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-} */
-
 #cpdatanh {
   margin: 2px;
 }
@@ -152,7 +144,10 @@ div.info_box {
   margin: 2px;
 }
 
-#copy_buttons{  
+#validate_button_container{
+  margin-top: 2px;
+}
+#copy_buttons_container{  
   display: flex;
   flex-direction: row;
 }
@@ -508,12 +503,22 @@ div.info_box {
   margin-left: 70px;
   padding-right: 5px;
 }
+#info_controls{
+  display: flex;
+  flex-direction: row;
+}
 .button-container {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-left: 10px;
-  margin-right: 30px;  
+  /* margin-left: 10px; */
+  /* margin-right: 30px;   */
+}
+.disabled-div {
+  opacity: 0.5; /* makes the div look faded */
+  pointer-events: none; /* prevents clicking on anything inside the div */
+  cursor: not-allowed; /* changes the cursor to indicate that it is disabled */
 }
 #share_message {
   font-size: 1.2em;
