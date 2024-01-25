@@ -36,6 +36,7 @@ const parse_api_data = function(data){
 
 const parse_share_api_data = function(data){
     const parsed_json = JSON.parse(data.data);
+    const path = data.path;
     const site = parseFromWK(parsed_json.wkt);    
     const centroid = {
         "type": "FeatureCollection",
@@ -63,7 +64,11 @@ const parse_share_api_data = function(data){
         site: site,
         spatial_fit: parsed_json.pointRadiusSpatialFit,
         uncertainty: parsed_json.radius_m,
-        wkt: parsed_json.wkt
+        wkt: parsed_json.wkt,
+        locality: parsed_json.locality,
+        georeferencer_name: parsed_json.georeferencer_name,
+        georeference_remarks: parsed_json.georeference_remarks,
+        path: path
     };
 }
 
@@ -111,7 +116,8 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
         function(l){
             site_layer.addLayer(l);
         });
-        site_layer.bringToFront();        
+        site_layer.bringToFront();
+
     })
     .catch(function(error){
         info.toast_error(error);
@@ -166,7 +172,8 @@ const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, m
             info.show_centroid_data(lat, long, radius);
             map.fitBounds(circle.getBounds());
         }
-        
+        info.show_textual_data(parsed_json);
+        info.set_share_link(parsed_json.path);
     }).catch(function(error){
         info.toast_error(error);        
         map.spin(false);
@@ -188,7 +195,8 @@ const write_share = function(share_data, map){
     })
     .then(function(data){        
         map.spin(false);
-        info.showShareLink(data.shortcode);
+        console.log(data.shortcode);
+        info.set_share_link(data.path);
     })
     .catch(function(error){
         map.spin(false);

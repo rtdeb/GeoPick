@@ -257,6 +257,22 @@ div.info_box {
   right: 5%;
 }
 
+.share_link {
+  padding-left: 10px;
+  font-size: smaller;
+}
+
+.share_link_wrapper{
+  margin-top: 10px;
+}
+
+#copy_link {
+  margin-left: 10px;
+  background-color: #4caf50 !important;
+  width: 25px;
+  height: 25px;  
+}
+
 #showShareLink {
   display: block;
   width: 350px;

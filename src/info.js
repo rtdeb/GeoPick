@@ -21,11 +21,13 @@ const headers = [
     'footprintWKT',
     'footprintSRS',
     'footprintSpatialFit',
+    'locality',
     'georeferencedBy',
     'georeferencedDate',
     'georeferenceProtocol',
     'georeferenceSources',
-    'georeferenceRemarks'
+    'georeferenceRemarks',
+    'shareLink'
 ];
 
 const controls = [
@@ -35,6 +37,12 @@ const controls = [
     'd_geojson',
     'spatial_fit'
 ];
+
+const set_share_link = function(link){
+    $('#share_link').attr("href", window.location.origin + link);
+    $('#share_link').text(window.location.origin + link);
+    $('#share_link_wrapper').show();
+}
 
 const empty_controls = function() {
     for (c in controls){
@@ -49,10 +57,14 @@ const clear_centroid_data = function(){
     controls.forEach(function (e) {
         $('#' + e).val("");
     });    
+    $('#locality_description').val('');
+    $('#georeferencer_name').val('');
+    $('#georeference_remarks').val('');
+    $('#share_link').text('');
 }
 
 const format_georef_data = function(georef_data){
-    var template = `${georef_data.centroid_y}\t${georef_data.centroid_x}\tepsg:4326\t${georef_data.radius_m}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.wkt}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.georeferencer_name}\t${georef_data.date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.source_string}\t${georef_data.georeference_remarks}`;
+    var template = `${georef_data.centroid_y}\t${georef_data.centroid_x}\tepsg:4326\t${georef_data.radius_m}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.wkt}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.locality}\t${georef_data.georeferencer_name}\t${georef_data.date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.source_string}\t${georef_data.georeference_remarks}\t${georef_data.link}`;
     return template;
 }
 
@@ -78,6 +90,8 @@ const get_ui_data = function(yes_wkt){
 
     let georeferencer_name = $('#georeferencer_name').val();
     let georeference_remarks = $('#georeference_remarks').val();
+    let locality = $('#locality_description').val();
+    let link = $('#share_link').text();
     return {
         'centroid_y': centroid_y,
         'centroid_x': centroid_x,
@@ -88,8 +102,16 @@ const get_ui_data = function(yes_wkt){
         'georeferencer_name': georeferencer_name,
         'date': date,
         'source_string': source_string,
-        'georeference_remarks': georeference_remarks
+        'georeference_remarks': georeference_remarks,
+        'locality': locality,
+        'link': link
     }
+}
+
+const show_textual_data = function(parsed_json){
+    $('#locality_description').val(parsed_json.locality);
+    $('#georeferencer_name').val(parsed_json.georeferencer_name);
+    $('#georeference_remarks').val(parsed_json.georeference_remarks);
 }
 
 const do_copy_data = function( yes_headers, yes_wkt ){
@@ -112,6 +134,11 @@ const do_copy_data = function( yes_headers, yes_wkt ){
 const copy_latest_search = function(latest_search){
     navigator.clipboard.writeText(latest_search);    
     toast_success('Latest search copied to clipboard!');
+}
+
+const copy_share_link = function(share_link){
+    navigator.clipboard.writeText(share_link);    
+    toast_success('Share link copied to clipboard!');
 }
 
 const show_api_centroid_data_wkt = function(parsed_json, wkt){
@@ -197,6 +224,9 @@ module.exports = {
     do_copy_data,
     get_ui_data,
     copy_latest_search,
-    showShareLink
+    showShareLink,
+    show_textual_data,
+    set_share_link,
+    copy_share_link
 }
 

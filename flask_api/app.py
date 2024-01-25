@@ -59,7 +59,7 @@ def write_georeference():
     georef_data = request.json.get("georef_data", None)
     georef_data_str = json.dumps(georef_data)
     georef = db_create_georef(db, geopick_id, georef_data_str)
-    return jsonify({"success": True, "msg": "Georef created", "id": georef.id, "shortcode": georef.geopick_id})
+    return jsonify({"success": True, "msg": "Georef created", "id": georef.id, "shortcode": georef.geopick_id, "path": '/?share={0}'.format(geopick_id)})
 
 
 @app.route('/v1/georeference/<geopick_id>', methods=['GET'])
@@ -67,7 +67,7 @@ def write_georeference():
 def read_georeference(geopick_id):
     shared_georef = db_get_georef(db, geopick_id)
     if shared_georef:
-        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data })
+        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(geopick_id)})
     else:
         return jsonify({"success": False, "msg": "Not found"}), 404
 

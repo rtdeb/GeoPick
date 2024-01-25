@@ -516,6 +516,10 @@ $("#latest_search_copy").on("click", function() {
     info.copy_latest_search($("#latest_search_hidden").val());
  });
 
+ $('#copy_link').on("click", function(){
+    info.copy_share_link($('#share_link').text());
+ })
+
 // Keyboard point editting handling
 $("#keyboardEdit").on("click", function(){ show_point_kb_box() });
 const show_point_kb_box = function(){
@@ -671,13 +675,16 @@ const handle_copy_data = function(withHeaders){
   wkt_length = wktSize();
   if(wkt_length != null){    
     showModal(withHeaders, wkt_length);
-  } else {
+  } else {        
     info.do_copy_data(withHeaders, true);
+    if( $("#share_checkbox").is(":checked") ){
+      do_share();
+    }    
   }
 
 }
 
-$("#share").on("click", function(){
+const do_share = function(){
   const geodata = $('#d_geojson').val();  
   if( (geodata===null || geodata==='') && centroid_layer.toGeoJSON().features.length == 0){
     info.toast_error('Nothing to share!');
@@ -686,6 +693,10 @@ $("#share").on("click", function(){
   const ui_data = info.get_ui_data(true);      
   ui_data.geojson_mbc = mbc_layer.toGeoJSON().features;  
   api.write_share(ui_data, map);
+}
+
+$("#share").on("click", function(){
+  do_share();
 });
 
 // Return a number with space as thousands separator

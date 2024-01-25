@@ -321,9 +321,12 @@
 
         <!-- COPY BUTTON -->
         <div class="separator"></div>
-        <label class="checkbox" id="share_checkbox">
-          <input type="checkbox">
+        <label class="checkbox">
+          <input id="share_checkbox" type="checkbox">
           Share
+          <div id="share_link_wrapper" class="share_link_wrapper" style="display: none;">
+            <a class="share_link" id="share_link" href=""></a><button id="copy_link" class="button copy_link" title="Copy share link to clipboard" style="outline-style: none; background: url(<%=require("./copy.png")%>) no-repeat 0 0 scroll;"></button>
+          </div>
         </label>
         <div class="button-container">
           <div id="copy_clipboard_message">Copy to clipboard:</div>
