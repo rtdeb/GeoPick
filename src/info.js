@@ -7,8 +7,11 @@ const p = require('../package.json');
 const { convertToWK } = require('wkt-parser-helper');
 // const map = require("./map");
 Toastr.options = {
-    "positionClass": "toast-top-center",
-    "timeOut": "3000"    
+      closeButton: false,     // Show close button
+      timeOut: 3000,            // Disable auto-hide
+      extendedTimeOut: 0,    // Disable auto-hide after user interaction
+      tapToDismiss: false, 
+      positionClass: "toast-center-center",
 }
 
 const headers = [

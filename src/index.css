@@ -143,7 +143,13 @@ div.info_box {
 #cpdata {
   margin: 2px;
 }
-
+.toast-center-center {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  position: fixed;
+  opacity: 1.0;
+}
 #validate_button_container{
   margin-top: 2px;
 }

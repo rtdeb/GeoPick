@@ -681,23 +681,43 @@ const wktSize = function () {
   }
 };
 
+// Check that the info box is adequately filled. If the latitude box is set it means that the rest of values down to georeference sources are also set. Therefore, we only need to check that latitude, localiyt and georeferenced by are filled. Remarks are optional
+const validateInfoBox = function () {
+  empty_info = []
+  if(document.getElementById("centroid_y").value == ""){
+    empty_info.push("Point-radius is not calculated.")
+  }
+  if(document.getElementById("locality_description").value == ""){
+    empty_info.push("The 'Locality' field is empty.")
+  }
+  if(document.getElementById("georeferencer_name").value == ""){
+    empty_info.push("The field 'Georeferenced by' is empty.")
+  }
+  if(empty_info.length != 0){
+    message = "<b>The georeference is not complete:</b><br><br>" + empty_info.join("<br>") + "</ul>"
+    info.toast_error(message);
+  } else {
+    return true;
+  }
+
+};
 $("#validate_georeference").on("click", function () {
-    var myDiv = document.getElementById('copy_buttons_container');
-    myDiv.classList.remove('disabled-div');
-
+  if(validateInfoBox()){
+    var myDiv = document.getElementById("copy_buttons_container");
+    myDiv.classList.remove("disabled-div");
+  }
 });
-
 
 $("#cpdata").on("click", function () {
   handle_copy_data(true);
-  var myDiv = document.getElementById('copy_buttons_container');
-  myDiv.classList.add('disabled-div');
+  var myDiv = document.getElementById("copy_buttons_container");
+  myDiv.classList.add("disabled-div");
 });
 
 $("#cpdatanh").on("click", function () {
   handle_copy_data(false);
-  var myDiv = document.getElementById('copy_buttons_container');
-  myDiv.classList.add('disabled-div');
+  var myDiv = document.getElementById("copy_buttons_container");
+  myDiv.classList.add("disabled-div");
 });
 
 const handle_copy_data = function (withHeaders) {
