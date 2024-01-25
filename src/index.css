@@ -136,22 +136,29 @@ div.info_box {
   border-width: 0px;
 }
 
-.button_container {
+/* .button_container {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-}
+} */
 
 #cpdatanh {
-  margin: 10px;
+  margin: 2px;
 }
 
 #cpdata {
-  margin: 10px;
+  margin: 2px;
 }
 
+#copy_buttons{  
+  display: flex;
+  flex-direction: row;
+}
+#validate_georeference {
+  align-items: left;
+}
 .leaflet-verticalcenter {
   position: absolute;
   z-index: 1000;
@@ -496,15 +503,17 @@ div.info_box {
   width: 95%;
 }
 #copy_clipboard_message {
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: bolder;
+  margin-left: 70px;
+  padding-right: 5px;
 }
 .button-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 30px;  
 }
 #share_message {
   font-size: 1.2em;

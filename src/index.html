@@ -7,8 +7,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="css/mystyles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
-    integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ==" crossorigin="anonymous"
-    referrerpolicy="no-referrer" />
+    integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Matomo -->
   <script>
@@ -42,13 +42,13 @@
         <table id="search_table">
           <tr>
             <td id="search_table_label">
-                <label id="search_label">Location search:&nbsp;</label>
+              <label id="search_label">Location search:&nbsp;</label>
             </td>
             <td id="search_table_input">
-                <input id="place_search" placeholder="through OpenStreetMap Nominatim" />
+              <input id="place_search" placeholder="through OpenStreetMap Nominatim" />
             </td>
             <td id="search_table_button">
-                <button id="importNominatim" class="button">Import location</button>
+              <button id="importNominatim" class="button">Import location</button>
             </td>
           </tr>
           <tr>
@@ -57,9 +57,9 @@
                 <label id="search_label">Latest search:&nbsp;</label>
               </div>
             </td>
-            <td id="search_table_input">                
-                <label id="latest_search"></label>
-                <input hidden id="latest_search_hidden" />
+            <td id="search_table_input">
+              <label id="latest_search"></label>
+              <input hidden id="latest_search_hidden" />
             </td>
             <td id="search_table_button">
               <button id="latest_search_copy" class="button">Copy</button>
@@ -67,90 +67,96 @@
           </tr>
         </table>
       </div>
-    
 
 
 
-    <!-- ADDITIONAL EDITING CONTROLS -->
-    <div class="wkt">
-      <input id="importWKT" src=<%=require("./wkt.png")%> type="image" title="Import from Well Known Text" width = "30px">
-    </div>
-    <div class="control-keyboard">
-      <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via keyboard" width = "30px">
-    </div>
 
-    <!-- HIDDEN DIALOG BOX CONTROLS -->
-    <div id="wkt_limit_box_modal" class="modal">
-      <div class="wkt_limit_box">
-        <div id="wkt_limit_box_text">
-          <p id="wkt_length_text">
+      <!-- ADDITIONAL EDITING CONTROLS -->
+      <div class="wkt">
+        <input id="importWKT" src=<%=require("./wkt.png")%> type="image" title="Import from Well Known Text" width =
+        "30px">
+      </div>
+      <div class="control-keyboard">
+        <input id="keyboardEdit" src=<%=require("./control-keyboard.png")%> type="image" title="Enter/modify point via
+        keyboard" width = "30px">
+      </div>
 
-          </p>
+      <!-- HIDDEN DIALOG BOX CONTROLS -->
+      <div id="wkt_limit_box_modal" class="modal">
+        <div class="wkt_limit_box">
+          <div id="wkt_limit_box_text">
+            <p id="wkt_length_text">
+
+            </p>
+          </div>
+          <div id="wkt_limit_box_buttons">
+            <!-- Give tabindex since default will be 'No' and 'Yes' if user clicks tab -->
+            <button tabindex=75 id="doCopyWKT">Yes</button>
+            <button tabindex=74 id="doNotCopyWKT">No</button>
+          </div>
         </div>
-        <div id="wkt_limit_box_buttons">
-          <!-- Give tabindex since default will be 'No' and 'Yes' if user clicks tab -->
-          <button tabindex=75 id="doCopyWKT">Yes</button>
-          <button tabindex=74 id="doNotCopyWKT">No</button>
+      </div>
+
+      <div id="showShareLink" style="display: none;">
+        <div style="text-align: justify; font-size: 1.2em;">This is your share link</div>
+        <div id="shareLink"><input id="textareaShare" type="text"></input></div>
+        <div id="buttonsShare">
+          <button id="copyShareLink">Copy link</button>
         </div>
       </div>
-    </div>
 
-    <div id="showShareLink" style="display: none;">
-      <div style="text-align: justify; font-size: 1.2em;">This is your share link</div>
-      <div id="shareLink"><input id="textareaShare" type="text"></input></div>      
-      <div id="buttonsShare">
-        <button id="copyShareLink">Copy link</button>        
+      <div id="deleteGeometries" style="display: none;">
+        <div style="text-align: justify; font-size: 1.2em;">Are you sure you want to clear all geometries?</div>
+        <div id="buttonsDeleteGeometries">
+          <button id="cancelDeleteGeometries">Cancel</button>
+          <button id="yesDeleteGeometries">Yes</button>
+        </div>
       </div>
-    </div>
 
-    <div id="deleteGeometries" style="display: none;">
-      <div style="text-align: justify; font-size: 1.2em;">Are you sure you want to clear all geometries?</div>
-      <div id="buttonsDeleteGeometries">
-        <button id="cancelDeleteGeometries">Cancel</button>
-        <button id="yesDeleteGeometries">Yes</button>
+      <div id="controlTextWKT" style="display: none;">
+        <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here
+        </div>
+        <textarea id="textareaWKT" rows="9" name="text"></textarea>
+        <div id="buttonsWKT">
+          <button id="cancelWKT">Cancel</button>
+          <button id="okWKT">OK</button>
+        </div>
+        <div id="infoDivBox" style="display: none;">
+          <textarea id="errorWKT" name="text"></textarea>
+        </div>
       </div>
-    </div>
 
-    <div id="controlTextWKT" style="display: none;">
-      <div style="text-align: justify; font-size: 1.2em;">Please paste your 'Well Known Text' (WKT) geometry here</div>
-      <textarea id="textareaWKT" rows="9" name="text"></textarea>
-      <div id="buttonsWKT">
-        <button id="cancelWKT">Cancel</button>
-        <button id="okWKT">OK</button>
+      <div id="controlKeyboard" style="display: none;">
+        <div style="text-align: justify; font-size: 1.2em; margin-bottom: 10px;">Please enter latitude, longitude and
+          uncertainty
+        </div>
+        <div>
+          <div style="margin-top: 5px;font-size: 1.2em;">Latitude (in decimal degrees, WGS84)</div>
+          <input id="keyboardLatitude" class="input is-small" type="text" placeholder="latitude" size="11" ,
+            maxlength="12">
+          <div style="margin-top: 5px;font-size: 1.2em;">Longitude (in decimal degrees, WGS84)</div>
+          <input id="keyboardLongitude" class="input is-small" type="text" placeholder="longitude">
+          <div style="margin-top: 5px;font-size: 1.2em;">Coordinate uncertainty (in meters)</div>
+          <input id="keyboardUncertainty" class="input is-small" type="text" placeholder="Uncertainty in meters">
+        </div>
+        <div id="buttonsKeyboard">
+          <button id="keyboardCancel">Cancel</button>
+          <button id="keyboardOK">OK</button>
+        </div>
       </div>
-      <div id="infoDivBox" style="display: none;">
-        <textarea id="errorWKT" name="text"></textarea>
-      </div>
-    </div>
-
-    <div id="controlKeyboard" style="display: none;">
-      <div style="text-align: justify; font-size: 1.2em; margin-bottom: 10px;">Please enter latitude, longitude and uncertainty
-      </div>
-      <div>
-        <div style="margin-top: 5px;font-size: 1.2em;">Latitude (in decimal degrees, WGS84)</div>
-        <input id="keyboardLatitude" class="input is-small" type="text" placeholder="latitude" size="11" , maxlength="12">
-        <div style="margin-top: 5px;font-size: 1.2em;">Longitude (in decimal degrees, WGS84)</div>
-        <input id="keyboardLongitude" class="input is-small" type="text" placeholder="longitude">
-        <div style="margin-top: 5px;font-size: 1.2em;">Coordinate uncertainty (in meters)</div>
-        <input id="keyboardUncertainty" class="input is-small" type="text" placeholder="Uncertainty in meters">
-      </div>
-      <div id="buttonsKeyboard">
-        <button id="keyboardCancel">Cancel</button>
-        <button id="keyboardOK">OK</button>
-      </div>
-    </div>
-    <div id="wktTooBigDialog" style="display: none;">
-      <div style="text-align: justify; font-size: 1.2em;">
-        <p>The geometry is too complex to be handled by a spreadsheet. Would you like to copy the footprintWKT field with your data or dismiss
-          this field?</p>
-      </div>
-      <div id="buttonsWKT">
-        <button id="doNotCopyWKT">No</button>
-        <button id="copyWKT">Yes</button>
+      <div id="wktTooBigDialog" style="display: none;">
+        <div style="text-align: justify; font-size: 1.2em;">
+          <p>The geometry is too complex to be handled by a spreadsheet. Would you like to copy the footprintWKT field
+            with your data or dismiss
+            this field?</p>
+        </div>
+        <div id="buttonsWKT">
+          <button id="doNotCopyWKT">No</button>
+          <button id="copyWKT">Yes</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
   <!-- INFO BOX -->
   <div id="info" class="unfolded">
     <button id="toggleButton" class="collapsible"></button>
@@ -184,7 +190,7 @@
       </div>
     </div>
 
-    <div id="infoContent">      
+    <div id="infoContent">
       <!-- CORRECTED CENTER: LATITUDE/LONGITUDE -->
       <!-- <div class="separator"></div> -->
       <div class="pair">
@@ -206,8 +212,8 @@
       <div class="pair">
         <div class="key">
           <div class="dwc_name">COORDINATE UNCERTAINTY (m)</div>
-          <div class="dwc_url"><a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters" target="_blank"
-              title="Go to Darwin Core definition">
+          <div class="dwc_url"><a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters"
+              target="_blank" title="Go to Darwin Core definition">
               [dwc:coordinateUncertaintyInMeters]</span></a>
           </div>
         </div>
@@ -219,12 +225,14 @@
       <div class="pair">
         <div class="key">
           <div class="dwc_name">GEODETIC DATUM</div>
-          <div class="dwc_url"><a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank" title="Go to Darwin Core definition">
+          <div class="dwc_url"><a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank"
+              title="Go to Darwin Core definition">
               [dwc:geodeticDatum]</a>
           </div>
         </div>
         <div class="value">
-          <input class="non-editable" readonly id="geodetic_datum" type="text" placeholder="" value="EPSG: 4326 (WGS84)">
+          <input class="non-editable" readonly id="geodetic_datum" type="text" placeholder=""
+            value="EPSG: 4326 (WGS84)">
         </div>
       </div>
       <!-- POINT-RADIUS SPATIAL FIT -->
@@ -232,7 +240,8 @@
         <div class="key">
           <div class="dwc_name">POINT RADIUS SPATIAL FIT</div>
           <div class="dwc_url">
-            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank" title="Go to Darwin Core definition">
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank"
+              title="Go to Darwin Core definition">
               [dwc:pointRadiusSpatialFit]</a>
           </div>
         </div>
@@ -290,9 +299,10 @@
               [dwc:locality]</a></div>
         </div>
         <div class="value">
-          <input class="editable" id="locality_description" class="input" type="text" placeholder="Please type or paste the locality description" />
+          <input class="editable" id="locality_description" class="input" type="text"
+            placeholder="Please type or paste the locality description" />
         </div>
-      </div>     
+      </div>
       <!-- GEOREFERENCED BY -->
       <div class="pair">
         <div class="key">
@@ -302,7 +312,8 @@
               [dwc:georeferencedBy]</a></div>
         </div>
         <div class="value">
-          <input class="editable" id="georeferencer_name" class="input" type="text" placeholder="Please enter your name(s)" />
+          <input class="editable" id="georeferencer_name" class="input" type="text"
+            placeholder="Please enter your name(s)" />
         </div>
       </div>
       <!-- GEOREFERENCE REMARKS -->
@@ -321,22 +332,25 @@
 
         <!-- COPY BUTTON -->
         <div class="separator"></div>
-        <label class="checkbox">
+        <!-- <label class="checkbox">
           <input id="share_checkbox" type="checkbox">
           Share
           <div id="share_link_wrapper" class="share_link_wrapper" style="display: none;">
             <a class="share_link" id="share_link" href=""></a><button id="copy_link" class="button copy_link" title="Copy share link to clipboard" style="outline-style: none; background: url(<%=require("./copy.png")%>) no-repeat 0 0 scroll;"></button>
           </div>
-        </label>
-        <div class="button-container">
-          <div id="copy_clipboard_message">Copy to clipboard:</div>
-          <button class="button button-headers" id="cpdata">With headers</button>
-          <button class="button button-noheaders" id="cpdatanh">Without headers</button>          
-        </div>
+        </label> -->
+
+        <div class="button-container" id="copy_buttons">
+          <button class="button button-headers" id="validate_georeference">Validate</button>
+            <div id="copy_clipboard_message">Copy to<br> clipboard:</div>
+            <button class="button button-headers" id="cpdata">With headers</button>
+            <button class="button button-noheaders" id="cpdatanh">Without headers</button>
+          </div>
+
       </div>
-        <input type="hidden" id="d_geojson">
-      </div>
+      <input type="hidden" id="d_geojson">
     </div>
+  </div>
   </div>
   </div>
 
