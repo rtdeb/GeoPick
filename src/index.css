@@ -440,7 +440,25 @@ div.info_box {
   /* margin-bottom: 10px; */
   font-weight: bold;
 }
-
+#georeference_url{
+  margin-bottom: 2px;
+  /* margin-bottom: 10px; */
+  font-weight:400;
+  font-style:italic;
+  font-size: smaller;
+  /* background-color: #ede0d6; */
+  width: 87%;
+}
+#georeference_url_div{
+  display: flex;
+  flex-direction: row;
+}
+#url_copy_icon{
+  padding-right: 10px;
+}
+#url_copy_icon:hover {
+  cursor: pointer;
+}
 .non-editable {
   border: 0px;
   border-color: #a94b08;

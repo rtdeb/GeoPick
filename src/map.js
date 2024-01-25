@@ -720,6 +720,23 @@ $("#cpdatanh").on("click", function () {
   myDiv.classList.add("disabled-div");
 });
 
+const copy_url_to_clipboard = function() {
+  // Get the input element with the URL
+  var urlInput = document.getElementById("georeference_url");  
+  // Select the text inside the input field
+  urlInput.select();
+  // Copy the selected text to the clipboard
+  document.execCommand("copy");
+  // Deselect the text
+  urlInput.setSelectionRange(0, 0);
+  // Display a message or perform any other action
+  info.toast_success("URL copied to clipboard!");  
+}
+
+$("#url_copy_icon").on("click", function () {
+  copy_url_to_clipboard();
+});
+
 const handle_copy_data = function (withHeaders) {
   wkt_length = wktSize();
   if (wkt_length != null) {

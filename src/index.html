@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
     integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Matomo -->
   <script>
     var _paq = window._paq = window._paq || [];
@@ -23,8 +23,6 @@
       var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
       g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
     })();
-
-
   </script>
   <!-- End Matomo Code -->
   <title>
@@ -67,9 +65,6 @@
           </tr>
         </table>
       </div>
-
-
-
 
       <!-- ADDITIONAL EDITING CONTROLS -->
       <div class="wkt">
@@ -157,6 +152,7 @@
       </div>
     </div>
   </div>
+
   <!-- INFO BOX -->
   <div id="info" class="unfolded">
     <button id="toggleButton" class="collapsible"></button>
@@ -208,6 +204,7 @@
           <input class="non-editable" readonly id="centroid_x" type="text" placeholder="" size="11">
         </div>
       </div>
+
       <!-- COORDINATE UNCERTAINTY -->
       <div class="pair">
         <div class="key">
@@ -221,6 +218,7 @@
           <input class="non-editable" readonly id="radius_m" type="text" placeholder="" size="15">
         </div>
       </div>
+
       <!-- GEODETIC DATUM -->
       <div class="pair">
         <div class="key">
@@ -235,6 +233,7 @@
             value="EPSG: 4326 (WGS84)">
         </div>
       </div>
+
       <!-- POINT-RADIUS SPATIAL FIT -->
       <div class="pair">
         <div class="key">
@@ -249,6 +248,7 @@
           <input class="non-editable" readonly id="spatial_fit" type="text" placeholder="" size="8">
         </div>
       </div>
+
       <!-- COORDINATE PRECISION -->
       <div class="pair">
         <div class="key">
@@ -262,6 +262,7 @@
           <input class="non-editable" readonly id="coordinate_precision" type="text" placeholder="" value="0.0000001">
         </div>
       </div>
+
       <!-- GEOREFERENCE PROTOCOL -->
       <div class="pair">
         <div class="key">
@@ -276,6 +277,7 @@
             rows="1">Georeferencing Quick Reference Guide (Zermoglio et al. 2020)</textarea>
         </div>
       </div>
+
       <!-- GEOREFERENCE SOURCES -->
       <div class="pair">
         <div class="key">
@@ -290,6 +292,7 @@
             rows="1">GeoPick v.<%= version %></textarea>
         </div>
       </div>
+
       <!-- LOCALITY -->
       <div class="pair" style="">
         <div class="key">
@@ -303,6 +306,7 @@
             placeholder="Please type or paste the locality description" />
         </div>
       </div>
+
       <!-- GEOREFERENCED BY -->
       <div class="pair">
         <div class="key">
@@ -316,6 +320,7 @@
             placeholder="Please enter your name(s)" />
         </div>
       </div>
+
       <!-- GEOREFERENCE REMARKS -->
       <div class="pair">
         <div class="key">
@@ -329,17 +334,33 @@
           <textarea class="editable" id="georeference_remarks" name="story" rows="4" cols="33"
             placeholder="Please add notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to those formalized in the method referred to in georeferenceProtocol."></textarea>
         </div>
+      </div>
 
-        <!-- COPY BUTTON -->
-        <div class="separator"></div>
-        <!-- <label class="checkbox">
-          <input id="share_checkbox" type="checkbox">
-          Share
-          <div id="share_link_wrapper" class="share_link_wrapper" style="display: none;">
-            <a class="share_link" id="share_link" href=""></a><button id="copy_link" class="button copy_link" title="Copy share link to clipboard" style="outline-style: none; background: url(<%=require("./copy.png")%>) no-repeat 0 0 scroll;"></button>
+      <!-- LOCATION ID -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">LOCATION ID</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/locationID" target="_blank"
+              title="Go to Darwin Core definition">
+              [dwc:locationID]</a>
           </div>
-        </label> -->
-        <div id="info_controls">
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="location_id" type="text" placeholder="" size="36"
+            value="geopick-v1.1.1-20240125140651047-542">
+        </div>
+      </div>
+      
+      <!-- GEOREFERENCE URL -->
+      <div id="georeference_url_div">
+        <input class="non-editable" readonly type="text" placeholder="" id="georeference_url" size="36"
+          value="https://geopick.gbif.org/?locationid=geopick-v1.1.1-20240125140651047-542">
+        <i class="fa-regular fa-copy" id="url_copy_icon"></i>
+      </div>
+
+      <!-- COPY BUTTON -->
+      <div class="separator"></div>
+      <div id="info_controls">
         <div id="validate_button_container">
           <button class="button button-headers" id="validate_georeference">Validate</button>
         </div>
@@ -349,7 +370,7 @@
           <button class="button button-noheaders" id="cpdatanh">Without headers</button>
         </div>
       </div>
-      </div>
+
       <input type="hidden" id="d_geojson">
     </div>
   </div>
