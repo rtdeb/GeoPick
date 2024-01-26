@@ -14,7 +14,7 @@ const schema_latlonunc = Joi.object({
 })
 
 const schema_share = Joi.object({
-    share: Joi.string().length(37).required(),
+    locationid: Joi.string().required(),
 })
 
 const urlParamsActions = function(urlParams){
@@ -38,9 +38,9 @@ const urlParamsActions = function(urlParams){
             retVal.opcode = opcodes.OPCODE_LATLONUNC;            
             retVal.params = { 'lat': parseFloat(lat), 'lon': parseFloat(lon), 'unc': parseFloat(unc) };
         }
-    } else if( actualParamsSet.has('share') ){        
-        const share = urlParams.get('share');
-        const value = schema_share.validate({ 'share': share });
+    } else if( actualParamsSet.has('locationid') ){        
+        const share = urlParams.get('locationid');
+        const value = schema_share.validate({ 'locationid': share });
         if(value.error){
             retVal.status = 'KO';
             retVal.opcode = opcodes.OPCODE_ERROR;
@@ -48,7 +48,7 @@ const urlParamsActions = function(urlParams){
         }else{            
             retVal.status = 'OK';
             retVal.opcode = opcodes.OPCODE_SHARE;
-            retVal.params = {'share': share};
+            retVal.params = {'locationid': share};
         }
     } else {
         retVal.status = 'KO';

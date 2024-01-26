@@ -4,7 +4,9 @@ const $ = require('jquery');
 const ui = require('jquery-ui/ui/widgets/dialog');
 const Toastr = require('toastr');
 const p = require('../package.json');
+const moment = require('moment');
 const { convertToWK } = require('wkt-parser-helper');
+
 // const map = require("./map");
 Toastr.options = {
       closeButton: false,     // Show close button
@@ -41,10 +43,25 @@ const controls = [
     'spatial_fit'
 ];
 
-const set_share_link = function(link){
-    $('#share_link').attr("href", window.location.origin + link);
-    $('#share_link').text(window.location.origin + link);
-    $('#share_link_wrapper').show();
+const generate_location_id = function(){
+    const version = 'v' + p.version;
+    const date = moment().format('YYYYMMDD');
+    const hour = moment().format('HHmmss');
+    const salt = Math.floor(Math.random() * 1000);
+    const location_template = `geopick-${version}-${date}${hour}-${salt}`;
+    return location_template;
+}
+
+const set_location_id = function(locationid){
+    $('#location_id').val(locationid);
+}
+
+const set_share_link = function(locationid){
+    if(locationid != ''){
+        $('#georeference_url').val(window.location.origin + "/?locationid=" + locationid);
+    }else{
+        $('#georeference_url').val('');
+    }
 }
 
 const empty_controls = function() {
@@ -56,6 +73,22 @@ const empty_controls = function() {
     return true;
 }
 
+const enable_validate_button = function(yesorno) {
+    if(yesorno==true){
+        $('#validate_button_container').removeClass('disabled-div');
+    }else{
+        $('#validate_button_container').addClass('disabled-div');        
+    }
+}
+
+const enable_copy_button = function(yesorno){
+    if(yesorno==true){
+        $('#copy_buttons_container').removeClass('disabled-div');
+    }else{
+        $('#copy_buttons_container').addClass('disabled-div');        
+    }
+}
+
 const clear_centroid_data = function(){
     controls.forEach(function (e) {
         $('#' + e).val("");
@@ -63,11 +96,12 @@ const clear_centroid_data = function(){
     $('#locality_description').val('');
     $('#georeferencer_name').val('');
     $('#georeference_remarks').val('');
-    $('#share_link').text('');
+    $('#location_id').val('');
+    $('#georeference_url').val('');
 }
 
 const format_georef_data = function(georef_data){
-    var template = `${georef_data.centroid_y}\t${georef_data.centroid_x}\tepsg:4326\t${georef_data.radius_m}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.wkt}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.locality}\t${georef_data.georeferencer_name}\t${georef_data.date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.source_string}\t${georef_data.georeference_remarks}\t${georef_data.link}`;
+    var template = `${georef_data.decimalLatitude}\t${georef_data.decimalLongitude}\tepsg:4326\t${georef_data.coordinateUncertaintyInMeters}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.wkt}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.locality}\t${georef_data.georeferencedBy}\t${georef_data.date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.source_string}\t${georef_data.georeferenceRemarks}\t${georef_data.link}`;
     return template;
 }
 
@@ -94,20 +128,22 @@ const get_ui_data = function(yes_wkt){
     let georeferencer_name = $('#georeferencer_name').val();
     let georeference_remarks = $('#georeference_remarks').val();
     let locality = $('#locality_description').val();
-    let link = $('#share_link').text();
+    let link = $('#georeference_url').val();
+    let locationid = $('#location_id').val();
     return {
-        'centroid_y': centroid_y,
-        'centroid_x': centroid_x,
-        'radius_m': radius_m,
+        'decimalLatitude': centroid_y,
+        'decimalLongitude': centroid_x,
+        'coordinateUncertaintyInMeters': radius_m,
         'pointRadiusSpatialFit': pointRadiusSpatialFit,
         'wkt': wkt,
         'footprintSpatialFit': footprintSpatialFit,
-        'georeferencer_name': georeferencer_name,
+        'georeferencedBy': georeferencer_name,
         'date': date,
-        'source_string': source_string,
-        'georeference_remarks': georeference_remarks,
+        'georeferenceSources': source_string,
+        'georeferenceRemarks': georeference_remarks,
         'locality': locality,
-        'link': link
+        'link': link,
+        'locationid': locationid
     }
 }
 
@@ -183,7 +219,23 @@ const show_api_centroid_data = function(parsed_json, geom){
             }            
         }
     }
-    $('#d_geojson').val( wkt );        
+    $('#d_geojson').val( wkt );
+    set_share_link('');
+    set_location_id('');
+}
+
+const presentConfirmResetValidation = function(event){
+    if($('#location_id').val()!= ''){
+        //console.log('Warning, invalidating validation');
+        if(confirm("Warning: you are about to change either the 'Locality', 'Georeferenced by' or 'Georeference remarks' on a georeference that has already been validated. If you continue, you will have to validate again the record and it will be considered a different georeference set. Do you want to continue?")){
+            set_share_link('');
+            set_location_id('');
+            enable_copy_button(false);
+            enable_validate_button(true);
+        }else{
+            event.preventDefault();
+        }
+    }  
 }
 
 const show_centroid_data = function(lat,lng,radius){
@@ -230,6 +282,11 @@ module.exports = {
     showShareLink,
     show_textual_data,
     set_share_link,
-    copy_share_link
+    copy_share_link,
+    generate_location_id,
+    set_location_id,
+    enable_validate_button,
+    enable_copy_button,
+    presentConfirmResetValidation
 }
 

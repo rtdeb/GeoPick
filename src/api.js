@@ -46,8 +46,8 @@ const parse_share_api_data = function(data){
                     "properties": {},
                     "geometry": {
                         "coordinates": [
-                            parseFloat(parsed_json.centroid_x),
-                            parseFloat(parsed_json.centroid_y)
+                            parseFloat(parsed_json.decimalLongitude),
+                            parseFloat(parsed_json.decimalLatitude)
                         ],
                         "type": "Point"
                     }
@@ -55,19 +55,19 @@ const parse_share_api_data = function(data){
             ]
     }    
     var mbc = null;
-    if( parsed_json.geojson_mbc.length != 0 ){            
-        mbc = { type: 'Feature', 'geometry': parsed_json.geojson_mbc[0].geometry };
+    if( parsed_json.geojson_sec.length != 0 ){            
+        mbc = { type: 'Feature', 'geometry': parsed_json.geojson_sec[0].geometry };
     }
     return {
         centroid: { type: 'Feature', 'geometry': centroid },
         mbc: mbc,
         site: site,
         spatial_fit: parsed_json.pointRadiusSpatialFit,
-        uncertainty: parsed_json.radius_m,
+        uncertainty: parsed_json.coordinateUncertaintyInMeters,
         wkt: parsed_json.wkt,
         locality: parsed_json.locality,
-        georeferencer_name: parsed_json.georeferencer_name,
-        georeference_remarks: parsed_json.georeference_remarks,
+        georeferencer_name: parsed_json.georeferencedBy,
+        georeference_remarks: parsed_json.georeferenceRemarks,
         path: path
     };
 }
@@ -125,7 +125,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
     });
 }
 
-const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, map){    
+const load_share = function(locationid, site_layer, mbc_layer, centroid_layer, map){    
     const fetchdata = {
         method: 'GET',        
         headers: new Headers({
@@ -133,9 +133,13 @@ const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, m
         })        
     }
     map.spin(true);
-    fetch( api_base_url + 'georeference/' + share_code, fetchdata)
+    fetch( api_base_url + 'georeference/' + locationid, fetchdata)
     .then(function(response){         
-        return response.json();
+        if(response.status == 404){
+            throw new Error("Resource with id " + locationid + " does not exist!", {cause: response});
+        }else{
+            return response.json();
+        }        
     })
     .then(function(data){        
         const parsed_json = parse_share_api_data(data);
@@ -169,37 +173,41 @@ const load_share = function(share_code, site_layer, mbc_layer, centroid_layer, m
             map.addLayer(circle);
             site_layer.addLayer(circle);
             centroid_layer.addData(site_layer.toGeoJSON());
-            info.show_centroid_data(lat, long, radius);
+            info.show_centroid_data(lat, long, radius);            
             map.fitBounds(circle.getBounds());
         }
         info.show_textual_data(parsed_json);
-        info.set_share_link(parsed_json.path);
+        info.set_share_link(locationid);
+        info.set_location_id(locationid);
+        info.enable_copy_button(true);
+        info.enable_validate_button(false);
     }).catch(function(error){
         info.toast_error(error);        
         map.spin(false);
     });
 }
 
-const write_share = function(share_data, map){
+const write_share = function(share_data, locationid, map, withHeaders){
     const fetchdata = {
         method: 'POST',
-        body: JSON.stringify({'georef_data': share_data}),
+        body: JSON.stringify({'georef_data': share_data, 'locationid': locationid}),
         headers: new Headers({
             'Content-Type': 'application/json; charset=UTF-8',            
         })        
     }
     map.spin(true);
     fetch( api_base_url + 'georeference', fetchdata)
-    .then(function(response){         
-        return response.json();
+    .then(function(response){        
+        return response.json();        
     })
     .then(function(data){        
-        map.spin(false);
-        console.log(data.shortcode);
-        info.set_share_link(data.path);
+        map.spin(false);                
+        info.do_copy_data(withHeaders, true);
     })
     .catch(function(error){
         map.spin(false);
+        info.set_location_id('');
+        info.set_share_link('');
         info.toast_error(error);        
     });        
 }

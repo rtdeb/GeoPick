@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
       window.history.pushState({}, document.title, "/");
     } else if (action.opcode === urlparams.opcodes.OPCODE_SHARE) {
       api.load_share(
-        action.params.share,
+        action.params.locationid,
         site_layer,
         mbc_layer,
         centroid_layer,
@@ -412,8 +412,12 @@ map.on(L.Draw.Event.EDITED, function (e) {
         maybe_circle._mRadius
       );
     }
+    info.enable_copy_button(false);
+    info.enable_validate_button(true);
   } else {
     api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
+    info.enable_copy_button(false);
+    info.enable_validate_button(true);
   }
 });
 
@@ -703,15 +707,19 @@ const validateInfoBox = function () {
 };
 $("#validate_georeference").on("click", function () {
   if(validateInfoBox()){
-    var myDiv = document.getElementById("copy_buttons_container");
-    myDiv.classList.remove("disabled-div");
+    info.enable_copy_button(true);
+    info.enable_validate_button(false);
+  }else{
+    console.log(info.generate_location_id());
   }
 });
 
 $("#cpdata").on("click", function () {
   handle_copy_data(true);
-  var myDiv = document.getElementById("copy_buttons_container");
-  myDiv.classList.add("disabled-div");
+  info.enable_validate_button(false);
+  info.enable_copy_button(true);
+  /*var myDiv = document.getElementById("copy_buttons_container");
+  myDiv.classList.add("disabled-div");*/
 });
 
 $("#cpdatanh").on("click", function () {
@@ -720,36 +728,16 @@ $("#cpdatanh").on("click", function () {
   myDiv.classList.add("disabled-div");
 });
 
-const copy_url_to_clipboard = function() {
-  // Get the input element with the URL
-  var urlInput = document.getElementById("georeference_url");  
-  // Select the text inside the input field
-  urlInput.select();
-  // Copy the selected text to the clipboard
-  document.execCommand("copy");
-  // Deselect the text
-  urlInput.setSelectionRange(0, 0);
-  // Display a message or perform any other action
-  info.toast_success("URL copied to clipboard!");  
-}
-
-$("#url_copy_icon").on("click", function () {
-  copy_url_to_clipboard();
-});
-
 const handle_copy_data = function (withHeaders) {
   wkt_length = wktSize();
   if (wkt_length != null) {
     showModal(withHeaders, wkt_length);
-  } else {
-    info.do_copy_data(withHeaders, true);
-    if ($("#share_checkbox").is(":checked")) {
-      do_share();
-    }
+  } else {    
+    do_share(withHeaders);    
   }
 };
 
-const do_share = function () {
+const do_share = function (withHeaders) {
   const geodata = $("#d_geojson").val();
   if (
     (geodata === null || geodata === "") &&
@@ -758,13 +746,33 @@ const do_share = function () {
     info.toast_error("Nothing to share!");
     return;
   }
-  const ui_data = info.get_ui_data(true);
-  ui_data.geojson_mbc = mbc_layer.toGeoJSON().features;
-  api.write_share(ui_data, map);
+  if($('#location_id').val() != ''){
+    info.do_copy_data(withHeaders, true);
+  }else{
+    const locationid = info.generate_location_id();
+    info.set_location_id(locationid);
+    info.set_share_link(locationid);
+    const ui_data = info.get_ui_data(true);
+    ui_data.geojson_sec = mbc_layer.toGeoJSON().features;  
+    api.write_share(ui_data, locationid, map, withHeaders);
+  }
 };
 
 $("#share").on("click", function () {
-  do_share();
+  do_share();  
+});
+
+
+$('#locality_description').on('keydown', function(event) {  
+  info.presentConfirmResetValidation(event);
+});
+
+$('#georeferencer_name').on('keydown', function(event) {  
+  info.presentConfirmResetValidation(event);
+});
+
+$('#georeference_remarks').on('keydown', function(event) {  
+  info.presentConfirmResetValidation(event);
 });
 
 // Return a number with space as thousands separator

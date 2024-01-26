@@ -453,12 +453,6 @@ div.info_box {
   display: flex;
   flex-direction: row;
 }
-#url_copy_icon{
-  padding-right: 10px;
-}
-#url_copy_icon:hover {
-  cursor: pointer;
-}
 .non-editable {
   border: 0px;
   border-color: #a94b08;

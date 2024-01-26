@@ -52,14 +52,12 @@ def middleware():
 
 @app.route('/v1/georeference', methods=['POST'])
 @jwt_required()
-def write_georeference():
-    current_date = datetime.datetime.now().strftime("%Y%m%d")
-    current_timestamp_ms = int(time.time() * 1000)
-    geopick_id = "geopick-v{0}-{1}-{2}".format(v,current_date,current_timestamp_ms)
+def write_georeference():    
+    locationid = request.json.get("locationid", None)
     georef_data = request.json.get("georef_data", None)
     georef_data_str = json.dumps(georef_data)
-    georef = db_create_georef(db, geopick_id, georef_data_str)
-    return jsonify({"success": True, "msg": "Georef created", "id": georef.id, "shortcode": georef.geopick_id, "path": '/?share={0}'.format(geopick_id)})
+    georef = db_create_georef(db, locationid, georef_data_str)
+    return jsonify({"success": True, "msg": "Georef created", "id": georef.id })
 
 
 @app.route('/v1/georeference/<geopick_id>', methods=['GET'])

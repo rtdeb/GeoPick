@@ -6,16 +6,16 @@ def hash_password(password):
     hash_object = hashlib.sha256(password_bytes)
     return hash_object.hexdigest()
 
-def db_get_georef(db, geopick_id):
+def db_get_georef(db, locationid):
     query = db.session.query(SharedGeoreference)
-    query = query.filter(SharedGeoreference.geopick_id == geopick_id)
+    query = query.filter(SharedGeoreference.locationid == locationid)
     if not db.session.query(query.exists()).scalar():
         return None    
     return query.first()
 
-def db_create_georef(db, geopick_id, georef_data):
+def db_create_georef(db, locationid, georef_data):
     georef = SharedGeoreference(
-        geopick_id=geopick_id,
+        locationid=locationid,
         georef_data=georef_data
     )
     db.session.add(georef)
