@@ -775,7 +775,7 @@ $("#share").on("click", function () {
   do_share();
 });
 
-$("#locality_description").on("keydown", function (event) {
+$("#locality_description").on("keypress", function (event) {
   if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
     info.presentConfirmResetValidation(event);
   }

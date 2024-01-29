@@ -233,9 +233,13 @@ const show_api_centroid_data = function(parsed_json, geom){
 
 const presentConfirmResetValidation = function(event){
     if($('#location_id').val()!= ''){        
+        event.preventDefault();
         $.confirm({
             title: 'Warning: about to reset controls',
-            content: "You are about to change either the 'Locality', 'Georeferenced by' or 'Georeference remarks' on a georeference that has already been validated. If you continue, you will have to validate again the record and it will be considered a different georeference set. Do you want to continue?",            
+            content: "You are about to change either the 'Locality', 'Georeferenced by' or 'Georeference remarks' on a georeference that has already been validated. If you continue, you will have to validate again the record and it will be considered a different georeference set. Do you want to continue?",       
+            theme: 'black',     
+            boxWidth: '30%',
+            useBootstrap: false,
             buttons: {   
                 ok: {
                     text: "ok!",
@@ -249,7 +253,7 @@ const presentConfirmResetValidation = function(event){
                     }
                 },
                 cancel: function(){
-                    event.preventDefault();
+                    
                 }
             }
         });
