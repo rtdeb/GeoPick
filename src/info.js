@@ -240,6 +240,7 @@ const presentConfirmResetValidation = function(event){
             theme: 'black',     
             boxWidth: '30%',
             useBootstrap: false,
+            keyboardEnabled: true,            
             buttons: {   
                 ok: {
                     text: "ok!",
