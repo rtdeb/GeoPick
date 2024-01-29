@@ -441,7 +441,8 @@ div.info_box {
   font-weight: bold;
 }
 #georeference_url{
-  margin-bottom: 2px;
+  margin-top: -5px;
+  margin-bottom: 7px;
   /* margin-bottom: 10px; */
   font-weight:400;
   font-style:italic;
@@ -452,6 +453,7 @@ div.info_box {
 #georeference_url_div{
   display: flex;
   flex-direction: row;
+
 }
 .non-editable {
   border: 0px;

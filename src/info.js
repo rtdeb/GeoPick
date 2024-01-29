@@ -17,6 +17,8 @@ Toastr.options = {
 }
 
 const headers = [
+    'locationID',
+    'locality',
     'decimalLatitude',
     'decimalLongitude',
     'geodeticDatum',
@@ -25,8 +27,7 @@ const headers = [
     'pointRadiusSpatialFit',
     'footprintWKT',
     'footprintSRS',
-    'footprintSpatialFit',
-    'locality',
+    'footprintSpatialFit',    
     'georeferencedBy',
     'georeferencedDate',
     'georeferenceProtocol',
@@ -83,7 +84,8 @@ const enable_validate_button = function(yesorno) {
 
 const enable_copy_button = function(yesorno){
     if(yesorno==true){
-        $('#copy_buttons_container').removeClass('disabled-div');
+        $('#copy_buttons_container').removeClass('disabled-div');        
+        $('#cpdata').trigger('focus');
     }else{
         $('#copy_buttons_container').addClass('disabled-div');        
     }
@@ -94,14 +96,14 @@ const clear_centroid_data = function(){
         $('#' + e).val("");
     });    
     $('#locality_description').val('');
-    $('#georeferencer_name').val('');
+    // $('#georefeerncer_name').val('');
     $('#georeference_remarks').val('');
     $('#location_id').val('');
     $('#georeference_url').val('');
 }
 
 const format_georef_data = function(georef_data){
-    var template = `${georef_data.decimalLatitude}\t${georef_data.decimalLongitude}\tepsg:4326\t${georef_data.coordinateUncertaintyInMeters}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.wkt}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.locality}\t${georef_data.georeferencedBy}\t${georef_data.date}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.source_string}\t${georef_data.georeferenceRemarks}\t${georef_data.link}`;
+    var template = `${georef_data.locationID}\t${georef_data.locality}\t${georef_data.decimalLatitude}\t${georef_data.decimalLongitude}\tepsg:4326\t${georef_data.coordinateUncertaintyInMeters}\t0.0000001\t${georef_data.pointRadiusSpatialFit}\t${georef_data.footprintWKT}\tepsg:4326\t${georef_data.footprintSpatialFit}\t${georef_data.georeferencedBy}\t${georef_data.georeferencedDate}\tGeoreferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)\t${georef_data.georeferenceSources}\t${georef_data.georeferenceRemarks}\t${georef_data.shareLink}`;
     return template;
 }
 
@@ -131,19 +133,23 @@ const get_ui_data = function(yes_wkt){
     let link = $('#georeference_url').val();
     let locationid = $('#location_id').val();
     return {
+        'locationID': locationid,
+        'locality': locality,                
         'decimalLatitude': centroid_y,
         'decimalLongitude': centroid_x,
+        'geodeticDatum': 'EPSG:4326',
         'coordinateUncertaintyInMeters': radius_m,
+        'coordinatePrecision': 0.0000001,
         'pointRadiusSpatialFit': pointRadiusSpatialFit,
-        'wkt': wkt,
+        'footprintWKT': wkt,
+        'footprintSRS': 'EPSG:4326',
         'footprintSpatialFit': footprintSpatialFit,
         'georeferencedBy': georeferencer_name,
-        'date': date,
+        'georeferencedDate': date,
+        'georeferenceProtocol': 'Georeferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)',
         'georeferenceSources': source_string,
-        'georeferenceRemarks': georeference_remarks,
-        'locality': locality,
-        'link': link,
-        'locationid': locationid
+        'georeferenceRemarks': georeference_remarks,        
+        'shareLink': link,
     }
 }
 

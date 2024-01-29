@@ -187,15 +187,35 @@
     </div>
 
     <div id="infoContent">
+      <!-- LOCATION ID -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">LOCATION ID</div>
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/locationID" target="_blank" tabindex="-1" 
+              title="Go to Darwin Core definition">
+              [dwc:locationID]</a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="location_id" type="text" placeholder="" size="36"
+            value="">
+        </div>
+      </div>
+      <!-- GEOREFERENCE URL -->
+      <div id="georeference_url_div">
+        <input class="non-editable" readonly type="text" placeholder="" id="georeference_url" size="36" value="">        
+      </div>
+
+
       <!-- CORRECTED CENTER: LATITUDE/LONGITUDE -->
       <!-- <div class="separator"></div> -->
       <div class="pair">
         <div class="key">
           <div class="dwc_name">LATITUDE, LONGITUDE</div>
           <div class="dwc_url">
-            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLatitude" target="_blank"
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLatitude" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">[dwc:decimalLatitude]</a>,
-            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLongitude" target="_blank"
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/decimalLongitude" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">[dwc:decimalLongitude]</a>
           </div>
         </div>
@@ -209,7 +229,7 @@
       <div class="pair">
         <div class="key">
           <div class="dwc_name">COORDINATE UNCERTAINTY (m)</div>
-          <div class="dwc_url"><a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters"
+          <div class="dwc_url"><a class="dwc" href="	http://rs.tdwg.org/dwc/terms/coordinateUncertaintyInMeters" tabindex="-1" 
               target="_blank" title="Go to Darwin Core definition">
               [dwc:coordinateUncertaintyInMeters]</span></a>
           </div>
@@ -218,12 +238,11 @@
           <input class="non-editable" readonly id="radius_m" type="text" placeholder="" size="15">
         </div>
       </div>
-
       <!-- GEODETIC DATUM -->
       <div class="pair">
         <div class="key">
           <div class="dwc_name">GEODETIC DATUM</div>
-          <div class="dwc_url"><a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank"
+          <div class="dwc_url"><a class="dwc" href=" http://rs.tdwg.org/dwc/terms/geodeticDatum" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:geodeticDatum]</a>
           </div>
@@ -233,27 +252,11 @@
             value="EPSG: 4326 (WGS84)">
         </div>
       </div>
-
-      <!-- POINT-RADIUS SPATIAL FIT -->
-      <div class="pair">
-        <div class="key">
-          <div class="dwc_name">POINT RADIUS SPATIAL FIT</div>
-          <div class="dwc_url">
-            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank"
-              title="Go to Darwin Core definition">
-              [dwc:pointRadiusSpatialFit]</a>
-          </div>
-        </div>
-        <div class="value">
-          <input class="non-editable" readonly id="spatial_fit" type="text" placeholder="" size="8">
-        </div>
-      </div>
-
       <!-- COORDINATE PRECISION -->
       <div class="pair">
         <div class="key">
           <div class="dwc_name">PRECISION</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank"
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/coordinatePrecision" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:coordinatePrecision]</a>
           </div>
@@ -263,11 +266,26 @@
         </div>
       </div>
 
+      <!-- POINT-RADIUS SPATIAL FIT -->
+      <div class="pair">
+        <div class="key">
+          <div class="dwc_name">POINT RADIUS SPATIAL FIT</div>
+          <div class="dwc_url">
+            <a class="dwc" href="http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit" target="_blank" tabindex="-1" 
+              title="Go to Darwin Core definition">
+              [dwc:pointRadiusSpatialFit]</a>
+          </div>
+        </div>
+        <div class="value">
+          <input class="non-editable" readonly id="spatial_fit" type="text" placeholder="" size="8">
+        </div>
+      </div>
+
       <!-- GEOREFERENCE PROTOCOL -->
       <div class="pair">
         <div class="key">
           <div class="dwc_name">GEOREFERENCE PROTOCOL</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank"
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceProtocol" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:georeferenceProtocol]</a>
           </div>
@@ -282,7 +300,7 @@
       <div class="pair">
         <div class="key">
           <div class="dwc_name">GEOREFERENCE SOURCES</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank"
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceSources" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:georeferenceSources]</a>
           </div>
@@ -297,12 +315,12 @@
       <div class="pair" style="">
         <div class="key">
           <div class="dwc_name">LOCALITY</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/locality" target="_blank"
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/locality" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:locality]</a></div>
         </div>
         <div class="value">
-          <input class="editable" id="locality_description" class="input" type="text"
+          <input class="editable" id="locality_description" class="input" type="text"  tabindex=70 
             placeholder="Please type or paste the locality description" />
         </div>
       </div>
@@ -311,12 +329,12 @@
       <div class="pair">
         <div class="key">
           <div class="dwc_name">GEOREFERENCED BY</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferencedBy" target="_blank"
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferencedBy" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:georeferencedBy]</a></div>
         </div>
         <div class="value">
-          <input class="editable" id="georeferencer_name" class="input" type="text"
+          <input class="editable" id="georeferencer_name" class="input" type="text"  tabindex=71 
             placeholder="Please enter your name(s)" />
         </div>
       </div>
@@ -325,42 +343,22 @@
       <div class="pair">
         <div class="key">
           <div class="dwc_name">GEOREFERENCE REMARKS</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceRemarks" target="_blank"
+          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/georeferenceRemarks" target="_blank" tabindex="-1" 
               title="Go to Darwin Core definition">
               [dwc:georeferenceRemarks]</a>
           </div>
         </div>
         <div class="value">
-          <textarea class="editable" id="georeference_remarks" name="story" rows="4" cols="33"
+          <textarea class="editable" id="georeference_remarks" name="story" rows="4" cols="33" tabindex=72 
             placeholder="Please add notes or comments about the spatial description determination, explaining assumptions made in addition or opposition to those formalized in the method referred to in georeferenceProtocol."></textarea>
         </div>
-      </div>
-
-      <!-- LOCATION ID -->
-      <div class="pair">
-        <div class="key">
-          <div class="dwc_name">LOCATION ID</div>
-          <div class="dwc_url"><a class="dwc" href="http://rs.tdwg.org/dwc/terms/locationID" target="_blank"
-              title="Go to Darwin Core definition">
-              [dwc:locationID]</a>
-          </div>
-        </div>
-        <div class="value">
-          <input class="non-editable" readonly id="location_id" type="text" placeholder="" size="36"
-            value="">
-        </div>
-      </div>
-      
-      <!-- GEOREFERENCE URL -->
-      <div id="georeference_url_div">
-        <input class="non-editable" readonly type="text" placeholder="" id="georeference_url" size="36" value="">        
       </div>
 
       <!-- COPY BUTTON -->
       <div class="separator"></div>
       <div id="info_controls">
         <div id="validate_button_container">
-          <button class="button button-headers" id="validate_georeference">Validate</button>
+          <button class="button button-headers" tabindex=73 id="validate_georeference">Validate</button>
         </div>
         <div id="copy_buttons_container" class="disabled-div">
           <div id="copy_clipboard_message">Copy to<br> clipboard:</div>

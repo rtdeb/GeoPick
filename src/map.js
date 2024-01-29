@@ -105,6 +105,12 @@ const importNominatim = function () {
       );
     }
     $("#importWKT").hide();
+    info.enable_validate_button(true);
+    info.enable_copy_button(false);
+    $("#locality_description").val(
+      "Nominatim: " + $("#latest_search_hidden").val()
+    );
+    $("#georeferencer_name").trigger("focus");
   }
 };
 
@@ -223,6 +229,7 @@ const init_autocomplete = function (map, input_id, nominatim_layer) {
       } else {
         $("#latest_search").text(ui.item.properties.display_name);
       }
+      info.clear_centroid_data();
     },
     create: function () {
       $(this).data("ui-autocomplete")._renderItem = function (ul, item) {
@@ -430,6 +437,8 @@ const clearAllGeometries = function () {
   mbc_layer.clearLayers();
   nominatim_layer.clearLayers();
   site_layer.clearLayers();
+  info.enable_validate_button(true);
+  info.enable_copy_button(false);
 
   if (site_layer.toGeoJSON().features.length > 0) {
     api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
@@ -491,6 +500,7 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   var type = e.layerType;
   if (type == "circle") {
     $("#keyboardEdit").show();
+    $("#locality_description").trigger("focus");
   }
   if (site_layer.toGeoJSON().features.length == 0) {
     resetDrawControls();
@@ -520,6 +530,7 @@ const resetDrawControls = function () {
 
 // Nominatim handling
 init_autocomplete(map, "place_search", nominatim_layer);
+
 $("#importNominatim").on("click", function () {
   importNominatim();
 });
@@ -668,7 +679,7 @@ $(document).on("keydown", function (event) {
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
     if (site_layer.toGeoJSON().features.length > 0) {
       $("#deleteGeometries").show();
-      $("#yesDeleteGeometries").focus();
+      $("#yesDeleteGeometries").trigger("focus");
     }
   } else if (event.ctrlKey && (event.key === "b" || event.key === "B")) {
     info.copy_latest_search($("#latest_search_hidden").val());
@@ -687,29 +698,31 @@ const wktSize = function () {
 
 // Check that the info box is adequately filled. If the latitude box is set it means that the rest of values down to georeference sources are also set. Therefore, we only need to check that latitude, localiyt and georeferenced by are filled. Remarks are optional
 const validateInfoBox = function () {
-  empty_info = []
-  if(document.getElementById("centroid_y").value == ""){
-    empty_info.push("Point-radius is not calculated.")
+  empty_info = [];
+  if (document.getElementById("centroid_y").value == "") {
+    empty_info.push("Point-radius is not calculated.");
   }
-  if(document.getElementById("locality_description").value == ""){
-    empty_info.push("The 'Locality' field is empty.")
+  if (document.getElementById("locality_description").value == "") {
+    empty_info.push("The 'Locality' field is empty.");
   }
-  if(document.getElementById("georeferencer_name").value == ""){
-    empty_info.push("The field 'Georeferenced by' is empty.")
+  if (document.getElementById("georeferencer_name").value == "") {
+    empty_info.push("The field 'Georeferenced by' is empty.");
   }
-  if(empty_info.length != 0){
-    message = "<b>The georeference is not complete:</b><br><br>" + empty_info.join("<br>") + "</ul>"
+  if (empty_info.length != 0) {
+    message =
+      "<b>The georeference is not complete:</b><br><br>" +
+      empty_info.join("<br>") +
+      "</ul>";
     info.toast_error(message);
   } else {
     return true;
   }
-
 };
 $("#validate_georeference").on("click", function () {
-  if(validateInfoBox()){
+  if (validateInfoBox()) {
     info.enable_copy_button(true);
     info.enable_validate_button(false);
-  }else{
+  } else {
     console.log(info.generate_location_id());
   }
 });
@@ -717,23 +730,23 @@ $("#validate_georeference").on("click", function () {
 $("#cpdata").on("click", function () {
   handle_copy_data(true);
   info.enable_validate_button(false);
-  info.enable_copy_button(true);
+  info.enable_copy_button(false);
   /*var myDiv = document.getElementById("copy_buttons_container");
   myDiv.classList.add("disabled-div");*/
 });
 
 $("#cpdatanh").on("click", function () {
   handle_copy_data(false);
-  var myDiv = document.getElementById("copy_buttons_container");
-  myDiv.classList.add("disabled-div");
+  info.enable_validate_button(false);
+  info.enable_copy_button(false);
 });
 
 const handle_copy_data = function (withHeaders) {
   wkt_length = wktSize();
   if (wkt_length != null) {
     showModal(withHeaders, wkt_length);
-  } else {    
-    do_share(withHeaders);    
+  } else {
+    do_share(withHeaders);
   }
 };
 
@@ -746,33 +759,38 @@ const do_share = function (withHeaders) {
     info.toast_error("Nothing to share!");
     return;
   }
-  if($('#location_id').val() != ''){
+  if ($("#location_id").val() != "") {
     info.do_copy_data(withHeaders, true);
-  }else{
+  } else {
     const locationid = info.generate_location_id();
     info.set_location_id(locationid);
     info.set_share_link(locationid);
     const ui_data = info.get_ui_data(true);
-    ui_data.geojson_sec = mbc_layer.toGeoJSON().features;  
+    ui_data.sec_representation = mbc_layer.toGeoJSON().features;
     api.write_share(ui_data, locationid, map, withHeaders);
   }
 };
 
 $("#share").on("click", function () {
-  do_share();  
+  do_share();
 });
 
-
-$('#locality_description').on('keydown', function(event) {  
-  info.presentConfirmResetValidation(event);
+$("#locality_description").on("keydown", function (event) {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift') {
+    info.presentConfirmResetValidation(event);
+  }
+})
+;
+$("#georeferencer_name").on("keydown", function (event) {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift') {
+    info.presentConfirmResetValidation(event);
+  }
 });
 
-$('#georeferencer_name').on('keydown', function(event) {  
-  info.presentConfirmResetValidation(event);
-});
-
-$('#georeference_remarks').on('keydown', function(event) {  
-  info.presentConfirmResetValidation(event);
+$("#georeference_remarks").on("keydown", function (event) {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift') {
+    info.presentConfirmResetValidation(event);
+  }
 });
 
 // Return a number with space as thousands separator

@@ -1,5 +1,6 @@
 // This script contains functionality related to interaction with the API
-
+const $ = require('jquery');
+const ui = require('jquery-ui/ui/widgets/dialog');
 const info = require('./info');
 require('leaflet-spin');
 const { parseFromWK } = require("wkt-parser-helper");
@@ -37,7 +38,7 @@ const parse_api_data = function(data){
 const parse_share_api_data = function(data){
     const parsed_json = JSON.parse(data.data);
     const path = data.path;
-    const site = parseFromWK(parsed_json.wkt);    
+    const site = parseFromWK(parsed_json.footprintWKT);    
     const centroid = {
         "type": "FeatureCollection",
             "features": [
@@ -55,8 +56,8 @@ const parse_share_api_data = function(data){
             ]
     }    
     var mbc = null;
-    if( parsed_json.geojson_sec.length != 0 ){            
-        mbc = { type: 'Feature', 'geometry': parsed_json.geojson_sec[0].geometry };
+    if( parsed_json.sec_representation.length != 0 ){            
+        mbc = { type: 'Feature', 'geometry': parsed_json.sec_representation[0].geometry };
     }
     return {
         centroid: { type: 'Feature', 'geometry': centroid },
@@ -64,7 +65,7 @@ const parse_share_api_data = function(data){
         site: site,
         spatial_fit: parsed_json.pointRadiusSpatialFit,
         uncertainty: parsed_json.coordinateUncertaintyInMeters,
-        wkt: parsed_json.wkt,
+        wkt: parsed_json.footprintWKT,
         locality: parsed_json.locality,
         georeferencer_name: parsed_json.georeferencedBy,
         georeference_remarks: parsed_json.georeferenceRemarks,
@@ -244,8 +245,10 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
         mbc_layer.addData( parsed_json.mbc );
         centroid_layer.addData( parsed_json.centroid );
         map.fitBounds(mbc_layer.getBounds());
-    
         info.show_api_centroid_data( parsed_json, geom );
+        $('#locality_description').trigger('focus');
+        info.enable_validate_button(true);
+        info.enable_copy_button(false);
     })
     .catch(function(error){
         info.toast_error(error);
