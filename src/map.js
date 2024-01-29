@@ -776,19 +776,19 @@ $("#share").on("click", function () {
 });
 
 $("#locality_description").on("keydown", function (event) {
-  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift') {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
     info.presentConfirmResetValidation(event);
   }
 })
 ;
 $("#georeferencer_name").on("keydown", function (event) {
-  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift') {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
     info.presentConfirmResetValidation(event);
   }
 });
 
 $("#georeference_remarks").on("keydown", function (event) {
-  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift') {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
     info.presentConfirmResetValidation(event);
   }
 });

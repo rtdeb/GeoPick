@@ -2,6 +2,7 @@
 
 const $ = require('jquery');
 const ui = require('jquery-ui/ui/widgets/dialog');
+const jq_confirm = require('jquery-confirm');
 const Toastr = require('toastr');
 const p = require('../package.json');
 const moment = require('moment');
@@ -231,16 +232,27 @@ const show_api_centroid_data = function(parsed_json, geom){
 }
 
 const presentConfirmResetValidation = function(event){
-    if($('#location_id').val()!= ''){
-        //console.log('Warning, invalidating validation');
-        if(confirm("Warning: you are about to change either the 'Locality', 'Georeferenced by' or 'Georeference remarks' on a georeference that has already been validated. If you continue, you will have to validate again the record and it will be considered a different georeference set. Do you want to continue?")){
-            set_share_link('');
-            set_location_id('');
-            enable_copy_button(false);
-            enable_validate_button(true);
-        }else{
-            event.preventDefault();
-        }
+    if($('#location_id').val()!= ''){        
+        $.confirm({
+            title: 'Warning: about to reset controls',
+            content: "You are about to change either the 'Locality', 'Georeferenced by' or 'Georeference remarks' on a georeference that has already been validated. If you continue, you will have to validate again the record and it will be considered a different georeference set. Do you want to continue?",            
+            buttons: {   
+                ok: {
+                    text: "ok!",
+                    btnClass: 'btn-primary',
+                    keys: ['enter'],
+                    action: function(){
+                        set_share_link('');
+                        set_location_id('');
+                        enable_copy_button(false);
+                        enable_validate_button(true);
+                    }
+                },
+                cancel: function(){
+                    event.preventDefault();
+                }
+            }
+        });
     }  
 }
 
