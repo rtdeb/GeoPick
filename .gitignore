@@ -23,10 +23,11 @@ ui.css
 ui.md
 .vscode
 flask_api/__pycache__/*
+flask_api/tests/__pycache__/
 flask_api/.idea/
 flask_api/db
 venv
-flask_api/commands
-flask_api/migrations
-
-
+flask_api/commands/__pycache__/
+flask_api/migrations/__pycache__/
+flask_api/migrations/versions/__pycache__/
+*.pyc

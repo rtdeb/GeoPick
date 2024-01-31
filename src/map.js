@@ -5,7 +5,7 @@
 // - centroid_layer: the layer containing the calculated centroid
 // - nominatim_layer: the geometry from a Nominatim search
 
-// Sites represented by lines or polygons rely on a call to the API while sites 
+// Sites represented by lines or polygons rely on a call to the API while sites
 // represented by a point and a circle of uncertainty are solved at the client side.
 
 const L = require("leaflet");
@@ -17,43 +17,68 @@ require("leaflet-defaulticon-compatibility");
 require("leaflet/dist/leaflet.css");
 require("leaflet-draw/dist/leaflet.draw.css");
 require("leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.css");
-require('leaflet-bing-layer');
+require("leaflet-bing-layer");
 require("./index.css");
 require("./mystyle.scss");
-require('jquery-ui/ui/widgets/autocomplete');
+require("jquery-ui/ui/widgets/autocomplete");
 
 const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
 const api = require("./api");
+const urlparams = require("./urlparams");
 const bing_api_key = process.env.BING_API_KEY;
 
 // TOGGLE INFO BOX ======================================================== //
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const info = document.getElementById("info");
   const toggleButton = document.getElementById("toggleButton");
 
-  toggleButton.addEventListener("click", function() {
+  toggleButton.addEventListener("click", function () {
     info.classList.toggle("unfolded");
   });
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const action = urlparams.urlParamsActions(urlParams);
+  if (action.status != "KO") {
+    if (action.opcode === urlparams.opcodes.OPCODE_LATLONUNC) {
+      addPointCircleToMap(
+        action.params.lat,
+        action.params.lon,
+        action.params.unc
+      );
+      window.history.pushState({}, document.title, "/");
+    } else if (action.opcode === urlparams.opcodes.OPCODE_SHARE) {
+      api.load_share(
+        action.params.locationid,
+        site_layer,
+        mbc_layer,
+        centroid_layer,
+        map
+      );
+      window.history.pushState({}, document.title, "/");
+    }
+  }
 });
 
 var coll = document.getElementsByClassName("collapsible");
 var i;
 for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
+  coll[i].addEventListener("click", function () {
     this.classList.toggle("active");
     var content = this.nextElementSibling;
-    if (content.style.maxHeight){
+    if (content.style.maxHeight) {
       content.style.maxHeight = null;
     } else {
       content.style.maxHeight = content.scrollHeight + "px";
-    } 
+    }
   });
 }
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
   if (nominatim_layer.toGeoJSON().features.length == 0) {
-    info.toast_error("Nothing to import! Please select a location.");
+    message = "Nothing to import! Please select a location.";
+    info.dialogError(message, 3000);
   } else {
     type = nominatim_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
@@ -81,6 +106,12 @@ const importNominatim = function () {
       );
     }
     $("#importWKT").hide();
+    info.enable_validate_button(true);
+    info.enable_copy_button(false);
+    $("#locality_description").val(
+      "Nominatim: " + $("#latest_search_hidden").val()
+    );
+    $("#georeferencer_name").trigger("focus");
   }
 };
 
@@ -100,7 +131,7 @@ const addPointCircleToMap = function (lat, long, radius) {
       fillOpacity: 0.5,
       color: "#e7e7e7",
       opacity: 0.5,
-    });    
+    });
   }
   map.addLayer(circle);
   site_layer.clearLayers();
@@ -114,7 +145,7 @@ setVisibleAreaAroundCircle = function (circle) {
   map.fitBounds(circle.getBounds());
 };
 
-const process_wkt_box = function(){
+const process_wkt_box = function () {
   wkt = $("#textareaWKT").val();
   geojson = parseFromWK(wkt);
   if (geojson === null) {
@@ -152,7 +183,7 @@ const process_wkt_box = function(){
   }
 };
 
-const process_point_kb_box = function(){
+const process_point_kb_box = function () {
   lat = parseFloat($("#keyboardLatitude").val());
   lng = parseFloat($("#keyboardLongitude").val());
   unc = $("#keyboardUncertainty").val();
@@ -166,90 +197,84 @@ const process_point_kb_box = function(){
   $("#controlKeyboard").hide();
 };
 
-const init_autocomplete = function(map, input_id, nominatim_layer){
-  $( "#" + input_id ).autocomplete({
-      source: function(request, response) {
-        $.ajax({
-          url: 'https://nominatim.openstreetmap.org/search',
-          data: {
-              q: request.term,
-              format: 'geojson',
-              polygon_geojson: 1
-          },
-          success: function(data) {
-              var results = $.map(data.features, function(item) {                
-                  return item;
-              });
-              response(results);
-          }
-        });
-      },      
-      minLength: 2,        
-      select: function( event, ui ) {
-        const sw = [ ui.item.bbox[1], ui.item.bbox[0]  ];
-        const ne = [ ui.item.bbox[3], ui.item.bbox[2]  ];
-        map.fitBounds( [ne,sw] );
-        nominatim_layer.clearLayers();
-        nominatim_layer.addData( ui.item.geometry );     
-        $("#latest_search_hidden").val(ui.item.properties.display_name);   
-        if(ui.item.properties.display_name.length > 32){
-          $("#latest_search").text(ui.item.properties.display_name.substr(0,32) + " ..."); 
-        } else {
-          $("#latest_search").text(ui.item.properties.display_name); 
-        }
-        
-      },
-      create: function () {
-        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {          
-            return $('<li>')
-                .append('<a>' + item.properties.display_name + '</a>')
-                .appendTo(ul);
-        };
+const init_autocomplete = function (map, input_id, nominatim_layer) {
+  $("#" + input_id).autocomplete({
+    source: function (request, response) {
+      $.ajax({
+        url: "https://nominatim.openstreetmap.org/search",
+        data: {
+          q: request.term,
+          format: "geojson",
+          polygon_geojson: 1,
+        },
+        success: function (data) {
+          var results = $.map(data.features, function (item) {
+            return item;
+          });
+          response(results);
+        },
+      });
+    },
+    minLength: 2,
+    select: function (event, ui) {
+      const sw = [ui.item.bbox[1], ui.item.bbox[0]];
+      const ne = [ui.item.bbox[3], ui.item.bbox[2]];
+      map.fitBounds([ne, sw]);
+      nominatim_layer.clearLayers();
+      nominatim_layer.addData(ui.item.geometry);
+      $("#latest_search_hidden").val(ui.item.properties.display_name);
+      if (ui.item.properties.display_name.length > 32) {
+        $("#latest_search").text(
+          ui.item.properties.display_name.substr(0, 32) + " ..."
+        );
+      } else {
+        $("#latest_search").text(ui.item.properties.display_name);
       }
+      info.clear_centroid_data();
+    },
+    create: function () {
+      $(this).data("ui-autocomplete")._renderItem = function (ul, item) {
+        return $("<li>")
+          .append("<a>" + item.properties.display_name + "</a>")
+          .appendTo(ul);
+      };
+    },
   });
-}
+};
 
 // MAP =========================================================================== //
-var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", 
-{
+var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   minZoom: 2,
   maxZoom: 18,
-  attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+  attribution:
+    'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
 });
 
-var bing_aerial = L.tileLayer.bing(
-  {
-      'bingMapsKey':bing_api_key
-  }
-);
+var bing_aerial = L.tileLayer.bing({
+  bingMapsKey: bing_api_key,
+});
 
-var bing_aerial_labels = L.tileLayer.bing(
-  {
-      'bingMapsKey':bing_api_key,
-      'imagerySet':'AerialWithLabels'
-  }
-);
+var bing_aerial_labels = L.tileLayer.bing({
+  bingMapsKey: bing_api_key,
+  imagerySet: "AerialWithLabels",
+});
 
-var bing_roads = L.tileLayer.bing(
-  {
-      'bingMapsKey':bing_api_key,
-      'imagerySet':'Road'
-  }
-);
+var bing_roads = L.tileLayer.bing({
+  bingMapsKey: bing_api_key,
+  imagerySet: "Road",
+});
 
-var bing_roads_dark = L.tileLayer.bing(
-  {
-      'bingMapsKey':bing_api_key,
-      'imagerySet':'CanvasDark'
-  }
-);
+var bing_roads_dark = L.tileLayer.bing({
+  bingMapsKey: bing_api_key,
+  imagerySet: "CanvasDark",
+});
 
 var map = L.map("map", {
   center: [51.505, -0.09],
-  zoom: 3,  
+  zoom: 3,
   layers: [bing_aerial_labels],
   zoomControl: false,
-  dragging: !L.Browser.mobile, 
+  dragging: !L.Browser.mobile,
 });
 var site_layer = new L.FeatureGroup();
 map.addLayer(site_layer);
@@ -348,11 +373,11 @@ var coordControl = L.control.coordinates({
 });
 map.addControl(coordControl);
 
-var div = L.DomUtil.get('place_search');
-L.DomEvent.on(div, 'mousewheel', L.DomEvent.stopPropagation);
-L.DomEvent.on(div, 'mousedown', L.DomEvent.stopPropagation);
-L.DomEvent.on(div, 'click', L.DomEvent.stopPropagation);
-L.DomEvent.on(div, 'dblclick', L.DomEvent.stopPropagation);
+var div = L.DomUtil.get("place_search");
+L.DomEvent.on(div, "mousewheel", L.DomEvent.stopPropagation);
+L.DomEvent.on(div, "mousedown", L.DomEvent.stopPropagation);
+L.DomEvent.on(div, "click", L.DomEvent.stopPropagation);
+L.DomEvent.on(div, "dblclick", L.DomEvent.stopPropagation);
 
 // Map events ···································································· //
 map.on(L.Draw.Event.CREATED, function (e) {
@@ -366,7 +391,11 @@ map.on(L.Draw.Event.CREATED, function (e) {
   if (type != "circle") {
     api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
   } else {
-    info.show_centroid_data(layer._latlng.lat, layer._latlng.lng, layer._mRadius);
+    info.show_centroid_data(
+      layer._latlng.lat,
+      layer._latlng.lng,
+      layer._mRadius
+    );
     centroid_layer.addData(site_layer.toGeoJSON());
   }
 });
@@ -391,8 +420,12 @@ map.on(L.Draw.Event.EDITED, function (e) {
         maybe_circle._mRadius
       );
     }
+    info.enable_copy_button(false);
+    info.enable_validate_button(true);
   } else {
     api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
+    info.enable_copy_button(false);
+    info.enable_validate_button(true);
   }
 });
 
@@ -405,6 +438,8 @@ const clearAllGeometries = function () {
   mbc_layer.clearLayers();
   nominatim_layer.clearLayers();
   site_layer.clearLayers();
+  info.enable_validate_button(true);
+  info.enable_copy_button(false);
 
   if (site_layer.toGeoJSON().features.length > 0) {
     api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
@@ -466,6 +501,7 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
   var type = e.layerType;
   if (type == "circle") {
     $("#keyboardEdit").show();
+    $("#locality_description").trigger("focus");
   }
   if (site_layer.toGeoJSON().features.length == 0) {
     resetDrawControls();
@@ -475,36 +511,45 @@ map.on(L.Draw.Event.DRAWSTOP, function (e) {
 });
 
 // Draw controls visibility handling
-const hideLineDrawControl = function(){
+const hideLineDrawControl = function () {
   $(".leaflet-draw-draw-polyline").hide();
-}
+};
 
-const hideCircleDrawControl = function(){
+const hideCircleDrawControl = function () {
   $(".leaflet-draw-draw-circle").hide();
-}
+};
 
-const hidePolyDrawControl = function(){
+const hidePolyDrawControl = function () {
   $(".leaflet-draw-draw-polygon").hide();
-}
+};
 
-const resetDrawControls = function(){
+const resetDrawControls = function () {
   $(".leaflet-draw-draw-polyline").show();
   $(".leaflet-draw-draw-polygon").show();
   $(".leaflet-draw-draw-circle").show();
-}
+};
 
 // Nominatim handling
 init_autocomplete(map, "place_search", nominatim_layer);
-$("#importNominatim").on("click", function () {  importNominatim() });
+
+$("#importNominatim").on("click", function () {
+  importNominatim();
+});
 
 //Copying latest search on Nominatim
-$("#latest_search_copy").on("click", function() {
-    info.copy_latest_search($("#latest_search_hidden").val());
- });
+$("#latest_search_copy").on("click", function () {
+  info.copy_latest_search($("#latest_search_hidden").val());
+});
+
+$("#copy_link").on("click", function () {
+  info.copy_share_link($("#share_link").text());
+});
 
 // Keyboard point editting handling
-$("#keyboardEdit").on("click", function(){ show_point_kb_box() });
-const show_point_kb_box = function(){
+$("#keyboardEdit").on("click", function () {
+  show_point_kb_box();
+});
+const show_point_kb_box = function () {
   hideLineDrawControl();
   hidePolyDrawControl();
   hideCircleDrawControl();
@@ -516,8 +561,10 @@ const show_point_kb_box = function(){
   $("#keyboardLatitude").trigger("focus");
 };
 
-$("#keyboardCancel").on("click", function () {  cancel_point_kb_box() });
-const cancel_point_kb_box = function() {
+$("#keyboardCancel").on("click", function () {
+  cancel_point_kb_box();
+});
+const cancel_point_kb_box = function () {
   if (site_layer.getLayers().length == 0) {
     resetDrawControls();
     $("#importWKT").show();
@@ -525,22 +572,25 @@ const cancel_point_kb_box = function() {
   $("#controlKeyboard").hide();
 };
 
-$("#keyboardOK").on("click", function () { process_point_kb_box() });
+$("#keyboardOK").on("click", function () {
+  process_point_kb_box();
+});
 
 // Delete geometries box
-$("#cancelDeleteGeometries").on("click", function(){ 
+$("#cancelDeleteGeometries").on("click", function () {
   $("#deleteGeometries").hide();
   // deleteGeometries.style.display = 'none';
 });
-$("#yesDeleteGeometries").on("click", function(){ 
+$("#yesDeleteGeometries").on("click", function () {
   clearAllGeometries();
-  $("#deleteGeometries").hide();  
+  $("#deleteGeometries").hide();
 });
 
-
 // Well-Known Text event handling
-$("#importWKT").on("click", function() { show_wkt_box() });
-const show_wkt_box = function(){
+$("#importWKT").on("click", function () {
+  show_wkt_box();
+});
+const show_wkt_box = function () {
   hideLineDrawControl();
   hidePolyDrawControl();
   hideCircleDrawControl();
@@ -551,16 +601,19 @@ const show_wkt_box = function(){
   $("#textareaWKT").focus();
 };
 
-$("#cancelWKT").on("click", function(){ cancel_wkt_box() });
-const cancel_wkt_box = function(){
+$("#cancelWKT").on("click", function () {
+  cancel_wkt_box();
+});
+const cancel_wkt_box = function () {
   resetDrawControls();
   $("#controlTextWKT").hide();
   $("#keyboardEdit").show();
   $("#importWKT").show();
 };
 
-$("#okWKT").on("click", function () { process_wkt_box() });
-
+$("#okWKT").on("click", function () {
+  process_wkt_box();
+});
 
 // Keyboard shortcuts handling
 // Keyboard shortcuts
@@ -580,20 +633,19 @@ $("#okWKT").on("click", function () { process_wkt_box() });
 
 // ESC: Closes div dialogs
 $(document).on("keydown", function (event) {
-  if (event.ctrlKey && event.key === 'h') {   
-    handle_copy_data(true); 
-  } else if (event.ctrlKey && event.key === 'f') {
+  if (event.ctrlKey && event.key === "h") {
+    handle_copy_data(true);
+  } else if (event.ctrlKey && event.key === "f") {
     $("#toggleButton").trigger("click");
-  } else if (event.ctrlKey && event.key === 'c') {
+  } else if (event.ctrlKey && event.key === "c") {
     handle_copy_data(false);
-  } else if (event.ctrlKey && event.key === 'w') {    
-      show_wkt_box(); 
-  } else if (event.ctrlKey && event.key === 'k') {
+  } else if (event.ctrlKey && event.key === "w") {
+    show_wkt_box();
+  } else if (event.ctrlKey && event.key === "k") {
     show_point_kb_box();
-  } else if (event.ctrlKey && event.key === 'g') {
+  } else if (event.ctrlKey && event.key === "g") {
     $("#georeferencer_name").trigger("focus");
-  
-  } else if (event.ctrlKey && event.key === 'm') {
+  } else if (event.ctrlKey && event.key === "m") {
     $("#georeference_remarks").trigger("focus");
   } else if (event.key === "Escape") {
     if ($("#controlTextWKT").is(":visible")) {
@@ -627,87 +679,168 @@ $(document).on("keydown", function (event) {
     importNominatim();
   } else if (event.ctrlKey && (event.key === "d" || event.key === "D")) {
     if (site_layer.toGeoJSON().features.length > 0) {
-        $('#deleteGeometries').show();
-        $('#yesDeleteGeometries').focus();
+      $("#deleteGeometries").show();
+      $("#yesDeleteGeometries").trigger("focus");
     }
-  } else if (event.ctrlKey && (event.key === "b" || event.key === "B")){
+  } else if (event.ctrlKey && (event.key === "b" || event.key === "B")) {
     info.copy_latest_search($("#latest_search_hidden").val());
   }
 });
 
 // Checking WKT and handling data copying when WKT is too big
-const wktSize = function(){
-  wkt = $('#d_geojson').val();
-  if(wkt.length >= 32767){
+const wktSize = function () {
+  wkt = $("#d_geojson").val();
+  if (wkt.length >= 32767) {
     return wkt.length;
   } else {
     return null;
   }
-}
+};
 
-$("#cpdata").on("click", function(){
+// Check that the info box is adequately filled. If the latitude box is set it means that the rest of values down to georeference sources are also set. Therefore, we only need to check that latitude, localiyt and georeferenced by are filled. Remarks are optional
+const validateInfoBox = function () {
+  empty_info = [];
+  if (document.getElementById("centroid_y").value == "") {
+    empty_info.push("Point-radius is not calculated.");
+  }
+  if (document.getElementById("locality_description").value == "") {
+    empty_info.push("The 'Locality' field is empty.");
+  }
+  if (document.getElementById("georeferencer_name").value == "") {
+    empty_info.push("The field 'Georeferenced by' is empty.");
+  }
+  if (empty_info.length != 0) {
+    message =
+      "<b>The georeference is not complete:</b><br><br>" +
+      empty_info.join("<br>") +
+      "</ul>";
+    info.dialogError(message, 10000);
+  } else {
+    return true;
+  }
+};
+$("#validate_georeference").on("click", function () {
+  if (validateInfoBox()) {
+    info.enable_copy_button(true);
+    info.enable_validate_button(false);
+  } else {
+    console.log(info.generate_location_id());
+  }
+});
+
+$("#cpdata").on("click", function () {
   handle_copy_data(true);
+  info.enable_validate_button(false);
+  info.enable_copy_button(false);
+  /*var myDiv = document.getElementById("copy_buttons_container");
+  myDiv.classList.add("disabled-div");*/
 });
 
-$("#cpdatanh").on("click", function(){
+$("#cpdatanh").on("click", function () {
   handle_copy_data(false);
+  info.enable_validate_button(false);
+  info.enable_copy_button(false);
 });
 
-const handle_copy_data = function(withHeaders){
+const handle_copy_data = function (withHeaders) {
   wkt_length = wktSize();
-  if(wkt_length != null){    
+  if (wkt_length != null) {
     showModal(withHeaders, wkt_length);
   } else {
-    info.do_copy_data(withHeaders, true);
+    do_share(withHeaders);
   }
+};
 
-}
+const do_share = function (withHeaders) {
+  const geodata = $("#d_geojson").val();
+  if (
+    (geodata === null || geodata === "") &&
+    centroid_layer.toGeoJSON().features.length == 0
+  ) {
+    info.dialogError("Nothing to share!", 3000);
+    return;
+  }
+  if ($("#location_id").val() != "") {
+    info.do_copy_data(withHeaders, true);
+  } else {
+    const locationid = info.generate_location_id();
+    info.set_location_id(locationid);
+    info.set_share_link(locationid);
+    const ui_data = info.get_ui_data(true);
+    ui_data.sec_representation = mbc_layer.toGeoJSON().features;
+    api.write_share(ui_data, locationid, map, withHeaders);
+  }
+};
+
+$("#share").on("click", function () {
+  do_share();
+});
+
+$("#locality_description").on("keypress", function (event) {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
+    info.presentConfirmResetValidation(event);
+  }
+})
+;
+$("#georeferencer_name").on("keydown", function (event) {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
+    info.presentConfirmResetValidation(event);
+  }
+});
+
+$("#georeference_remarks").on("keydown", function (event) {
+  if (event.key !== "Tab" && event.key !== 'Control' && event.key !== 'Shift' && event.key !== 'Alt') {
+    info.presentConfirmResetValidation(event);
+  }
+});
 
 // Return a number with space as thousands separator
-const format = function(num){
-  let nf = new Intl.NumberFormat('en-US');
-  s = nf.format(num); 
+const format = function (num) {
+  let nf = new Intl.NumberFormat("en-US");
+  s = nf.format(num);
   s = s.replace(/,/g, " ");
   return s;
   // This regular expression did the same but is unsupported by Safari
   // return String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, '$1 ');
+};
+
+// Get the modal element
+const modal = document.getElementById("wkt_limit_box_modal");
+
+// Function to display the modal
+function showModal(withHeaders, wkt_length) {
+  modal.style.display = "block";
+  message =
+    "WARNING!\nThe size of this WKT is " +
+    format(wkt_length) +
+    " characters long. Usually spreadsheet applications have a limit on the maximum number of characters that are allowed per cell (e.g., Microsoft Excel: 32 767, Google Sheets: 50 000).\nDo you still want to copy the data including the WKT?";
+  document.getElementById("wkt_length_text").innerText = message;
+  modal.setAttribute("withHeaders", withHeaders);
+  document.getElementById("doNotCopyWKT").focus();
 }
 
-  // Get the modal element
-  const modal = document.getElementById('wkt_limit_box_modal');
+// Function to handle the "Yes" button click
+$("#doCopyWKT").on("click", function () {
+  const withHeaders = JSON.parse(modal.getAttribute("withHeaders"));
+  info.do_copy_data(withHeaders, true);
+  closeModal();
+});
 
-  // Function to display the modal
-  function showModal(withHeaders, wkt_length) {
-    modal.style.display = 'block';
-    message = "WARNING!\nThe size of this WKT is " + format(wkt_length) + " characters long. Usually spreadsheet applications have a limit on the maximum number of characters that are allowed per cell (e.g., Microsoft Excel: 32 767, Google Sheets: 50 000).\nDo you still want to copy the data including the WKT?"
-    document.getElementById('wkt_length_text').innerText = message;
-    modal.setAttribute('withHeaders', withHeaders);
-    document.getElementById('doNotCopyWKT').focus();
-  }
+// Function to handle the "No" button click
+$("#doNotCopyWKT").on("click", function () {
+  const withHeaders = JSON.parse(modal.getAttribute("withHeaders"));
+  info.do_copy_data(withHeaders, false);
+  closeModal();
+});
 
-  // Function to handle the "Yes" button click
-  $("#doCopyWKT").on("click", function () {     
-    const withHeaders = JSON.parse(modal.getAttribute('withHeaders'));
-    info.do_copy_data(withHeaders, true)
-    closeModal();
+// Function to close the modal
+function closeModal() {
+  modal.style.display = "none";
+}
 
-  });
-  
-  // Function to handle the "No" button click
-  $("#doNotCopyWKT").on("click", function () {     
-    const withHeaders = JSON.parse(modal.getAttribute('withHeaders'));
-    info.do_copy_data(withHeaders, false)
-    closeModal();
-  });
-
-  // Function to close the modal
-  function closeModal() {
-    modal.style.display = 'none';
-  }
-
-  // Close the modal if the user clicks outside of it
-  // window.onclick = function(event) {
-  //   if (event.target === modal) {
-  //     closeModal();
-  //   }
-  // };
+// Close the modal if the user clicks outside of it
+// window.onclick = function(event) {
+//   if (event.target === modal) {
+//     closeModal();
+//   }
+// };

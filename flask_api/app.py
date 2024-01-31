@@ -11,7 +11,12 @@ import os
 import json
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required
 from flask_jwt_extended import get_jwt_identity
-from flask_api.dbutils import db_create_user, db_get_user, db_get_user_by_id
+from flask_api.dbutils import db_create_user, db_get_user, db_create_georef, db_get_georef, db_get_georef_page
+from flask_api.models import User, db
+from flask_migrate import Migrate
+from flask_api.commands import custom_commands
+from sqlalchemy.exc import IntegrityError
+import time
 
 
 upper_dir = (Path(dirname(__file__))).parent.absolute()
@@ -20,7 +25,6 @@ dotenv_path = join(upper_dir, '.env')
 package_path = join(upper_dir, 'package.json')
 
 load_dotenv(dotenv_path)
-database_file = os.environ.get('DATABASE_FILE')
 
 f = open(package_path)
 package_json = json.load(f)
@@ -31,37 +35,11 @@ CORS(app)
 app.config['JWT_SECRET_KEY'] = os.environ.get('SECRET')
 jwt = JWTManager(app)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tracking
 
-def init_db():
-    with app.app_context():
-        # create db file
-        db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
-        # create initial user
-        username = os.environ.get('USERNAME')
-        password = os.environ.get('PASSWORD')
-        db_create_user(db, username, password)
-
-
-
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(database_file)
-    return db
-
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-
-if not os.path.exists(database_file):
-    init_db()
+db.init_app(app)
+migrate = Migrate(app, db)
 
 @app.before_request
 def middleware():
@@ -71,6 +49,47 @@ def middleware():
             access_token = create_access_token(identity=1, expires_delta=datetime.timedelta(days=1))
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token
 
+
+@app.route('/v1/georeference', methods=['POST'])
+@jwt_required()
+def write_georeference():    
+    locationid = request.json.get("locationid", None)
+    georef_data = request.json.get("georef_data", None)
+    georef_data_str = json.dumps(georef_data)
+    georef = db_create_georef(db, locationid, georef_data_str)
+    return jsonify({"success": True, "msg": "Georef created", "id": georef.id })
+
+
+@app.route('/v1/georeference/<geopick_id>', methods=['GET'])
+@jwt_required()
+def read_georeference(geopick_id):
+    shared_georef = db_get_georef(db, geopick_id)
+    if shared_georef:
+        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(geopick_id)})
+    else:
+        return jsonify({"success": False, "msg": "Not found"}), 404
+
+@app.route('/v1/georeference', methods=['GET'])
+@jwt_required()
+def list_georeferences():
+    current_user_id = get_jwt_identity()
+    author = db.get_or_404(User, current_user_id)
+    if author.username == os.environ.get('USERNAME'):
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per-page", 100, type=int)
+        georefs = db_get_georef_page(db, page, per_page)
+        results = {
+            "results": [{"id": g.id, "geopick_id": g.geopick_id, "georef_data": g.georef_data} for g in georefs.items],
+            "pagination": {
+                "count": georefs.total,
+                "page": page,
+                "per_page": per_page,
+                "pages": georefs.pages,
+            },
+        }
+        return jsonify(results)
+    else:
+        return jsonify({"success": False, "msg": "Not allowed"}), 401
 
 @app.route('/v1/sec', methods=['POST'])
 @jwt_required()
@@ -97,15 +116,15 @@ def create_user():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
     current_user_id = get_jwt_identity()
-    author = db_get_user_by_id(get_db(),current_user_id)
-    if author[1] == os.environ.get('USERNAME'):
+    author = db.get_or_404(User, current_user_id)
+    if author.username == os.environ.get('USERNAME'):
         try:
-            user_id = db_create_user(get_db(),username, password)
-        except sqlite3.IntegrityError as i:
+            user = db_create_user(db, username, password)
+            return jsonify({"success": True, "msg": "User created", "id": user.id})
+        except IntegrityError as i:
             return json.dumps({"success": False, "msg": "username exists"}), 400, {'ContentType': 'application/json'}
         except Exception as e:
-            return json.dumps({"success": False, "msg": str(e)}), 400, {'ContentType': 'application/json'}
-        return jsonify({"success": True, "msg": "User created", "id": user_id})
+            return json.dumps({"success": False, "msg": str(e)}), 400, {'ContentType': 'application/json'}        
     else:
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
@@ -114,12 +133,15 @@ def create_user():
 def auth_user():
     username = request.json.get("username", None)
     password = request.json.get("password", None)
-    user = db_get_user(get_db(), username, password)
+    user = db_get_user(db, username, password)
     if user is not None:
-        access_token = create_access_token(identity=user[0], expires_delta=datetime.timedelta(days=1))
-        return jsonify({"success": True, "msg": "User retrieved", "id": user[0], "token": access_token})
+        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=1))
+        return jsonify({"success": True, "msg": "User retrieved", "id": user.id, "token": access_token})
     else:
         return json.dumps({"success": False, "msg": "No user with these credentials exist"}), 404, {'ContentType': 'application/json'}
+    
+# Register custom command
+app.cli.add_command(custom_commands.create_superuser)
 
 
 if __name__ == '__main__':
