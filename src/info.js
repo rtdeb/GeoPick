@@ -3,19 +3,11 @@
 const $ = require("jquery");
 const ui = require("jquery-ui/ui/widgets/dialog");
 const jq_confirm = require("jquery-confirm");
-const Toastr = require("toastr");
 const p = require("../package.json");
 const moment = require("moment");
 const { convertToWK } = require("wkt-parser-helper");
 
 // const map = require("./map");
-Toastr.options = {
-  closeButton: false, // Show close button
-  timeOut: 3000, // Disable auto-hide
-  extendedTimeOut: 0, // Disable auto-hide after user interaction
-  tapToDismiss: false,
-  positionClass: "toast-center-center",
-};
 
 const headers = [
   "locationID",
