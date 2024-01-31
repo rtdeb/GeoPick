@@ -30,6 +30,9 @@ The tool uses the [OpenStreetMap Nominatim API](https://nominatim.openstreetmap.
 #### Coordinates and scale
 The map coordinates are shown when moving the cursor around, and the scale is also shown when zooming in and out. Coordinates are in decimal degrees and the scale is shown in either kilometres and miles, or metres and feet, depending on the zoom level.
 
+#### Georeference sharing
+Each georeferenced location is assigned a unique locationID (http://rs.tdwg.org/dwc/terms/locationID) and can be used to share georeferences among GeoPick users. GeoPick provides with a share link in the form of https://geopick.gbif.org/?locationid=<locationID>. 
+
 ### A FINAL NOTE ON UNCERTAINTY
 GeoPick gives coordinates with seven decimal places following Georeferencing Best Practices ([Chapman and Wieczorek, 2022](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision)) and Georeferencing Quick Reference Guide ([Zermoglio et al., 2022](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format)). This allows preservation of the correct coordinates in all formats regardless of how many transformations are done ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/); [Wiezorek et al., 2010](https://doi.org/10.1080/13658810412331280211)). Accordingly, GeoPick sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of the number of decimals given with the coordinates ([Darwin Core Maintenance Group, 2021](https://dwc.tdwg.org/terms/#dwc:coordinatePrecision)). Please also note that as in this version of GeoPick, coordinate uncertainty refers only to the radius of the enclosing circle of the geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of the underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator ([Wieczorek C and Wieczorek J.R., 2021](http://georeferencing.org/georefcalculator/gc.html)) and its manual ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/)).
 
@@ -110,6 +113,15 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### VERSIONS
+#### Version 2.0.0
+- Added new compulsory Darwin Core field _locality_.  
+- Added new automatically assigned Darwin Core field _locationID_.  
+- Replaced the _toastr_ javascript library for notifications for the _jquery-confirm JQuery plugin_.  
+- Added new button _Validate_ for validation of georeferences before sharing or exporting.  
+- Added georeference sharing functionality.  
+- Added PostgreSQL back-end database, which can store georeferences in GeoJSON format for sharing via the applications API.  
+- Added fields _locationID_ and _locality_ to the exported Darwin Core format.  
+
 #### Version 1.1.1
 - Restored progress wheel.  
 
