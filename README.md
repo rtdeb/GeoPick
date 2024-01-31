@@ -72,12 +72,38 @@ Requirements: git
 
 > git clone https://github.com/rtdeb/GeoPick.git  
 
-#### 2 Set up the server API
+#### 2 Set up the database
+
+GeoPick uses a [PostgreSQL](https://www.postgresql.org/) database to store georeference data. Download and install an instance of the database.
+
+##### 2.1 Create user and database
+
+We recommend creating a dedicated database and user for GeoPick. First, we create a user called 'geopick' (you can choose any name you like):
+
+> CREATE ROLE geopick LOGIN PASSWORD 'mypassword' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+
+This user will be the owner of the database and GeoPick will use it to open connections. Now, create the database. From the shell, as the postgresql administrative user (usually postgres) do:
+
+> createdb geopick -O geopick
+
+We created a database called geopick (again, use any name you like) and assigned its ownership to the previously created 'geopick' user.
+
+##### 2.2 Update the database connection in the .env file
+
+Look for an entry called 'SQLALCHEMY_DATABASE_URI' in your .env file. This key contains the connection details for the postgresql database. The string has the following structure:
+
+> 'postgres://geopick_username:geopick_password@database_address:database_port/database_name'
+
+Assuming that we take the values from the example, and PostgreSQL is running on localhost at the usual port (5432), our string would look like this:
+
+> 'postgres://geopick:mypassword@localhost:5432/geopick'
+
+#### 3 Set up the server API
 Requirements: Python version 3.11
 
 You can configure some API parameters by setting an *.env* file at the GeoPick's root directory. You can see an example of it in this repo's *.env_example*
 
-##### 2.1 Create python virtual environment
+##### 3.1 Create python virtual environment
 
 From the root project folder, run:
 
@@ -85,21 +111,41 @@ From the root project folder, run:
 
 This will create a folder named venv containing an empty python virtual environment folder.
 
-##### 2.2 Activate virtual environment and install dependencies
+##### 3.2 Activate virtual environment and install dependencies
 
 To activate the virtual environment, do
 
 > source venv/bin/activate  
 > pip install -r requirements.txt
 
-##### 2.3 Start up development API server
+##### 3.3 Perform initial database setup
+
+The database we created in step 2 is completely empty. We need to create the basic tables, to do this, activate the virtual environment from the root folder of the project:
+
+> source venv/bin/activate  
+
+Then go to the flask_api folder:
+
+> cd flask_api
+
+And run the command:
+
+> flask db upgrade
+
+This will apply migrations and create the necessary tables. Lastly, we need to create the admin user. To do this, execute the command:
+
+> flask create_superuser
+
+This will create a user in the database using as username the key USERNAME and the key PASSWORD present in your .env file.
+
+##### 3.4 Start up development API server
 
 From the root directory, and with the recently created virtual environment active, do
 
 > cd flask_api  
 > flask run
 
-#### 3 Set up the client side  
+#### 4 Set up the client
 Requirements: node v16.16.0
 
 You can change the port by modifying the *webpack.dev.js* file before executing the command *npm run start*. The default port is set at 8085.
