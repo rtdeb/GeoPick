@@ -88,7 +88,8 @@ This user will be the owner of the database and GeoPick will use it to open conn
 
 We created a database called geopick (again, use any name you like) and assigned its ownership to the previously created 'geopick' user.
 
-##### 2.2 Update the database connection in the .env file
+##### 2.2 Create a .env file and customize it for your installation
+Create a .env file using the provide .env_example file. Change the key values to suite your installation.  
 
 Look for an entry called 'SQLALCHEMY_DATABASE_URI' in your .env file. This key contains the connection details for the postgresql database. The string has the following structure:
 
