@@ -27,6 +27,7 @@ const info = require("./info");
 const api = require("./api");
 const urlparams = require("./urlparams");
 const bing_api_key = process.env.BING_API_KEY;
+const base_app_url = process.env.BASE_APP_URL;
 
 // TOGGLE INFO BOX ======================================================== //
 document.addEventListener("DOMContentLoaded", function () {
@@ -47,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         action.params.lon,
         action.params.unc
       );
-      window.history.pushState({}, document.title, "/");
+      window.history.pushState({}, document.title, "/" + base_app_url);
     } else if (action.opcode === urlparams.opcodes.OPCODE_SHARE) {
       api.load_share(
         action.params.locationid,
@@ -56,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
         centroid_layer,
         map
       );
-      window.history.pushState({}, document.title, "/");
+      window.history.pushState({}, document.title, "/" + base_app_url);
     }
   }
 });
