@@ -40,7 +40,6 @@
     "moment": "^2.30.1",
     "terraformer": "^1.0.12",
     "terraformer-wkt-parser": "^1.2.1",
-    "toastr": "^2.1.4",
     "wkt-parser-helper": "^4.1.0",
     "yesno-dialog": "^0.2.1"
   }

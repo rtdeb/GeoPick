@@ -121,7 +121,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
 
     })
     .catch(function(error){
-        info.toast_error(error);
+        info.dialogError(error, 5000);
         map.spin(false);
     });
 }
@@ -183,7 +183,7 @@ const load_share = function(locationid, site_layer, mbc_layer, centroid_layer, m
         info.enable_copy_button(true);
         info.enable_validate_button(false);
     }).catch(function(error){
-        info.toast_error(error);        
+        info.dialogError(error, 5000);        
         map.spin(false);
     });
 }
@@ -209,7 +209,7 @@ const write_share = function(share_data, locationid, map, withHeaders){
         map.spin(false);
         info.set_location_id('');
         info.set_share_link('');
-        info.toast_error(error);        
+        info.dialogError(error, 5000);        
     });        
 }
 
@@ -251,7 +251,7 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
         info.enable_copy_button(false);
     })
     .catch(function(error){
-        info.toast_error(error);
+        info.dialogError(error, 5000);
         map.spin(false);
     });        
 }

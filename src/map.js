@@ -77,7 +77,8 @@ for (i = 0; i < coll.length; i++) {
 // FUNCTIONS ===================================================================== //
 const importNominatim = function () {
   if (nominatim_layer.toGeoJSON().features.length == 0) {
-    info.toast_error("Nothing to import! Please select a location.");
+    message = "Nothing to import! Please select a location.";
+    info.dialogError(message, 3000);
   } else {
     type = nominatim_layer.toGeoJSON().features[0].geometry.type;
     if (type == "Point") {
@@ -713,7 +714,7 @@ const validateInfoBox = function () {
       "<b>The georeference is not complete:</b><br><br>" +
       empty_info.join("<br>") +
       "</ul>";
-    info.toast_error(message);
+    info.dialogError(message, 10000);
   } else {
     return true;
   }
@@ -756,7 +757,7 @@ const do_share = function (withHeaders) {
     (geodata === null || geodata === "") &&
     centroid_layer.toGeoJSON().features.length == 0
   ) {
-    info.toast_error("Nothing to share!");
+    info.dialogError("Nothing to share!", 3000);
     return;
   }
   if ($("#location_id").val() != "") {
