@@ -6,6 +6,7 @@ const jq_confirm = require("jquery-confirm");
 const p = require("../package.json");
 const moment = require("moment");
 const { convertToWK } = require("wkt-parser-helper");
+const base_app_url = process.env.BASE_APP_URL;
 
 // const map = require("./map");
 
@@ -52,8 +53,9 @@ const set_location_id = function (locationid) {
 
 const set_share_link = function (locationid) {
   if (locationid != "") {
-    $("#georeference_url").val(
-      window.location.origin + "/?locationid=" + locationid
+    const base_url = base_app_url === '' || base_app_url === null ? "/" : "/" + base_app_url;
+    $("#georeference_url").val(      
+      window.location.origin + base_url + "?locationid=" + locationid
     );
   } else {
     $("#georeference_url").val("");
