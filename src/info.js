@@ -281,7 +281,7 @@ const dialogConfirm = function (message) {
           set_share_link("");
           set_location_id("");
           enable_copy_button(false);
-          enable_validate_button(true);
+          // enable_validate_button(true);
         },
       },
       cancel: function () {},
@@ -363,7 +363,7 @@ module.exports = {
   copy_share_link,
   generate_location_id,
   set_location_id,
-  enable_validate_button,
+  // enable_validate_button,
   enable_copy_button,
   presentConfirmResetValidation,
 };
