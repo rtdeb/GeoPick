@@ -40,10 +40,9 @@ const controls = [
 
 const generate_location_id = function () {
   const version = "v" + p.version;
-  const date = moment().format("YYYYMMDD");
-  const hour = moment().format("HHmmss");
+  const time_utc = moment().utc().format('YYYY-MM-DDTHH-mm-ss.SSS') + 'Z';
   const salt = Math.floor(Math.random() * 1000);
-  const location_template = `geopick-${version}-${date}${hour}-${salt}`;
+  const location_template = `geopick-${version}-${time_utc}-${salt}`;
   return location_template;
 };
 
