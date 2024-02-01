@@ -441,11 +441,12 @@ div.info_box {
   font-style:italic;
   font-size: smaller;
   /* background-color: #ede0d6; */
-  width: 87%;
+  width: 97%;
 }
 #georeference_url_div{
   display: flex;
   flex-direction: row;
+  /* background-color: #833904; */
 
 }
 .non-editable {
