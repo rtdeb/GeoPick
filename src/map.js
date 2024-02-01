@@ -107,7 +107,7 @@ const importNominatim = function () {
       );
     }
     $("#importWKT").hide();
-    info.enable_validate_button(true);
+    // info.enable_validate_button(true);
     info.enable_copy_button(false);
     $("#locality_description").val(
       "Nominatim: " + $("#latest_search_hidden").val()
@@ -422,11 +422,11 @@ map.on(L.Draw.Event.EDITED, function (e) {
       );
     }
     info.enable_copy_button(false);
-    info.enable_validate_button(true);
+    // info.enable_validate_button(true);
   } else {
     api.load_api_data(site_layer, mbc_layer, centroid_layer, map);
     info.enable_copy_button(false);
-    info.enable_validate_button(true);
+    // info.enable_validate_button(true);
   }
 });
 
@@ -439,7 +439,7 @@ const clearAllGeometries = function () {
   mbc_layer.clearLayers();
   nominatim_layer.clearLayers();
   site_layer.clearLayers();
-  info.enable_validate_button(true);
+  // info.enable_validate_button(true);
   info.enable_copy_button(false);
 
   if (site_layer.toGeoJSON().features.length > 0) {
@@ -723,7 +723,7 @@ const validateInfoBox = function () {
 $("#validate_georeference").on("click", function () {
   if (validateInfoBox()) {
     info.enable_copy_button(true);
-    info.enable_validate_button(false);
+    // info.enable_validate_button(false);
   } else {
     console.log(info.generate_location_id());
   }
@@ -731,7 +731,7 @@ $("#validate_georeference").on("click", function () {
 
 $("#cpdata").on("click", function () {
   handle_copy_data(true);
-  info.enable_validate_button(false);
+  // info.enable_validate_button(false);
   info.enable_copy_button(false);
   /*var myDiv = document.getElementById("copy_buttons_container");
   myDiv.classList.add("disabled-div");*/
@@ -739,7 +739,7 @@ $("#cpdata").on("click", function () {
 
 $("#cpdatanh").on("click", function () {
   handle_copy_data(false);
-  info.enable_validate_button(false);
+  // info.enable_validate_button(false);
   info.enable_copy_button(false);
 });
 
