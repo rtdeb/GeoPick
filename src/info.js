@@ -315,8 +315,11 @@ const dialogSuccess = function (message) {
     icon: "fa-solid fa-circle-check",
     boxWidth: "30%",
     content: message,
+    okButton: false,
+    autoClose: "ok|2000",    
     buttons: {
         ok: {
+          // isHidden: true,
           keys: ["enter"],
           action: function () {
             //   $.alert("action is canceled");

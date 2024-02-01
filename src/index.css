@@ -448,6 +448,9 @@ div.info_box {
   flex-direction: row;
 
 }
+#importNominatim{
+  margin-bottom: 2px;
+}
 .non-editable {
   border: 0px;
   border-color: #a94b08;
