@@ -449,6 +449,9 @@ div.info_box {
   /* background-color: #833904; */
 
 }
+#importNominatim{
+  margin-bottom: 2px;
+}
 .non-editable {
   border: 0px;
   border-color: #a94b08;

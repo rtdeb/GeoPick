@@ -30,6 +30,9 @@ The tool uses the [OpenStreetMap Nominatim API](https://nominatim.openstreetmap.
 #### Coordinates and scale
 The map coordinates are shown when moving the cursor around, and the scale is also shown when zooming in and out. Coordinates are in decimal degrees and the scale is shown in either kilometres and miles, or metres and feet, depending on the zoom level.
 
+#### Georeference sharing
+Each georeferenced location is assigned a unique locationID (http://rs.tdwg.org/dwc/terms/locationID) and can be used to share georeferences among GeoPick users. GeoPick provides with a share link in the form of https://geopick.gbif.org/?locationid=<locationID>. 
+
 ### A FINAL NOTE ON UNCERTAINTY
 GeoPick gives coordinates with seven decimal places following Georeferencing Best Practices ([Chapman and Wieczorek, 2022](https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision)) and Georeferencing Quick Reference Guide ([Zermoglio et al., 2022](https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format)). This allows preservation of the correct coordinates in all formats regardless of how many transformations are done ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/); [Wiezorek et al., 2010](https://doi.org/10.1080/13658810412331280211)). Accordingly, GeoPick sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of the number of decimals given with the coordinates ([Darwin Core Maintenance Group, 2021](https://dwc.tdwg.org/terms/#dwc:coordinatePrecision)). Please also note that as in this version of GeoPick, coordinate uncertainty refers only to the radius of the enclosing circle of the geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of the underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator ([Wieczorek C and Wieczorek J.R., 2021](http://georeferencing.org/georefcalculator/gc.html)) and its manual ([Bloom et al., 2020](https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/)).
 
@@ -69,12 +72,39 @@ Requirements: git
 
 > git clone https://github.com/rtdeb/GeoPick.git  
 
-#### 2 Set up the server API
+#### 2 Set up the database
+
+GeoPick uses a [PostgreSQL](https://www.postgresql.org/) database to store georeference data. Download and install an instance of the database.
+
+##### 2.1 Create user and database
+
+We recommend creating a dedicated database and user for GeoPick. First, we create a user called 'geopick' (you can choose any name you like):
+
+> CREATE ROLE geopick LOGIN PASSWORD 'mypassword' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION;
+
+This user will be the owner of the database and GeoPick will use it to open connections. Now, create the database. From the shell, as the postgresql administrative user (usually postgres) do:
+
+> createdb geopick -O geopick
+
+We created a database called geopick (again, use any name you like) and assigned its ownership to the previously created 'geopick' user.
+
+##### 2.2 Create a .env file and customize it for your installation
+Create a .env file using the provided .env_example file. Change the key values to suit your installation.  
+
+Look for an entry called 'SQLALCHEMY_DATABASE_URI' in your .env file. This key contains the connection details for the postgresql database. The string has the following structure:
+
+> 'postgres://geopick_username:geopick_password@database_address:database_port/database_name'
+
+Assuming that we take the values from the example, and PostgreSQL is running on localhost at the usual port (5432), our string would look like this:
+
+> 'postgres://geopick:mypassword@localhost:5432/geopick'
+
+#### 3 Set up the server API
 Requirements: Python version 3.11
 
 You can configure some API parameters by setting an *.env* file at the GeoPick's root directory. You can see an example of it in this repo's *.env_example*
 
-##### 2.1 Create python virtual environment
+##### 3.1 Create python virtual environment
 
 From the root project folder, run:
 
@@ -82,21 +112,41 @@ From the root project folder, run:
 
 This will create a folder named venv containing an empty python virtual environment folder.
 
-##### 2.2 Activate virtual environment and install dependencies
+##### 3.2 Activate virtual environment and install dependencies
 
 To activate the virtual environment, do
 
 > source venv/bin/activate  
 > pip install -r requirements.txt
 
-##### 2.3 Start up development API server
+##### 3.3 Perform initial database setup
+
+The database we created in step 2 is completely empty. We need to create the basic tables, to do this, activate the virtual environment from the root folder of the project:
+
+> source venv/bin/activate  
+
+Then go to the flask_api folder:
+
+> cd flask_api
+
+And run the command:
+
+> flask db upgrade
+
+This will apply migrations and create the necessary tables. Lastly, we need to create the admin user. To do this, execute the command:
+
+> flask create_superuser
+
+This will create a user in the database using as username the key USERNAME and the key PASSWORD present in your .env file.
+
+##### 3.4 Start up development API server
 
 From the root directory, and with the recently created virtual environment active, do
 
 > cd flask_api  
 > flask run
 
-#### 3 Set up the client side  
+#### 4 Set up the client
 Requirements: node v16.16.0
 
 You can change the port by modifying the *webpack.dev.js* file before executing the command *npm run start*. The default port is set at 8085.
@@ -109,7 +159,16 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 
 <hr>
 
-### VERSIONS
+### Changelog
+#### Version 2.0.0
+- Added new compulsory Darwin Core field _locality_.  
+- Added new automatically assigned Darwin Core field _locationID_.  
+- Replaced the _toastr_ javascript library for notifications for the _jquery-confirm JQuery plugin_.  
+- Added new button _Validate_ for validation of georeferences before sharing or exporting.  
+- Added georeference sharing functionality.  
+- Added PostgreSQL back-end database, which can store georeferences in GeoJSON format for sharing via the applications API.  
+- Added fields _locationID_ and _locality_ to the exported Darwin Core format.  
+
 #### Version 1.1.1
 - Restored progress wheel.  
 

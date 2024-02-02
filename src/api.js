@@ -181,7 +181,7 @@ const load_share = function(locationid, site_layer, mbc_layer, centroid_layer, m
         info.set_share_link(locationid);
         info.set_location_id(locationid);
         info.enable_copy_button(true);
-        info.enable_validate_button(false);
+        // info.enable_validate_button(false);
     }).catch(function(error){
         info.dialogError(error, 5000);        
         map.spin(false);
@@ -247,7 +247,7 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
         map.fitBounds(mbc_layer.getBounds());
         info.show_api_centroid_data( parsed_json, geom );
         $('#locality_description').trigger('focus');
-        info.enable_validate_button(true);
+        // info.enable_validate_button(true);
         info.enable_copy_button(false);
     })
     .catch(function(error){

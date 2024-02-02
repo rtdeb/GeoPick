@@ -280,7 +280,7 @@ const dialogConfirm = function (message) {
           set_share_link("");
           set_location_id("");
           enable_copy_button(false);
-          enable_validate_button(true);
+          // enable_validate_button(true);
         },
       },
       cancel: function () {},
@@ -314,8 +314,11 @@ const dialogSuccess = function (message) {
     icon: "fa-solid fa-circle-check",
     boxWidth: "30%",
     content: message,
+    okButton: false,
+    autoClose: "ok|2000",    
     buttons: {
         ok: {
+          // isHidden: true,
           keys: ["enter"],
           action: function () {
             //   $.alert("action is canceled");
@@ -362,7 +365,7 @@ module.exports = {
   copy_share_link,
   generate_location_id,
   set_location_id,
-  enable_validate_button,
+  // enable_validate_button,
   enable_copy_button,
   presentConfirmResetValidation,
 };

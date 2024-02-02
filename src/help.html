@@ -229,28 +229,46 @@
         </div>
       </div>
 
-      <!-- COPY DATA TO CLIPBOARD -->
+      <!-- VALIDATE AND COPY DATA TO CLIPBOARD -->
       <div class="help_container">
         <div class="help_unit">
           <div class="help_unit_title">Getting georeference results</div>
           <div class="help_unit_explanation">
-            You can use either of these two buttons to export data to the clipboard in a spreadsheet-friendly tab-delimited format.
+            Use these three buttons to validate the georeference data and export data to the clipboard in a spreadsheet-friendly tab-delimited format.
           </div>
           <!-- EDIT TOOL -->
           <div class="help_unit_controls">
             <div class="help_unit_control_icon" style="flex-basis: 40%;">
-              <img src=<%=require("./copy-data-to-clipboard.png")%>>
+              <img src=<%=require("./validate-and-copy-data-to-clipboard.png")%>>
             </div>
             <div class="help_unit_control_text" style="flex-basis: 60%;">
-              Once you have the georeference representing the location of interest, all georeference data and metadata will be
-              shown on the right info column. To export it, you just need to click on the <i>With headers</i> or <i>Without headers</i> button and all
-              data will be copied to the clipboard. If you choose <i>With headers</i>, the headers (field names) of each georeference field will
-              also be copied. On the contrary, if you choose <i>Without headers</i>, only the data will be copied. You may be georeferencing more than
-              one location and this will serve you to copy the headers only for the first one. From the second on, you will be able to paste them in
+              Once you have filled in the <i>Locality</i>, <i>Georeferenced by</i>, and, optionally, the <i>Georeference remarks</i> in the Info box, you need to click on the <i>Validate button</i> to confirm the georeference data. Then you can export it. You just need to click on the <i>With headers</i> or <i>Without headers</i> button and all data will be copied to the clipboard. If you choose <i>With headers</i>, the headers (field names) of each georeference field will also be copied. On the contrary, if you choose <i>Without headers</i>, only the data will be copied. You may be georeferencing more than one location and this will serve you to copy the headers only for the first one. From the second on, you will be able to paste them in
               each following row of a spreadsheet without repeating column names.
               <br></br>
               NOTE: Some spreadsheets limit the number of characters per cell (e.g., Microsoft Excel: 32 767, Google Sheets: 50 000). Since some geometries can get quite complicated and exceed 32 767 characters, specially those imported from Nominatim, GeoPick let's the user decide whether to copy or not the WKT representation of the geometry when copying data.
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SHARING GEOREFERENCES -->
+      <div class="help_container">
+        <div class="help_unit">
+          <div class="help_unit_title">Sharing georeferences</div>
+          <div class="help_unit_explanation">
+            You can use <span class="geopick_name">GeoPick</span> to share your georeferences with colleagues.  
+          </div>
+          <!-- EDIT TOOL -->
+          <div class="help_unit_controls">
+            <div class="help_unit_control_icon" style="flex-basis: 0%;">
+            </div>
+            <div class="help_unit_control_text" style="flex-basis: 100%;">
+              <span class="geopick_name">GeoPick</span> will assign a unique ID to each georeference and provide you with a link, which you can share with your colleagues. The link will take the form of https://geopick.gbif.org/?locationid=&lt;geopick_id&gt;. This promotes collaboration with colleagues by allowing the quality of
+              georeferences to be double-checked and by allowing georeferences to be shared. Even so, be sure to copy your georeference data into your database/spreadsheet because its long-term storage in <span class="geopick_name">GeoPick</span> can not be guaranteed. 
+            </div>
+            <div class="help_unit_control_text" style="flex-basis: 100%; margin-top: 15px;">
+              <span class="geopick_name">GeoPick</span> also allows you to show a simple point-radius geometry to a colleague by using a parameterized URL in the form of<div style="font-style: italic;"> https://geopick.gbif.org/?lat=&lt;latitude in decimal degrees&gt;&lon=&lt;longitude in decimal degrees&gt;&unc=&lt;coordinate uncertainty in meters&gt;</div> When navigating to such a URL with a browser <span class="geopick_name">GeoPick</span> will show the point-radius geometry.
+            </div>            
           </div>
         </div>
       </div>

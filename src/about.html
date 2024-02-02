@@ -46,30 +46,36 @@
     <div class="box is-size-5">
       <p>
         <span class="geopick_name">GeoPick</span> is an open source online companion tool to the
-        <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en" target="_blank"><i>Georeferencing Best Practices</i> (Chapman A.D. and
+        <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en" target="_blank"><i>Georeferencing Best
+            Practices</i> (Chapman A.D. and
           Wieczorek J.R.)</a> that follows its recommendations and practices. Its idea started within work
         done in the <a href="https://museuciencies.cat">Museu de Ciències Naturals de Barcelona
           (MCNB)</a> and the <a href="https://www.mobilise-action.eu" target="_blank">MOBILISE Cost Action</a>. It is
         meant to provide georeferencers with a simple, easy-to-use yet powerful tool that helps them
-        to follow best georeferencing practices and data standards (<i>i.e., </i><a href="https://dwc.tdwg.org" target="_blank">Darwin Core</a>). The
+        to follow best georeferencing practices and data standards (<i>i.e., </i><a href="https://dwc.tdwg.org"
+          target="_blank">Darwin Core</a>). The
         guiding principle behind its design is to remain as simple and user-friendly as possible.
       </p>
       <!-- Features -->
       <p class="mt-5 has-text-weight-bold">FEATURES</p>
       <!-- Georeferencing method -->
       <p class="mt-3 has-text-weight-bold">Georeferencing methods</p>
-      <p class="mt-3">The tool implements both the <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#point-radius-method"
-          target="_blank">point-radius</a> and <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#shape-method" target="
+      <p class="mt-3">The tool implements both the <a
+          href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#point-radius-method"
+          target="_blank">point-radius</a> and <a
+          href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#shape-method" target="
           _blank">shape</a> georeferencing methods.</p>
       <div class="content pl-5">
         <div class="mt-4">
           <span class="has-text-weight-bold">Point-radius method</span>. Once the <a
-            href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#polygons" target="_blank">polygon</a> or <a
-            href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#paths" target="_blank">line/path</a> have been digitised, the tool
+            href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#polygons" target="_blank">polygon</a> or
+          <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#paths" target="_blank">line/path</a> have
+          been digitised, the tool
           automatically calculates and
           displays the centroid and the uncertainty. In the case that the centroid does not fall
           on or within the polygon boundaries or on top of the line path, <i>i.e.,</i> a concave geometry,
-          the tool automatically calculates the <a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center"
+          the tool automatically calculates the <a
+            href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#corrected-center"
             target="_blank">corrected centre</a> and places it to the nearest point on the
           georeferenced line or polygon. It then calculates the smallest enclosing circle to obtain
           the
@@ -77,35 +83,44 @@
         </div>
         <div class="mt-4">
           <span class="has-text-weight-bold mt-4">Shape method.</span> The tool partially implements
-          the shape method. The digitised polygon or line/path are kept and exported in the <a href="https://dwc.tdwg.org/list/#dwc_footprintWKT"
-            target="_blank">Darwin Core dwc:footprintWKT</a>
+          the shape method. The digitised polygon or line/path are kept and exported in the <a
+            href="https://dwc.tdwg.org/list/#dwc_footprintWKT" target="_blank">Darwin Core dwc:footprintWKT</a>
           format.
         </div>
       </div>
       <!-- Data import -->
       <p class="mt-3 has-text-weight-bold">Data import</p>
-      <p class="mt-3">Geometries can be imported via <a href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-Known
-          Text (WKT)</a> format; used by the <a href="https://dwc.tdwg.org/list/#dwc_footprintWKT">Darwin Core footprintWKT</a> term. Please note that
+      <p class="mt-3">Geometries can be imported via <a
+          href="https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry">Well-Known
+          Text (WKT)</a> format; used by the <a href="https://dwc.tdwg.org/list/#dwc_footprintWKT">Darwin Core
+          footprintWKT</a> term. Please note that
         MULTIPOINT and GEOMETRYCOLLECTION types are not supported.
         <!-- Data export -->
       <p class="mt-3 has-text-weight-bold">Data export</p>
-      <p class="mt-3">Data is exported in the <a href="https://dwc.tdwg.org/terms/#location" target="_blank">Darwin Core format for location data</a>,
-        including the coordinate uncertainty in metres and the digitised shape in the <a href="https://www.iso.org/standard/60343.html"
-          target="_blank"> Text format defined by ISO 2016</a>. Data can be easily copied and pasted into a spreadsheet.</p>
+      <p class="mt-3">Data is exported in the <a href="https://dwc.tdwg.org/terms/#location" target="_blank">Darwin Core
+          format for location data</a>,
+        including the coordinate uncertainty in metres and the digitised shape in the <a
+          href="https://www.iso.org/standard/60343.html" target="_blank"> Text format defined by ISO 2016</a>. Data can
+        be easily copied and pasted into a spreadsheet.</p>
       <!-- On-screen digitisation -->
       <p class="mt-3 has-text-weight-bold">On-screen digitisation</p>
-      <p class="mt-3">The tool allows the user to digitise polygons, lines and points, at any zoom level, to respresent descriptions of polygonal and
-        lineal localities. Once done, the vertices of both graphical objects can be edited and moved around. In the case of a point, it can be moved
+      <p class="mt-3">The tool allows the user to digitise polygons, lines and points, at any zoom level, to respresent
+        descriptions of polygonal and
+        lineal localities. Once done, the vertices of both graphical objects can be edited and moved around. In the case
+        of a point, it can be moved
         around and the radius of uncertainty can be modified.</p>
       <!-- Layers -->
       <p class="mt-3 has-text-weight-bold">Layers</p>
-      <p class="mt-3">Georeferencing can be done using <i>OpenStreetMap</i>, or any of the following Google views: <i>Default, Terrain, Satellite</i>,
+      <p class="mt-3">Georeferencing can be done using <i>OpenStreetMap</i>, or any of the following Google views:
+        <i>Default, Terrain, Satellite</i>,
         or <i>Hybrid</i>.</p>
       <!-- Site search -->
       <p class="mt-3 has-text-weight-bold">Site search</p>
-      <p class="mt-3">The tool uses the <a href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API to help do a first
+      <p class="mt-3">The tool uses the <a href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap
+          Nominatim</a> API to help do a first
         approximation to the location of the site to be georeferenced. The polygon returned by the <a
-          href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API can be easily imported and used.</p>
+          href="https://nominatim.openstreetmap.org/ui/about.html">OpenStreetMap Nominatim</a> API can be easily
+        imported and used.</p>
       <!-- Coordinates and scale -->
       <p class="mt-3 has-text-weight-bold">Coordinates and scale</p>
       <p class="mt-3">The map coordinates are shown when moving the cursor around, and the scale
@@ -113,28 +128,47 @@
         also shown when zooming in and out. Coordinates are in decimal degrees and the scale is shown
         in
         either kilometres and miles, or metres and feet, depending on the zoom level.</p>
+      <!-- Georeference sharing -->
+      <p class="mt-3 has-text-weight-bold">Georeference sharing</p>
+      <p class="mt-3">Each georeferenced location is assigned a unique (<a
+          href="http://rs.tdwg.org/dwc/terms/locationID">locationID</a>) and can be used to share georeferences among
+        GeoPick users. GeoPick provides with a share link in the form of
+        <i>https://geopick.gbif.org/?locationid=&lt;locationID&gt;</i>.
+      </p>
+
+
     </div>
 
     <!-- A final note on uncertainty -->
     <div class="box">
       <p class="mt-5 is-size-5 ">A FINAL NOTE ON UNCERTAINTY:</p>
-      <p class="mt-3 is-size-5"><span class="geopick_name">GeoPick</span> gives coordinates with seven decimal places following Georeferencing
-        Best Practices (<a href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision"
+      <p class="mt-3 is-size-5"><span class="geopick_name">GeoPick</span> gives coordinates with seven decimal places
+        following Georeferencing
+        Best Practices (<a
+          href="https://docs.gbif.org/georeferencing-best-practices/1.0/en/#uncertainty-related-to-coordinate-precision"
           target="_blank">Chapman and Wieczorek, 2022</a>) and Georeferencing Quick Reference Guide (<a
-          href="https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format" target="_blank">Zermoglio et al.,
-          2022</a>). This allows preservation of the correct coordinates in all formats regardless of how many transformations are
-        done (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>; <a
-          href="https://doi.org/10.1080/13658810412331280211" target="_blank">Wiezorek et al., 2010</a>). Accordingly,
-        <span class="geopick_name">GeoPick</span> sets coordinate precision to a fixed value of 0.0000001, which is a decimal representation of
+          href="https://docs.gbif.org/georeferencing-quick-reference-guide/1.0/en/#s-coordinate-format"
+          target="_blank">Zermoglio et al.,
+          2022</a>). This allows preservation of the correct coordinates in all formats regardless of how many
+        transformations are
+        done (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al.,
+          2020</a>; <a href="https://doi.org/10.1080/13658810412331280211" target="_blank">Wiezorek et al., 2010</a>).
+        Accordingly,
+        <span class="geopick_name">GeoPick</span> sets coordinate precision to a fixed value of 0.0000001, which is a
+        decimal representation of
         the
-        number of decimals given with the coordinates (<a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision" target="_blank">Darwin Core
+        number of decimals given with the coordinates (<a href="https://dwc.tdwg.org/terms/#dwc:coordinatePrecision"
+          target="_blank">Darwin Core
           Maintenance Group, 2021</a>). Please also note that as in this
-        version of <span class="geopick_name">GeoPick</span>, <%= version %>, coordinate uncertainty refers only to the radius of the enclosing circle of the
-        geometry and does not take into account other sources of uncertainty such as those derived from measurement accuracy and the accuracy of
-        the
-        underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator (<a
-          href="http://georeferencing.org/georefcalculator/gc.html" target="_blank">Wieczorek C and Wieczorek J.R., 2021)</a> and its manual (<a
-          href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/" target="_blank">Bloom et al., 2020</a>).
+        version of <span class="geopick_name">GeoPick</span>, <%= version %>, coordinate uncertainty refers only to the
+          radius of the enclosing circle of the
+          geometry and does not take into account other sources of uncertainty such as those derived from measurement
+          accuracy and the accuracy of
+          the
+          underlying maps. To add this extra source of uncertainty please access the Georeferencing Calculator (<a
+            href="http://georeferencing.org/georefcalculator/gc.html" target="_blank">Wieczorek C and Wieczorek J.R.,
+            2021)</a> and its manual (<a href="https://docs.gbif-uat.org/georeferencing-calculator-manual/1.0/en/"
+            target="_blank">Bloom et al., 2020</a>).
       </p>
     </div>
 
@@ -142,7 +176,8 @@
     <div class="box">
       <p class="is-size-5">How to cite:</p>
       <p class="is-size-6">
-        Marcer A., Escobar E., Chapman A.D. and Wieczorek J.R.(2023). GeoPick: Enhancing georeferencing efficiency through best practices [web
+        Marcer A., Escobar E., Chapman A.D. and Wieczorek J.R.(2023). GeoPick: Enhancing georeferencing efficiency
+        through best practices [web
         application, version <%= version %>], URL: https://geopick.gbif.org
       </p>
     </div>
@@ -157,25 +192,37 @@
     <div class="box">
       <p class="is-size-5">Disclaimer</p>
       <p class="is-size-6">
-        <span class="geopick_name">GeoPick</span> is provided "as is" without warranty or liability for any purpose. Though developed with all the
-        good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The authors are committed to do their
+        <span class="geopick_name">GeoPick</span> is provided "as is" without warranty or liability for any purpose.
+        Though developed with all the
+        good intentions to make it correct and fit-for-purpose, that does not mean it is completely error-free. The
+        authors are committed to do their
         best to correct errors, but can not guarantee their quick resolution.
     </div>
     <!-- Feedback -->
     <div class="box">
       <p class="is-size-5">Feedback</p>
-      <p class="is-size-6">You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at] creaf [dot] uab [dot] cat*.
-        We will do our best to solve any existing bugs. Please understand, though, that we will not respond to all emails and will not be able to
-        satisfy all suggested enhancements. However, your input will be of much value when considering future developments.
+      <p class="is-size-6">You may give us feedback on bugs or desired enhancements by sending an email to *geopick [at]
+        creaf [dot] uab [dot] cat*.
+        We will do our best to solve any existing bugs. Please understand, though, that we will not respond to all
+        emails and will not be able to
+        satisfy all suggested enhancements. However, your input will be of much value when considering future
+        developments.
         <br><br>
-        For those acquainted with GitHub, you may <a target="_blank" href="https://github.com/rtdeb/GeoPick/issues">use GitHub's interface to raise issues</a>. Please set the label to <span
+        For those acquainted with GitHub, you may <a target="_blank" href="https://github.com/rtdeb/GeoPick/issues">use
+          GitHub's interface to raise issues</a>. Please set the label to <span
           style="font-style: italic; text-decoration: underline;">Feedback from user</span>.
       </p>
+    </div>
+    <!-- Changelog -->
+    <div class="box">
+      <p class="is-size-5">Changelog</p>
+      <p class="is-size-6">Please see them at the end of the landing page of the repository below</p>
     </div>
     <!-- GitHub repository -->
     <div class="box">
       <p class="is-size-5">GitHub repository</p>
-      <p class="is-size-6"><a target="_blank" href="https://github.com/rtdeb/GeoPick">https://github.com/rtdeb/GeoPick</a></p>
+      <p class="is-size-6"><a target="_blank"
+          href="https://github.com/rtdeb/GeoPick">https://github.com/rtdeb/GeoPick</a></p>
     </div>
 
     <!-- Logos -->
@@ -184,7 +231,8 @@
         <a href="https://www.creaf.cat" target="_blank"><img src=<%=require("./creaf-transparent.png")%>></a>
       </div>
       <div id="mobilise">
-        <a href="https://www.mobilise-action.eu" target="_blank"><img src=<%=require("./mobilise-transparent.png")%>></a>
+        <a href="https://www.mobilise-action.eu" target="_blank"><img
+            src=<%=require("./mobilise-transparent.png")%>></a>
       </div>
     </div>
 
