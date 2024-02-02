@@ -160,7 +160,7 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### Changelog
-#### Version 2.0.0
+#### Version 2.0.0 (not yet deployed at https://geopick.gbif.org)
 - Added new compulsory Darwin Core field _locality_.  
 - Added new automatically assigned Darwin Core field _locationID_.  
 - Replaced the _toastr_ javascript library for notifications for the _jquery-confirm JQuery plugin_.  
