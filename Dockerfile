@@ -17,7 +17,6 @@ ENV USERNAME=testusername
 ENV PASSWORD=testpassword
 ENV SECRET=testsecret
 ENV DATABASE_FILE=testdb.sqlite3
-ENV BASE_APP_URL=""
 ARG sqlalchemy_database_uri
 ENV SQLALCHEMY_DATABASE_URI=$sqlalchemy_database_uri
 
