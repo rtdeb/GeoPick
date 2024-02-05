@@ -1,7 +1,6 @@
 import click
 from flask.cli import with_appcontext
-from flask_api.app import db
-from flask_api.models import User
+from flask_api.models import User, db
 from pathlib import Path
 from os.path import join, dirname
 from dotenv import load_dotenv
