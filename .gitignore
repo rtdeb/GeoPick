@@ -31,3 +31,4 @@ flask_api/commands/__pycache__/
 flask_api/migrations/__pycache__/
 flask_api/migrations/versions/__pycache__/
 *.pyc
+.npm
