@@ -8,7 +8,7 @@ WORKDIR /srv/
 RUN pip install -r requirements.txt --src /usr/local/src
 RUN touch .env && pip install pyuwsgi --src /usr/local/src
 
-CMD uwsgi --http-socket 0.0.0.0:8000 --wsgi-file flask_api/app.py --callable app --processes 4 --threads 2
+CMD cd flask_api && flask db upgrade && flask create_superuser && cd .. && uwsgi --http-socket 0.0.0.0:8000 --wsgi-file flask_api/app.py --callable app --processes 4 --threads 2
 
 # Run tests
 FROM api AS test
@@ -17,6 +17,8 @@ ENV USERNAME=testusername
 ENV PASSWORD=testpassword
 ENV SECRET=testsecret
 ENV DATABASE_FILE=testdb.sqlite3
+ARG sqlalchemy_database_uri
+ENV SQLALCHEMY_DATABASE_URI=$sqlalchemy_database_uri
 
 #sqlite3 testdb.sqlite3 < flask_api/schema.sql
 #echo "INSERT INTO users (username, password) VALUES ('testusername','9f735e0df9a1ddc702bf0a1a7b83033f9f7153a00c29de82cedadc9957289b05')" | sqlite3 testdb.sqlite3
@@ -25,4 +27,4 @@ RUN echo 'H4sICPXycWUAA2RiLnNxbGl0ZTMA7dq/a8JAFAfwO+1PwdotU+GWgqKUmBBitqYlFNsYNY
 
 # Put in test data
 WORKDIR /srv/flask_api
-RUN pytest
+RUN flask db upgrade && flask create_superuser && pytest
