@@ -57,6 +57,16 @@ module.exports = {
       favicon: "src/favicon.ico",
       inject: "body",
     }),
+    new HtmlWebpackPlugin({
+      filename: "changelog.html",
+      template: "src/changelog.html",
+      templateParameters: {
+        title: "Changelog",
+        version: version,
+      },
+      favicon: "src/favicon.ico",
+      inject: "body",
+    }),    
     new MiniCssExtractPlugin({
       filename: "css/mystyles.css",
     }),

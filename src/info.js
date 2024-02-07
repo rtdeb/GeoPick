@@ -305,6 +305,23 @@ const dialogError = function (message, cancel_time) {
     },
   });
 };
+const dialogWhatsNew = function (title, message) {
+  $.confirm({
+    title: title,
+    useBootstrap: false,
+    type: "blue",
+    icon: "fa-solid fa-globe",
+    boxWidth: "30%",
+    content: message,
+    animation: "scale",
+    animationSpeed: 1000,
+    buttons: {
+        ok: {
+          keys: ["enter"],
+        }
+      },
+    });
+};
 
 const dialogSuccess = function (message) {
   $.confirm({
@@ -352,6 +369,7 @@ module.exports = {
   dialogError,
   dialogSuccess,
   dialogWarning,
+  dialogWhatsNew,
   clear_centroid_data,
   show_api_centroid_data,
   show_api_centroid_data_wkt,
