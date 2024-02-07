@@ -23,6 +23,10 @@ div.info_box {
   padding-bottom: 15px;
 }
 
+/* CHANGELOG */
+.changelog-box{
+  background-color: #ffffff;
+}
 /* Styling for the modal */
 .modal {
   display: none; /* Hidden by default */

@@ -26,6 +26,7 @@ const { parseFromWK } = require("wkt-parser-helper");
 const info = require("./info");
 const api = require("./api");
 const urlparams = require("./urlparams");
+const cookies = require("./cookies");
 const bing_api_key = process.env.BING_API_KEY;
 const base_app_url = process.env.BASE_APP_URL;
 

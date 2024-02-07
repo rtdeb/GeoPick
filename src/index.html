@@ -24,14 +24,14 @@
       g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
     })();
   </script>
-  <!-- End Matomo Code -->
+  <!-- End Matomo Code -->        
   <title>
     <%= title %>
   </title>
 </head>
 
 <body>
-  <!-- OVERALL CONTAINER   -->
+  <!-- MAP CONTAINER   -->
   <div id="container">
     <!-- MAP -->
     <div id="map">
@@ -152,7 +152,7 @@
       </div>      
     </div>
   </div>
-
+  
   <!-- INFO BOX -->
   <div id="info" class="unfolded">
     <button id="toggleButton" class="collapsible"></button>
@@ -172,6 +172,12 @@
               <span class="is-size-6 has-text-weight-bold">
                 <a href="/help.html" target="_blank">Help</a>
               </span>
+              <span class="is-size-6 has-text-weight-bold">
+                |
+              </span>
+              <span class="is-size-6 has-text-weight-bold">
+                <a href="/changelog.html" target="_blank">Changelog</a>
+              </span>              
               <div class="column has-text-left is-full">
                 <span class="is-size-7 is-full">
                   v.<%= version %>

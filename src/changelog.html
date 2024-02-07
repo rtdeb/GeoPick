@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <!-- Matomo -->
+  <script>
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "//matomo.creaf.cat/";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      _paq.push(['setSiteId', '5']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
+  <title>
+    <%= title %>
+  </title>
+</head>
+
+<body class="has-background-grey-lighter">
+  <div class="container is-max-desktop has-background-white p-4">
+    <div class="box" style="background-color:rgb(245, 222, 179);">
+      <div class="columns">
+        <div class="column is-three-quarters">
+          <h1 class="title is-1 pl-3">
+            GeoPick
+          </h1>
+          <p class="title is-5 is-uppercase pl-3">
+            Enhancing georeferencing efficiency through best practices<br>
+          </p>
+        </div>
+        <div class="column is-one-quarter pt-5 pr-4">
+          <img src=<%=require("./geopick-logo.png")%> width = "350px" alt="MDN">
+        </div>
+      </div>
+    </div>
+    <!-- VERSIONS -->
+    <div class="box is-size-5 changelog-box">
+      <div class="content">
+        <h1>VERSIONS</h1>
+      </div>
+    </div>
+    <div class="box is-size-5 changelog-box">
+      <!-- VERSIONS -->
+      <div class="content">
+        <h2>Version 2</h2>
+        <h3>Version 2.0.0</h3>
+        <ul>
+          <li>Added new compulsory Darwin Core field <i>locality</i>.</li>
+          <li>Added new automatically assigned Darwin Core field <i>locationID</i>.</li>
+          <li>Replaced the <i>toastr</i> javascript library for notifications for the <i>jquery-confirm JQuery plugin</i>.</li>
+          <li>Added new button <i>Validate</i> for validation of georeferences before sharing or exporting.</li>
+          <li>Added georeference sharing functionality.</li>
+          <li>Added PostgreSQL back-end database, which can store georeferences in GeoJSON format for sharing via the
+            applications API.</li>
+          <li>Added fields <i>locationID</i> and <i>locality</i> to the exported Darwin Core format.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="box is-size-5 changelog-box">
+      <div class="content">
+        <h2>Version 1</h2>
+        <h3>Version 1.1.1</h3>
+        <ul>
+          <li>Restored progress wheel.</li>
+        </ul>
+        <h3>Version 1.1.0</h3>
+        <ul>
+          <li>API converted to Python, performance improved.</li>
+        </ul>
+        <h3>Version 1.0.4</h3>
+        <ul>
+          <li>Corrected misplacement of warning message box when copying data if the WKT text is too large.</li>
+          <li>Changed github address in about.html.</li>
+        </ul>
+        <h3>Version 1.0.3</h3>
+        <ul>
+          <li>Documented new shortcuts in Help.</li>
+          <li>Solved regression misplacing WKT and Delete dialog boxes.</li>
+        </ul>
+        <h3>Version 1.0.2</h3>
+        <ul>
+          <li>Changed language in html file form 'es' to 'en' to prevent browsers from prompting to translate from
+            spanish.</li>
+          <li>Search box now keeps the latest search and this can be copied to the clipboard.</li>
+        </ul>
+        <h3>Version 1.0.1</h3>
+        <ul>
+          <li>Bing Maps layers.</li>
+        </ul>
+        <h3>Version 1.0.0</h3>
+        <ul>
+          <li>Point-radius and shape georeferencing methods.</li>
+          <li>On-screen digitizing and editing of points, lines and polygons.</li>
+          <li>Search and capture geometries from Nominatim (OpenStreetMap Data API).</li>
+          <li>Calculation of smallest enclosing circle (uncertainty) and corrected center.</li>
+          <li>Well-Known Text import.</li>
+          <li>Data export in Darwin Core format via clipboard.</li>
+          <li>Screen responsiveness to different resolutions.</li>
+
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Logos -->
+  <div class="container is-max-desktop has-background-white p-4">
+  <div class="logos">
+    <div id="creaf">
+      <a href="https://www.creaf.cat" target="_blank"><img src=<%=require("./creaf-transparent.png")%>></a>
+    </div>
+    <div id="mobilise">
+      <a href="https://www.mobilise-action.eu" target="_blank"><img src=<%=require("./mobilise-transparent.png")%>></a>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>
