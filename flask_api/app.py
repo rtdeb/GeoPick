@@ -62,7 +62,7 @@ def write_georeference():
 
 
 @app.route('/v1/georeference/<geopick_id>', methods=['GET'])
-@jwt_required()
+# @jwt_required()
 def read_georeference(geopick_id):
     shared_georef = db_get_georef(db, geopick_id)
     if shared_georef:
@@ -92,17 +92,30 @@ def list_georeferences():
     else:
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
-@app.route('/v1/sec', methods=['POST'])
-@jwt_required()
-def sec():
+def parse_sec_request():
     json_location = request.get_json()
     json_location = str(json_location)
     json_location = json_location.replace("'", "\"")
     if json_location[0] == "[":
         json_location = json_location[1:len(json_location) - 1]
     location_wgs84 = gp.json_to_geoseries(json_location)
+    return location_wgs84
+    
+@app.route('/v1/sec', methods=['POST'])
+@jwt_required()
+def sec():
+    location_wgs84 = parse_sec_request()
     georeference_json = gp.get_json_georeference(location_wgs84)
     response = georeference_json
+    return response
+
+@app.route('/v1/sec', methods=['POST'])
+@jwt_required()
+# Returns georeference in JSON in Darwin Core Standard
+def sec_dwc():
+    location_wgs84 = parse_sec_request()
+    georef = gp.get_georeference(location_wgs84)
+    response = ""
     return response
 
 @app.route('/v1/version', methods=['GET'])
