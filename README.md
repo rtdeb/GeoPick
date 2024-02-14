@@ -161,8 +161,6 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### Changelog
-#### Version 2.0.1
-- Solved bug which did not allow to visualize a georeference from a shared link.  
 #### Version 2.0.0
 - Added new compulsory Darwin Core field _locality_.  
 - Added new automatically assigned Darwin Core field _locationID_.  
