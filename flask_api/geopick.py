@@ -5,7 +5,6 @@ import shapely
 import numpy as np
 import json
 import math
-import flask_api.location_wkt as loc
 
 max_points_polygon =10000
 tolerance = 500
@@ -252,21 +251,3 @@ def extract_wkt(items):
             wkt = item
             break  # Stop searching once a match is found
     return wkt
-
-def get_location():
-    items = loc.capdecreus_wkt.split("\t")
-    location_wkt = extract_wkt(items)
-    if location_wkt.startswith("POINT"):
-        if len(items) == 1:
-            print("POINT geometry, uncertainty not specified.\n")
-        else:
-            print("POINT geometry.\n")
-            print("Latitude:", items[0], ", Longitude:", items[1], ", Uncertainty:", items[3])
-        class StopExecution(Exception):
-            def _render_traceback_(self):
-                return []
-        raise StopExecution
-
-    location_wgs84 = gpd.GeoSeries(shapely.wkt.loads(location_wkt))
-    location_wgs84.crs = "EPSG:4326"
-    return location_wgs84

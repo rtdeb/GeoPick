@@ -43,8 +43,8 @@ migrate = Migrate(app, db)
 
 @app.before_request
 def middleware():
-    http_origin = request.environ.get('HTTP_ORIGIN','')
-    http_referer = request.environ.get('HTTP_REFERER','')    
+    http_origin = request.environ.get('HTTP_ORIGIN','origin')
+    http_referer = request.environ.get('HTTP_REFERER','referer')    
     if request.environ['REQUEST_METHOD'] != 'OPTIONS':
         if os.environ.get('API_REQUEST_ORIGINS') == http_origin or http_referer.startswith(http_origin):
             access_token = create_access_token(identity=1, expires_delta=datetime.timedelta(days=1))
