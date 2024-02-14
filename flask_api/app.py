@@ -1,4 +1,5 @@
-import datetime
+from datetime import datetime, timezone
+import random
 
 from flask import Flask, request, jsonify, g
 import sqlite3
@@ -105,11 +106,11 @@ def sec():
     response = georeference_json
     return response
 
+
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
-def version():
+def version():    
     return jsonify({'version': v})
-
 
 @app.route("/v1/user", methods=["POST"])
 @jwt_required()
