@@ -26,7 +26,7 @@ function getCookie(name) {
 
 document.addEventListener("DOMContentLoaded", function () {
   // Check if the "hasVisited" cookie exists
-  cookie_name = "GeoPick_v" + p.version + "_hasBeenVisited"
+  cookie_name = "GeoPick_v2.0.0_hasBeenVisited"
   if (getCookie(cookie_name) !== "true") {
     message = "<b>GeoPick</b> now allows you to <b>share georeferences</b> with another GeoPick user. You will find a new <i>shareLink</i> column in the data copied to the clipboard which contains a URL you can share with other users. Please see sections <i>Getting georeference results</i> and <i>Sharing georeferences</i> in the <i>Help</i> page.<br><br><b>New Darwin Core fields</b> <i>Location ID</i> and <i>Locality</i> have been added to the <i>Info box</i>.<br><br>Happy georeferencing!" 
     info.dialogWhatsNew("New Version 2!", message);    
