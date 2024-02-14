@@ -1,6 +1,7 @@
 {
   "name": "GeoPick",
   "version": "2.0.0",
+  "version-api": "1",
   "description": "GeoPick is an open source online companion tool to the Georeferencing Best Practices (Chapman A.D. and Wieczorek J.R.)",
   "private": true,
   "scripts": {

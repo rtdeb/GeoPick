@@ -1,5 +1,5 @@
-import datetime
-
+from datetime import datetime, timezone
+import random
 from flask import Flask, request, jsonify, g
 import sqlite3
 import flask_api.geopick as gp
@@ -18,7 +18,6 @@ from flask_api.commands import custom_commands
 from sqlalchemy.exc import IntegrityError
 import time
 
-
 upper_dir = (Path(dirname(__file__))).parent.absolute()
 
 dotenv_path = join(upper_dir, '.env')
@@ -29,6 +28,7 @@ load_dotenv(dotenv_path)
 f = open(package_path)
 package_json = json.load(f)
 v = package_json['version']
+v_api = package_json['version-api']
 
 app = Flask(__name__)
 CORS(app)
@@ -100,6 +100,13 @@ def parse_sec_request():
         json_location = json_location[1:len(json_location) - 1]
     location_wgs84 = gp.json_to_geoseries(json_location)
     return location_wgs84
+
+def generate_location_id():
+    now_utc = datetime.now(timezone.utc)
+    timestamp_str = now_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4]
+    random_number = str(random.randint(100, 999))
+    location_id = "geopick-api-" + v_api + "-" + timestamp_str + "Z-" + random_number
+    return location_id
     
 @app.route('/v1/sec', methods=['POST'])
 @jwt_required()
@@ -109,13 +116,24 @@ def sec():
     response = georeference_json
     return response
 
-@app.route('/v1/sec', methods=['POST'])
+
+@app.route('/v1/sec_dwc', methods=['POST'])
 @jwt_required()
 # Returns georeference in JSON in Darwin Core Standard
-def sec_dwc():
+def sec_dwc():    
     location_wgs84 = parse_sec_request()
     georef = gp.get_georeference(location_wgs84)
-    response = ""
+    id = generate_location_id()
+    decimalLongitude = georef[0].centroid[0].x
+    decimalLatitude = georef[0].centroid[0].y
+    coordinateUncertaintyInMeters = georef[1]
+    geojson_sec = georef[2]
+    pointRadiusSpatialFit = georef[3]
+    response = jsonify({'locationID': id, 
+                        'decimalLongitude': decimalLongitude, 'decimalLatitude': decimalLatitude,
+                        'coordinateUncertaintyInMeters': coordinateUncertaintyInMeters,
+                        'geojson_sec': json.loads(geojson_sec.to_json()),
+                        'pointRadiusSpatialFit': pointRadiusSpatialFit})
     return response
 
 @app.route('/v1/version', methods=['GET'])
