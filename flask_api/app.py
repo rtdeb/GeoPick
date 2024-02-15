@@ -16,7 +16,9 @@ from flask_api.models import User, db
 from flask_migrate import Migrate
 from flask_api.commands import custom_commands
 from sqlalchemy.exc import IntegrityError
+from shapely.wkt import dumps
 import time
+from collections import OrderedDict
 
 upper_dir = (Path(dirname(__file__))).parent.absolute()
 
@@ -116,25 +118,31 @@ def sec():
     response = georeference_json
     return response
 
-
 @app.route('/v1/sec_dwc', methods=['POST'])
 @jwt_required()
 # Returns georeference in JSON in Darwin Core Standard
 def sec_dwc():    
     location_wgs84 = parse_sec_request()
     georef = gp.get_georeference(location_wgs84)
-    id = generate_location_id()
+    locationid = generate_location_id()
     decimalLongitude = georef[0].centroid[0].x
     decimalLatitude = georef[0].centroid[0].y
     coordinateUncertaintyInMeters = georef[1]
-    geojson_sec = georef[2]
+    geojson_sec = dumps(georef[2][0])
     pointRadiusSpatialFit = georef[3]
-    response = jsonify({'locationID': id, 
-                        'decimalLongitude': decimalLongitude, 'decimalLatitude': decimalLatitude,
-                        'coordinateUncertaintyInMeters': coordinateUncertaintyInMeters,
-                        'geojson_sec': json.loads(geojson_sec.to_json()),
-                        'pointRadiusSpatialFit': pointRadiusSpatialFit})
-    return response
+    footprintWKT = dumps(location_wgs84[0])
+    response = OrderedDict([
+        ('locationID', locationid),
+        ('decimalLongitude', round(decimalLongitude, 7)),
+        ('decimalLatitude', round(decimalLatitude, 7)),
+        ('coordinatePrecision', 0.0000001),
+        ('geodeticDatum', "EPSG:4326"),
+        ('coordinateUncertaintyInMeters', round(coordinateUncertaintyInMeters, 1)),
+        ('sec', geojson_sec),
+        ('pointRadiusSpatialFit', pointRadiusSpatialFit),
+        ('footprintWKT', footprintWKT)
+    ])
+    return json.dumps(response)
 
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
