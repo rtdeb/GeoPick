@@ -103,11 +103,14 @@ def parse_sec_request():
         json_location = json_location[1:len(json_location) - 1]    
     return json_location
 
-def generate_location_id():
+def getUTC():
     now_utc = datetime.now(timezone.utc)
     timestamp_str = now_utc.strftime("%Y-%m-%dT%H:%M:%S.%fZ")[:-4]
+    return timestamp_str + "Z"
+
+def generate_location_id(timestamp_str):
     random_number = str(random.randint(100, 999))
-    location_id = "geopick-api-" + v_api + "-" + timestamp_str + "Z-" + random_number
+    location_id = "geopick-api-" + v_api + "-" + timestamp_str + "-" + random_number
     return location_id
 
 # Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application
@@ -156,13 +159,12 @@ def wktIsLatLon(wkt):
   return wktOK
 
 
-# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional field: the SEC polygonal representation as a WKT.
+# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'secAsPolygon' (polygonal representation as a WKT).
 @app.route('/v1/sec_dwc', methods=['POST'])
 @jwt_required()
 def sec_dwc():    
     json_location = parse_sec_request()
     data = json.loads(json_location)
-    # Access the value of the 'locality' key
     if 'locality' in data:
         locality = data['locality']
     else:
@@ -179,12 +181,17 @@ def sec_dwc():
     if wktIsLatLon(location_wgs84[0]):
         georef = gp.get_georeference(location_wgs84)
         decimalLongitude = georef[0].centroid[0].x
-        decimalLatitude = georef[0].centroid[0].y    
-        locationid = generate_location_id()
+        decimalLatitude = georef[0].centroid[0].y  
+        georeferenceDate = getUTC()  
+        locationid = generate_location_id(georeferenceDate)
         coordinateUncertaintyInMeters = georef[1]
         geojson_sec = dumps(georef[2][0])
         pointRadiusSpatialFit = georef[3]
-        footprintWKT = dumps(location_wgs84[0])    
+        if location_wgs84.iloc[0].geom_type.lower() == 'polygon' or location_wgs84.iloc[0].geom_type.lower() == 'multipolygon':
+            footprintSpatialFit = 1
+        else:
+            footprintSpatialFit = ""
+        footprintWKT = dumps(location_wgs84[0]) 
         response = OrderedDict([
             ('locationID', locationid),
             ('locality', locality),
@@ -193,10 +200,14 @@ def sec_dwc():
             ('coordinatePrecision', 0.0000001),
             ('geodeticDatum', "EPSG:4326"),
             ('coordinateUncertaintyInMeters', round(coordinateUncertaintyInMeters, 1)),
-            ('sec', geojson_sec),
+            ('secAsPolygon', geojson_sec),
             ('pointRadiusSpatialFit', pointRadiusSpatialFit),
             ('footprintWKT', footprintWKT),
-            ('footprintSRS', "EPSG4326"),
+            ('footprintSRS', "EPSG:4326"),
+            ('footprintSpatialFit', footprintSpatialFit),
+            ('georeferencedDate', georeferenceDate),
+            ('georeferenceSources', "GeoPick v." + v),
+            ('georeferenceProtocol', "Georeferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)"),
             ('georeferencedBy', georeferencedBy),
             ('georeferenceRemarks', georeferenceRemarks)
             ])
