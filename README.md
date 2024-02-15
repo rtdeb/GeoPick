@@ -40,7 +40,7 @@ GeoPick gives coordinates with seven decimal places following Georeferencing Bes
 <hr>
 
 ### HOW TO CITE:
-Marcer A., Escobar E., Uribe F., Chapman A.D. and Wieczorek J.R. (2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application, version 1.0.0], URL: https://geopick.gbif.org
+Marcer A., Escobar A., Uribe F., Chapman A.D. and Wieczorek J.R. (2023). GeoPick: Enhancing georeferencing efficiency through best practices [web application, version 1.0.0], URL: https://geopick.gbif.org
 
 <hr>
 
