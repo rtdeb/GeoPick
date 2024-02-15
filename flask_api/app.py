@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import random
 from flask import Flask, request, jsonify, g
 import sqlite3
@@ -17,6 +17,7 @@ from flask_migrate import Migrate
 from flask_api.commands import custom_commands
 from sqlalchemy.exc import IntegrityError
 from shapely.wkt import dumps
+from shapely.geometry import Polygon, MultiPolygon, LineString, MultiLineString
 import time
 from collections import OrderedDict
 
@@ -49,7 +50,7 @@ def middleware():
     http_referer = request.environ.get('HTTP_REFERER','referer')    
     if request.environ['REQUEST_METHOD'] != 'OPTIONS':
         if os.environ.get('API_REQUEST_ORIGINS') == http_origin or http_referer.startswith(http_origin):
-            access_token = create_access_token(identity=1, expires_delta=datetime.timedelta(days=1))
+            access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
 
 
@@ -99,9 +100,8 @@ def parse_sec_request():
     json_location = str(json_location)
     json_location = json_location.replace("'", "\"")
     if json_location[0] == "[":
-        json_location = json_location[1:len(json_location) - 1]
-    location_wgs84 = gp.json_to_geoseries(json_location)
-    return location_wgs84
+        json_location = json_location[1:len(json_location) - 1]    
+    return json_location
 
 def generate_location_id():
     now_utc = datetime.now(timezone.utc)
@@ -109,39 +109,99 @@ def generate_location_id():
     random_number = str(random.randint(100, 999))
     location_id = "geopick-api-" + v_api + "-" + timestamp_str + "Z-" + random_number
     return location_id
-    
+
+# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application
 @app.route('/v1/sec', methods=['POST'])
 @jwt_required()
 def sec():
-    location_wgs84 = parse_sec_request()
+    json_location = parse_sec_request()
+    location_wgs84 = gp.json_to_geoseries(json_location)
     georeference_json = gp.get_json_georeference(location_wgs84)
     response = georeference_json
     return response
 
+# Simple check to assume coordinates are in EPSG4326
+def isLatLon(lat, lon): 
+  ok = True
+  if lon > 180 or lon < -180:
+    ok = False
+  if lat > 90 or lat < -90:
+    ok = False
+  return ok  
+
+# Utility function to iterate oveer the coordinates of geometries
+def iterate_coordinates(geometry):
+    if geometry.geom_type == 'Polygon':
+        for point in geometry.exterior.coords:
+            yield point
+    elif geometry.geom_type == 'MultiPolygon':
+        for polygon in geometry.geoms:
+            for point in polygon.exterior.coords:
+                yield point
+    elif geometry.geom_type == 'LineString':
+        for point in geometry.coords:
+            yield point
+    elif geometry.geom_type == 'MultiLineString':
+        for linestring in geometry.geoms:
+            for point in linestring.coords:
+                yield point
+
+# Simple check of wkt being in epsg 4326
+def wktIsLatLon(wkt):
+  wktOK = True
+  for point in iterate_coordinates(wkt): 
+      if not isLatLon(point[1], point[0]):
+        wktOK = False
+        break
+  return wktOK
+
+
+# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional field: the SEC polygonal representation as a WKT.
 @app.route('/v1/sec_dwc', methods=['POST'])
 @jwt_required()
-# Returns georeference in JSON in Darwin Core Standard
 def sec_dwc():    
-    location_wgs84 = parse_sec_request()
-    georef = gp.get_georeference(location_wgs84)
-    locationid = generate_location_id()
-    decimalLongitude = georef[0].centroid[0].x
-    decimalLatitude = georef[0].centroid[0].y
-    coordinateUncertaintyInMeters = georef[1]
-    geojson_sec = dumps(georef[2][0])
-    pointRadiusSpatialFit = georef[3]
-    footprintWKT = dumps(location_wgs84[0])
-    response = OrderedDict([
-        ('locationID', locationid),
-        ('decimalLongitude', round(decimalLongitude, 7)),
-        ('decimalLatitude', round(decimalLatitude, 7)),
-        ('coordinatePrecision', 0.0000001),
-        ('geodeticDatum', "EPSG:4326"),
-        ('coordinateUncertaintyInMeters', round(coordinateUncertaintyInMeters, 1)),
-        ('sec', geojson_sec),
-        ('pointRadiusSpatialFit', pointRadiusSpatialFit),
-        ('footprintWKT', footprintWKT)
-    ])
+    json_location = parse_sec_request()
+    data = json.loads(json_location)
+    # Access the value of the 'locality' key
+    if 'locality' in data:
+        locality = data['locality']
+    else:
+        locality = ""
+    if 'georeferencedBy' in data:
+        georeferencedBy = data['georeferencedBy']
+    else:
+        georeferencedBy = ""        
+    if 'georeferenceRemarks' in data:
+        georeferenceRemarks = data['georeferenceRemarks']
+    else:
+        georeferenceRemarks = ""            
+    location_wgs84 = gp.json_to_geoseries(json_location)
+    if wktIsLatLon(location_wgs84[0]):
+        georef = gp.get_georeference(location_wgs84)
+        decimalLongitude = georef[0].centroid[0].x
+        decimalLatitude = georef[0].centroid[0].y    
+        locationid = generate_location_id()
+        coordinateUncertaintyInMeters = georef[1]
+        geojson_sec = dumps(georef[2][0])
+        pointRadiusSpatialFit = georef[3]
+        footprintWKT = dumps(location_wgs84[0])    
+        response = OrderedDict([
+            ('locationID', locationid),
+            ('locality', locality),
+            ('decimalLongitude', round(decimalLongitude, 7)),
+            ('decimalLatitude', round(decimalLatitude, 7)),
+            ('coordinatePrecision', 0.0000001),
+            ('geodeticDatum', "EPSG:4326"),
+            ('coordinateUncertaintyInMeters', round(coordinateUncertaintyInMeters, 1)),
+            ('sec', geojson_sec),
+            ('pointRadiusSpatialFit', pointRadiusSpatialFit),
+            ('footprintWKT', footprintWKT),
+            ('footprintSRS', "EPSG4326"),
+            ('georeferencedBy', georeferencedBy),
+            ('georeferenceRemarks', georeferenceRemarks)
+            ])
+    else:
+        response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon)"}        
     return json.dumps(response)
 
 @app.route('/v1/version', methods=['GET'])
@@ -174,7 +234,7 @@ def auth_user():
     password = request.json.get("password", None)
     user = db_get_user(db, username, password)
     if user is not None:
-        access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=1))
+        access_token = create_access_token(identity=user.id, expires_delta=timedelta(days=1))
         return jsonify({"success": True, "msg": "User retrieved", "id": user.id, "token": access_token})
     else:
         return json.dumps({"success": False, "msg": "No user with these credentials exist"}), 404, {'ContentType': 'application/json'}
