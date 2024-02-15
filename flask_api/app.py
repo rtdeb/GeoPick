@@ -138,9 +138,8 @@ def sec_dwc():
 
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
-def version():
+def version():    
     return jsonify({'version': v})
-
 
 @app.route("/v1/user", methods=["POST"])
 @jwt_required()
