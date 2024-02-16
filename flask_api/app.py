@@ -1,7 +1,6 @@
 from datetime import datetime, timezone, timedelta
 import random
 from flask import Flask, request, jsonify, g
-import sqlite3
 import flask_api.geopick as gp
 from flask_cors import CORS
 from os.path import join, dirname
@@ -211,9 +210,9 @@ def sec_dwc():
             ('georeferencedBy', georeferencedBy),
             ('georeferenceRemarks', georeferenceRemarks)
             ])
+        return json.dumps(response)
     else:
-        response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon)"}        
-    return json.dumps(response)
+        return json.dumps({"success": False, "msg": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon)"}), 400
 
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
