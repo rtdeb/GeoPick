@@ -1,6 +1,7 @@
 from datetime import datetime, timezone, timedelta
 import random
 from flask import Flask, request, jsonify, g
+import sqlite3
 import flask_api.geopick as gp
 from flask_cors import CORS
 from os.path import join, dirname
@@ -125,10 +126,8 @@ def sec():
 # Simple check to assume coordinates are in EPSG4326
 def isLatLon(lat, lon): 
   ok = True
-  if lon > 180 or lon < -180:
-    ok = False
-  if lat > 90 or lat < -90:
-    ok = False
+  if lon > 180 or lon < -180 or lat > 90 or lat < -90:
+      ok = False
   return ok  
 
 # Utility function to iterate oveer the coordinates of geometries
@@ -150,13 +149,13 @@ def iterate_coordinates(geometry):
 
 # Simple check of wkt being in epsg 4326
 def wktIsLatLon(wkt):
-  wktOK = True
-  for point in iterate_coordinates(wkt): 
-      if not isLatLon(point[1], point[0]):
-        wktOK = False
-        break
-  return wktOK
-
+    coords = wkt.get_coordinates()
+    wktOK = True
+    for index, row in coords.iterrows():
+        if not isLatLon(row['y'], row['x']):
+            wktOK = False
+            break
+    return wktOK
 
 # Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'secAsPolygon' (polygonal representation as a WKT).
 @app.route('/v1/sec_dwc', methods=['POST'])
@@ -177,7 +176,7 @@ def sec_dwc():
     else:
         georeferenceRemarks = ""            
     location_wgs84 = gp.json_to_geoseries(json_location)
-    if wktIsLatLon(location_wgs84[0]):
+    if wktIsLatLon(location_wgs84):
         georef = gp.get_georeference(location_wgs84)
         decimalLongitude = georef[0].centroid[0].x
         decimalLatitude = georef[0].centroid[0].y  
@@ -210,9 +209,9 @@ def sec_dwc():
             ('georeferencedBy', georeferencedBy),
             ('georeferenceRemarks', georeferenceRemarks)
             ])
-        return json.dumps(response)
     else:
-        return json.dumps({"success": False, "msg": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon)"}), 400
+        response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon). One or more longitude or latitude values are outside of their range. Valid ranges are: Longitude [-180, 180] and Latitude: [-90, 90]"}        
+    return json.dumps(response)
 
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
