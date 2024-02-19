@@ -211,7 +211,7 @@ def sec_dwc():
             ])
     else:
         response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon). One or more longitude or latitude values are outside of their range. Valid ranges are: Longitude [-180, 180] and Latitude: [-90, 90]"}        
-    return json.dumps(response)
+    return jsonify(response)
 
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
