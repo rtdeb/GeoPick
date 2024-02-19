@@ -176,3 +176,4 @@ app.cli.add_command(custom_commands.create_superuser)
 if __name__ == '__main__':
     app.run(debug=False, port=os.environ.get('API_PORT'))
 
+
