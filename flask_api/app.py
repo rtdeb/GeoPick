@@ -17,12 +17,14 @@ from flask_migrate import Migrate
 from flask_api.commands import custom_commands
 from sqlalchemy.exc import IntegrityError
 import time
-
+from collections import OrderedDict
+from flask_swagger_ui import get_swaggerui_blueprint
 
 upper_dir = (Path(dirname(__file__))).parent.absolute()
 
 dotenv_path = join(upper_dir, '.env')
 package_path = join(upper_dir, 'package.json')
+
 
 load_dotenv(dotenv_path)
 
@@ -37,6 +39,19 @@ jwt = JWTManager(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tracking
+
+SWAGGER_URL="/swagger"
+API_URL="/static/swagger.json"
+
+swagger_ui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': 'GeoPick API'
+    }
+)
+
+app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
 
 db.init_app(app)
 migrate = Migrate(app, db)
