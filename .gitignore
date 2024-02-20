@@ -8,7 +8,7 @@
 .vscode
 .vscode
 *.pyc
-*.ipynb
+test.ipynb
 **/._*
 **/.DS_Store
 dist
