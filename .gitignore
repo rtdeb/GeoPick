@@ -8,7 +8,9 @@
 .vscode
 .vscode
 *.pyc
+flask_api/__init__.py
 *.ipynb
+.ipynb_checkpoints
 **/._*
 **/.DS_Store
 dist
@@ -28,6 +30,7 @@ log.md
 node_modules
 notebooks/matomo_params.json
 package-lock.json
+flask_api/__pycache__
 R/tests
 resources
 tmp
