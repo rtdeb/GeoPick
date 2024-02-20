@@ -54,15 +54,17 @@ def middleware():
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
 
 
+def georeferenceToDB(locationid, georeference_json):
+    georef = db_create_georef(db, locationid, json.dumps(georeference_json))
+    return jsonify({"success": True, "msg": "Georef created", "id": georef.id })
+
 @app.route('/v1/georeference', methods=['POST'])
 @jwt_required()
 def write_georeference():    
     locationid = request.json.get("locationid", None)
     georef_data = request.json.get("georef_data", None)
-    georef_data_str = json.dumps(georef_data)
-    georef = db_create_georef(db, locationid, georef_data_str)
-    return jsonify({"success": True, "msg": "Georef created", "id": georef.id })
-
+    georef_json = georeferenceToDB(locationid, georef_data)
+    return georef_json
 
 @app.route('/v1/georeference/<geopick_id>', methods=['GET'])
 # @jwt_required()
@@ -157,7 +159,43 @@ def wktIsLatLon(wkt):
             break
     return wktOK
 
-# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'secAsPolygon' (polygonal representation as a WKT).
+def cleanGeoJSON(json_obj):
+    key_to_remove = 'features.bbox'
+    if key_to_remove in json_obj:
+        del json_obj[key_to_remove]
+    cleaned_json_str = json.dumps(json_obj)
+    return(cleaned_json_str)
+
+def reorganizeJSON(json_obj):
+    # if "coordinates" in json_obj:
+    coordinates = json_obj["features"][0]["geometry"]["coordinates"]        
+    # json_georef = {
+    # "sec_representation": [
+    #         {
+    #             "geometry": {
+    #                 "coordinates": coordinates,
+    #                 "type": "Polygon"
+    #             },
+    #             "properties": {},
+    #             "type": "Feature"
+    #         }
+    #     ]
+    # }    
+    json_georef = {
+        "sec_representation": [
+            {
+                "geometry": {
+                    "coordinates": coordinates,
+                    "type": "Polygon"
+                },
+                "properties": {},
+                "type": "Feature"
+            }
+        ]
+    }    
+    return json_georef
+
+# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'sec_representation' (polygonal representation as a WKT).
 @app.route('/v1/sec_dwc', methods=['POST'])
 @jwt_required()
 def sec_dwc():    
@@ -183,13 +221,15 @@ def sec_dwc():
         georeferenceDate = getUTC()  
         locationid = generate_location_id(georeferenceDate)
         coordinateUncertaintyInMeters = georef[1]
-        geojson_sec = dumps(georef[2][0])
+        georef_json = georef[2].to_json()
+        georef_json = json.loads(georef_json)
+        georef_json = reorganizeJSON(georef_json)['sec_representation']
         pointRadiusSpatialFit = georef[3]
         if location_wgs84.iloc[0].geom_type.lower() == 'polygon' or location_wgs84.iloc[0].geom_type.lower() == 'multipolygon':
             footprintSpatialFit = 1
         else:
             footprintSpatialFit = ""
-        footprintWKT = dumps(location_wgs84[0]) 
+        footprintWKT = dumps(location_wgs84[0])         
         response = OrderedDict([
             ('locationID', locationid),
             ('locality', locality),
@@ -198,7 +238,7 @@ def sec_dwc():
             ('coordinatePrecision', 0.0000001),
             ('geodeticDatum', "EPSG:4326"),
             ('coordinateUncertaintyInMeters', round(coordinateUncertaintyInMeters, 1)),
-            ('secAsPolygon', geojson_sec),
+            ('sec_representation', georef_json),
             ('pointRadiusSpatialFit', pointRadiusSpatialFit),
             ('footprintWKT', footprintWKT),
             ('footprintSRS', "EPSG:4326"),
@@ -209,6 +249,8 @@ def sec_dwc():
             ('georeferencedBy', georeferencedBy),
             ('georeferenceRemarks', georeferenceRemarks)
             ])
+        json_string = json.dumps(response)
+        georeferenceToDB(locationid, json.loads(json_string))
     else:
         response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon). One or more longitude or latitude values are outside of their range. Valid ranges are: Longitude [-180, 180] and Latitude: [-90, 90]"}        
     return jsonify(response)
