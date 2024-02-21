@@ -167,20 +167,7 @@ def cleanGeoJSON(json_obj):
     return(cleaned_json_str)
 
 def reorganizeJSON(json_obj):
-    # if "coordinates" in json_obj:
     coordinates = json_obj["features"][0]["geometry"]["coordinates"]        
-    # json_georef = {
-    # "sec_representation": [
-    #         {
-    #             "geometry": {
-    #                 "coordinates": coordinates,
-    #                 "type": "Polygon"
-    #             },
-    #             "properties": {},
-    #             "type": "Feature"
-    #         }
-    #     ]
-    # }    
     json_georef = {
         "sec_representation": [
             {
@@ -198,7 +185,7 @@ def reorganizeJSON(json_obj):
 # Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'sec_representation' (polygonal representation as a WKT).
 @app.route('/v1/sec_dwc', methods=['POST'])
 @jwt_required()
-def sec_dwc():    
+def sec_dwc():        
     json_location = parse_sec_request()
     data = json.loads(json_location)
     if 'locality' in data:
@@ -229,7 +216,8 @@ def sec_dwc():
             footprintSpatialFit = 1
         else:
             footprintSpatialFit = ""
-        footprintWKT = dumps(location_wgs84[0])         
+        footprintWKT = dumps(location_wgs84[0])
+        shareLink = os.environ.get('API_REQUEST_ORIGINS') + "/?locationid=" + locationid
         response = OrderedDict([
             ('locationID', locationid),
             ('locality', locality),
@@ -247,7 +235,8 @@ def sec_dwc():
             ('georeferenceSources', "GeoPick v." + v),
             ('georeferenceProtocol', "Georeferencing Quick Reference Guide (Zermoglio et al. 2020, https://doi.org/10.35035/e09p-h128)"),
             ('georeferencedBy', georeferencedBy),
-            ('georeferenceRemarks', georeferenceRemarks)
+            ('georeferenceRemarks', georeferenceRemarks),
+            ('shareLink', shareLink)
             ])
         json_string = json.dumps(response)
         georeferenceToDB(locationid, json.loads(json_string))
