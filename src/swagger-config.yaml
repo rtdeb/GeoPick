@@ -1,0 +1,40 @@
+# https://swagger.io/docs/specification/2-0
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: "Swagger GeoPick docs"
+  description: "List of all API endpoints"
+host: 127.0.0.1:8000
+basePath: /v1
+schemes:
+  - http
+paths:
+  /auth:
+    post:
+      summary: "Provides a json token valid for usage against authenticated endpoints"
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: "access data"
+          in: body
+          description: "JSON data for the api"
+          required: true
+          schema:
+            $ref: "#/definitions/AuthData"
+      responses:
+        401:
+          description: "Unauthorized"
+        200:
+          description: "OK"
+definitions:
+  AuthData:
+    type: "object"
+    properties: 
+      username: 
+        type: "string"          
+        description: "Valid username of registered user"
+      password:
+        type: "string"
+        description: "Valid password of registered user"

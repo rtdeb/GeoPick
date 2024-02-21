@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
+const webpack = require("webpack")
 const Dotenv = require("dotenv-webpack");
 const path = require("path");
 const version = require("./package.json").version;
@@ -10,6 +11,7 @@ module.exports = {
     index: "./src/map.js",
     util: "./src/api.js",
     ui: "./src/info.js",
+    swagger: "./src/swagger.js",    
   },
   output: {
     filename: "js/[name].bundle.js",
@@ -36,6 +38,7 @@ module.exports = {
       favicon: "src/favicon.ico",
       inject: "body",
       hash: true,
+      chunks:['index','util','ui']
     }),
     new HtmlWebpackPlugin({
       filename: "about.html",
@@ -58,6 +61,17 @@ module.exports = {
       inject: "body",
     }),
     new HtmlWebpackPlugin({
+      filename: "swagger.html",
+      template: "src/swagger.html",
+      templateParameters: {
+        title: "Swagger docs",
+        version: version,
+      },
+      favicon: "src/favicon.ico",
+      inject: "body",
+      chunks:['swagger']
+    }),    
+    new HtmlWebpackPlugin({
       filename: "changelog.html",
       template: "src/changelog.html",
       templateParameters: {
@@ -66,6 +80,9 @@ module.exports = {
       },
       favicon: "src/favicon.ico",
       inject: "body",
+    }),
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
     }),    
     new MiniCssExtractPlugin({
       filename: "css/mystyles.css",
@@ -78,6 +95,13 @@ module.exports = {
   module: {
     rules: [
       { test: /\.css$/i, use: ["style-loader", "css-loader"] },
+      {
+        test: /\.yaml$/,
+        use: [
+          { loader: 'json-loader' },
+          { loader: 'yaml-loader', options:{ asJSON: true } }
+        ]
+      },
       {
         test: /\.scss$/,
         use: [
