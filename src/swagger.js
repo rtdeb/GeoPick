@@ -10,14 +10,21 @@ const parse_url = function(url){
     return {
         protocol: _url.protocol,
         hostname: _url.hostname,
-        port: _url.port
+        port: _url.port,
+        pathname: _url.pathname
     }
 }
 
 const adjust_spec = function(spec){    
     const parsed_url = parse_url(api_url);
-    spec.host = parsed_url.hostname + ':' + parsed_url.port;
-    spec.schemes = [parsed_url.protocol];    
+    if(parsed_url.port != "80"){
+        spec.host = parsed_url.hostname + ':' + parsed_url.port;
+    }else{
+        spec.host = parsed_url.hostname;
+    }    
+    spec.schemes = [parsed_url.protocol.slice(0,-1)];
+    const reduced_pathname = parsed_url.pathname.slice(0,-1);
+    spec.basePath = reduced_pathname + spec.basePath;
 }
 
 
@@ -28,5 +35,5 @@ const ui = SwaggerUI({
   dom_id: '#swagger',
 });
 
-//console.log(parse_url(api_url));
+console.log(parse_url(api_url));
 console.log(spec);
