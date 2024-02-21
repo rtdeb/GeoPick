@@ -85,7 +85,7 @@ def list_georeferences():
         per_page = request.args.get("per-page", 100, type=int)
         georefs = db_get_georef_page(db, page, per_page)
         results = {
-            "results": [{"id": g.id, "geopick_id": g.geopick_id, "georef_data": g.georef_data} for g in georefs.items],
+            "results": [{"id": g.id, "locationid": g.locationid, "georef_data": g.georef_data, "time_created": g.time_created} for g in georefs.items],
             "pagination": {
                 "count": georefs.total,
                 "page": page,
