@@ -24,10 +24,10 @@ paths:
           schema:
             $ref: "#/definitions/AuthData"
       responses:
-        401:
-          description: "Unauthorized"
+        404:
+          description: "No user with these credentials exist"
         200:
-          description: "OK"
+          description: "Authentication successful"
 definitions:
   AuthData:
     type: "object"
