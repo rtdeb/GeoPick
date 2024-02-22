@@ -4,7 +4,7 @@ info:
   version: "1.0.0"
   title: "Swagger GeoPick docs"
   description: "List of all API endpoints"
-host: 127.0.0.1:8085
+host: 127.0.0.1:8085 
 basePath: /v1
 schemes:
   - http
