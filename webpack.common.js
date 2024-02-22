@@ -61,10 +61,10 @@ module.exports = {
       inject: "body",
     }),
     new HtmlWebpackPlugin({
-      filename: "swagger.html",
-      template: "src/swagger.html",
+      filename: "api_docs.html",
+      template: "src/api_docs.html",
       templateParameters: {
-        title: "Swagger docs",
+        title: "Swagger GeoPick docs",
         version: version,
       },
       favicon: "src/favicon.ico",
