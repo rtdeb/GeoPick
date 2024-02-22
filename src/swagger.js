@@ -17,7 +17,7 @@ const parse_url = function(url){
 
 const adjust_spec = function(spec){    
     const parsed_url = parse_url(api_url);
-    if(parsed_url.port != "80"){
+    if(parsed_url.port != "80" && parsed_url.port != ""){
         spec.host = parsed_url.hostname + ':' + parsed_url.port;
     }else{
         spec.host = parsed_url.hostname;
