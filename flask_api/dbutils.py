@@ -23,9 +23,9 @@ def db_create_georef(db, locationid, georef_data):
     return georef
 
 def db_get_georef_page(db, page, per_page):
-    query =  db.session.query(SharedGeoreference)
-    query = query.paginate(page=page, per_page=per_page)
-    return query
+    query = db.session.query(SharedGeoreference).order_by(SharedGeoreference.time_created.desc())
+    paginated_query = query.paginate(page=page, per_page=per_page)
+    return paginated_query
 
 def db_create_user(db, username, password):
     user = User(
