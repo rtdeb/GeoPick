@@ -21,7 +21,7 @@ def test_api_version():
     package_json = json.load(f)
     v = package_json['version']
     with t.test_client() as c:
-        rv = c.post('/v1/auth', json={
+        rv = c.post('/v1/authenticate', json={
             'username': os.environ.get('USERNAME'), 'password': os.environ.get('PASSWORD')
         })
         json_response = json.loads(rv.data)
@@ -32,7 +32,7 @@ def test_api_version():
 
 def test_api_auth():
     with t.test_client() as c:
-        rv = c.post('/v1/auth', json={
+        rv = c.post('/v1/authenticate', json={
             'username': os.environ.get('USERNAME'), 'password': os.environ.get('PASSWORD')
         })
         json_response = json.loads(rv.data)
