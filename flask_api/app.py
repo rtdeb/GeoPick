@@ -183,9 +183,9 @@ def reorganizeJSON(json_obj):
     return json_georef
 
 # Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'sec_representation' (polygonal representation as a WKT).
-@app.route('/v1/sec_dwc', methods=['POST'])
+@app.route('/v1/georeference-dwc', methods=['POST'])
 @jwt_required()
-def sec_dwc():        
+def georeference_dwc():        
     json_location = parse_sec_request()
     data = json.loads(json_location)
     if 'locality' in data:
@@ -268,7 +268,7 @@ def create_user():
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
 
-@app.route("/v1/auth", methods=["POST"])
+@app.route("/v1/authenticate", methods=["POST"])
 def auth_user():
     username = request.json.get("username", None)
     password = request.json.get("password", None)

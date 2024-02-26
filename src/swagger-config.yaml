@@ -9,7 +9,7 @@ basePath: /v1
 schemes:
   - http
 paths:
-  /auth:
+  /authenticate:
     post:
       summary: "Provides a json token valid for usage against authenticated endpoints"
       consumes:
@@ -28,6 +28,26 @@ paths:
           description: "No user with these credentials exist"
         200:
           description: "Authentication successful"
+  /georeference-dwc:
+    post:
+      summary: "Update GeoJSON feature collection"
+      description: "Updates the GeoJSON feature collection with features in the request body."
+      consumes:
+        - application/json  # Specify the request content type
+      produces:
+        - application/json
+      parameters:
+        - name: "access data"
+          in: body
+          description: "JSON data for the api"
+          required: true
+          schema:
+            $ref: "#/definitions/GeorefData"
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "Bad Request"  
 definitions:
   AuthData:
     type: "object"
@@ -38,3 +58,34 @@ definitions:
       password:
         type: "string"
         description: "Valid password of registered user"
+  GeorefData:
+    type: object
+    properties:
+      locality: 
+        type: string
+      type:
+        type: string
+      georeferencedBy:
+        type: string
+      georeferenceRemarks:
+        type: string      
+      features:        
+        type: object
+        properties:
+          id:
+            type: string  # "id" is a string in this case
+          type:
+            type: string  # "type" is assumed to be a string
+          properties:
+            type: object  # "properties" is an object
+          geometry:
+            type: object
+            properties:
+              type:
+                type: string  # "type" is a string
+              coordinates:
+                type: array
+                items:
+                  type: array
+                  items:
+                    type: number  # Coordinates are represented as numbers
