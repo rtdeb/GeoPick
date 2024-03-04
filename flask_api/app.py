@@ -66,7 +66,7 @@ def write_georeference():
     georef_json = georeferenceToDB(locationid, georef_data)
     return georef_json
 
-@app.route('/v1/georeference/<geopick_id>', methods=['GET'])
+@app.route('/v1/georeferences/<geopick_id>', methods=['GET'])
 # @jwt_required()
 def read_georeference(geopick_id):
     shared_georef = db_get_georef(db, geopick_id)
@@ -75,7 +75,7 @@ def read_georeference(geopick_id):
     else:
         return jsonify({"success": False, "msg": "Not found"}), 404
 
-@app.route('/v1/georeference', methods=['GET'])
+@app.route('/v1/georeferences', methods=['GET'])
 @jwt_required()
 def list_georeferences():
     current_user_id = get_jwt_identity()
@@ -85,7 +85,7 @@ def list_georeferences():
         per_page = request.args.get("per-page", 100, type=int)
         georefs = db_get_georef_page(db, page, per_page)
         results = {
-            "results": [{"id": g.id, "locationid": g.locationid, "georef_data": g.georef_data, "time_created": g.time_created} for g in georefs.items],
+            "results": [{"id": g.id, "locationid": g.locationid, "georef_data": json.loads(g.georef_data), "time_created": g.time_created} for g in georefs.items],
             "pagination": {
                 "count": georefs.total,
                 "page": page,

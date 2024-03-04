@@ -96,7 +96,7 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
         })        
     }
     map.spin(true);
-    fetch( api_base_url + 'sec',fetchdata)
+    fetch( api_base_url + 'sec', fetchdata)
     .then(function(response){
         return response.json();
     })
@@ -134,7 +134,7 @@ const load_share = function(locationid, site_layer, mbc_layer, centroid_layer, m
         })        
     }
     map.spin(true);
-    fetch( api_base_url + 'georeference/' + locationid, fetchdata)
+    fetch( api_base_url + 'georeferences/' + locationid, fetchdata)
     .then(function(response){         
         if(response.status == 404){
             throw new Error("Resource with id " + locationid + " does not exist!", {cause: response});

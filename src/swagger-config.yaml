@@ -11,7 +11,7 @@ schemes:
 paths:
   /authenticate:
     post:
-      summary: "Provides a json token valid for usage against authenticated endpoints"
+      summary: "Provides a token valid for use against authenticated endpoints"
       consumes:
         - application/json
       produces:
