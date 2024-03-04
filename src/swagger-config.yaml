@@ -69,7 +69,7 @@ definitions:
         type: string
       georeferenceRemarks:
         type: string      
-      features:        
+      features:
         type: object
         properties:
           id:
