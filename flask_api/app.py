@@ -115,7 +115,7 @@ def generate_location_id(timestamp_str):
     location_id = "geopick-api-" + v_api + "-" + timestamp_str + "-" + random_number
     return location_id
 
-# Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application
+# Given an incoming spatial geometry in GeoJSON format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application. This is a method intended to be used only by the GeoPick web application. To directly use the API please refer to the 'georeference-dwc' endpoint.
 @app.route('/v1/sec', methods=['POST'])
 @jwt_required()
 def sec():
