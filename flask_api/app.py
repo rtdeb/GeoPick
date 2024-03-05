@@ -71,7 +71,7 @@ def write_georeference():
 def read_georeference(locationid):
     shared_georef = db_get_georef(db, locationid)
     if shared_georef:
-        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)})
+        return jsonify({"success": True, "msg": "Georeference retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)})
     else:
         return jsonify({"success": False, "msg": "Not found"}), 404
 
@@ -93,7 +93,8 @@ def list_georeferences():
                 "pages": georefs.pages,
             },
         }
-        return jsonify(results)
+        results = jsonify(results)
+        return results
     else:
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
