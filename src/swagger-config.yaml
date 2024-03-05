@@ -1,19 +1,40 @@
 # https://swagger.io/docs/specification/2-0
 swagger: "2.0"
+
 info:
   version: "1.0.0"
-  title: "Swagger GeoPick docs"
-  description: "List of all API endpoints"
+  title: "GeoPick API documentation (Swagger)"
+  description: "List of API endpoints"
+
 host: 127.0.0.1:8085 
 basePath: /v1
 schemes:
   - http
+
 paths:
+# API metadata
+  /version:
+    get:
+      tags:
+        - "API metadata"
+      summary: "Returns the API version"      
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                version:
+                  type: string
+        400:
+          description: "Could not retrieve the API's version."  
+
+# User authentication
   /authenticate:
     post:
       tags: 
-        - "Authentication"
-      summary: "Provides a token valid for use against authenticated endpoints"
+        - "User authentication"
+      summary: "Provides a token valid for use against endpoints needing authentication."
       consumes:
         - application/json
       produces:
@@ -32,80 +53,62 @@ paths:
               password:
                 type: string
                 description: "Valid password of registered user"
-
       responses:
-        404:
+        400:
           description: "No user with these credentials exist"
         200:
           description: "Authentication successful"
 
-  /version:
-    get:
-      tags:
-        - "API metadata"
-      summary: "Returns the API version"      
-      responses:
-        200:
-          description: "Successful operation"
-          content:
-            application/json:
-              schema:
-                version:
-                  type: string
-        400:
-          description: "Bad Request"  
-
-  /sec:
+  /user:
     post:
-      tags: 
-        - "Web application private methods"
-      summary: "This method is intended to be used only by the GeoPick web application. To directly query the API please refer to the 'georeference-dwc' endpoint."
-      description: "Given an incoming spatial geometry in GeoJSON format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application. This is a method intended to be used only by the GeoPick web application."
+      tags:
+        - "User authentication"
+      summary: "Creates a regular user in the database."
       consumes:
-        - application/json  # Specify the request content type
-      produces:
         - application/json
       parameters:
-        - name: "access data"
-          in: body
-          description: "JSON data for the api"
+        - in: body
+          name: UserData
+          description: "JSON data for the API"
           required: true
           schema:
             type: object
             properties:
-              type: 
+              username:
                 type: string
-              geometry:
-                type: object
-                properties:
-                  type:
-                    type: string  # "type" is a string
-                  coordinates:
-                    type: array
-                    items:
-                      type: array
-                      items:
-                        type: number  # Coordinates are represented as numbers
-
+              password:
+                type: string
       responses:
         200:
-          description: "OK"
+          description: "User created"
+          content:
+            application/json:
+              schema:
+                msg:
+                  type: string
+                  description: "A message indicating the status of the operation"
+                  example: "Georeference retrieved"
+                success:
+                  type: boolean                  
+                  example: true
         400:
-          description: "Bad Request"  
-  
+          description: "User could not be created."
+
+# Georeferencing methods
   /georeference-dwc:
     post:
       tags: 
-        - "API methods"
-      summary: "Given a georeferenced locality expressed in GeoJSON format, returns a complete point-radius georeference as a GeoJSON object whose keys are named in Darwin Core named terms. It also includes a polygonal representation of the smallest enclosing circle."
+        - "Georeferencing"
+      summary: "Calculates a point-radius georeference given a georeference in Darwin Core terms and JSON format."
+      description: "Given a georeferenced locality expressed in GeoJSON format, returns a complete point-radius georeference as a GeoJSON object whose keys are named in Darwin Core terms. It also includes a polygonal representation of the smallest enclosing circle."
       consumes:
         - application/json  # Specify the request content type
       produces:
         - application/json
       parameters:
-        - name: "access data"
-          in: body
-          description: "JSON data for the api"
+        - in: body
+          name: DwC-GeoreferenceData          
+          description: "Georeference data in Darwin Core terms from which to calculate the point-radius."
           required: true
           schema:
             type: object
@@ -143,21 +146,22 @@ paths:
         200:
           description: "OK"
         400:
-          description: "Bad Request"  
+          description: "Point-radius calculation failed."  
   
   /georeference:
     post:
       tags: 
-        - "API methods"
-      summary: "Writes a locality georeference to the database."
+        - "Georeferencing"
+      summary: "Writes a locality point-radius georeference to the database."
+      description: "Takes a locality point-radius georeference in JSON format and stores it in the database. The georeference can later be retrieved using the endpoint '/georeference/{locationid}'"
       consumes:
         - application/json  # Specify the request content type
       produces:
         - application/json  # A response JSON in the form {"success": True, "msg": "Georeference created", "locacationid": georef.id } 
       parameters:
-        - name: "access data"
-          in: body
-          description: "JSON data for the api"
+        - in: body
+          name: GeoreferenceDB          
+          description: "Point-radius georeference to be written into the database."
           required: true
           schema:
             type: object
@@ -216,20 +220,19 @@ paths:
         200:
           description: "OK"
         400:
-          description: "Bad Request"  
+          description: "Could not write georeference to the database."  
 
   /georeferences/{locationid}:
     get:
       tags: 
-        - "API methods"
+        - "Georeferencing"
       summary: "Gets a point-radius georeference with id equal to locationid"
       parameters:
-        - name: locationid
-          in: path
+        - in: path
+          name: locationID
           description: "Location identifier"
-          required: true
-          schema:
-            type: string
+          required: true          
+          type: string
       responses:
         200:
           description: "Successful operation"
@@ -252,11 +255,13 @@ paths:
                   type: boolean
                   description: "Indicates whether the operation was successful"
                   example: true
+        400:
+          description: "There is no georeference with such locationID"
 
   /georeferences:
     get:
       tags: 
-        - "API methods"
+        - "Georeferencing"
       summary: "Gets a paged list of georeferences in GeoPick's database"
       responses:
         200:
@@ -351,6 +356,45 @@ paths:
                   type: boolean
                   description: "Indicates whether the operation was successful"
                   example: true
+        400:
+          description: "Retrieving of paged list of georeferences failed."
 
-                                
+# Endpoints to be used only by the Geopick's web application
+  /sec:
+    post:
+      tags: 
+        - "GeoPick's web application private methods"
+      summary: "This method is intended to be used only by the GeoPick web application. To directly query the API please refer to the 'georeference-dwc' endpoint."
+      consumes:
+        - application/json  # Specify the request content type
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: GeoreferenceData
+          description: "Georeference data generated by GeoPick's web application."
+          required: true
+          schema:
+            type: object
+            properties:
+              type: 
+                type: string
+              geometry:
+                type: object
+                properties:
+                  type:
+                    type: string  # "type" is a string
+                  coordinates:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number  # Coordinates are represented as numbers
+
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "Point-radius calculation failed."  
+                                  
                                 
