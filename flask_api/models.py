@@ -13,7 +13,6 @@ class User(db.Model):
 
 class SharedGeoreference(db.Model):
     id = db.Column(db.Integer, primary_key=True)    
-    # geopick-v1.1-20240118-1
     locationid = db.Column(db.String(300), unique=True, nullable=False)
     georef_data = db.Column(db.Text(), nullable=False)
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())

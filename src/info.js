@@ -123,7 +123,7 @@ const get_ui_data = function (yes_wkt) {
   let pointRadiusSpatialFit = $("#spatial_fit").val();
   let footprintSpatialFit = 1;
   if (wkt.includes("LINESTRING") || wkt.includes("POINT")) {
-    footprintSpatialFit = "";
+    footprintSpatialFit = null;
   }
   let source_string = p.name + " v." + p.version;
 

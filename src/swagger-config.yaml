@@ -38,6 +38,7 @@ paths:
           description: "No user with these credentials exist"
         200:
           description: "Authentication successful"
+  
   /sec:
     post:
       tags: 
@@ -75,11 +76,11 @@ paths:
           description: "OK"
         400:
           description: "Bad Request"  
-
+  
   /georeference-dwc:
     post:
       tags: 
-        - "API ßmethods"
+        - "API methods"
       summary: "Given a georeferenced locality expressed in GeoJSON format, returns a complete point-radius georeference as a GeoJSON object whose keys are named in Darwin Core named terms. It also includes a polygonal representation of the smallest enclosing circle."
       consumes:
         - application/json  # Specify the request content type
@@ -122,6 +123,79 @@ paths:
                           items:
                             type: number  # Coordinates are represented as numbers
             
+      responses:
+        200:
+          description: "OK"
+        400:
+          description: "Bad Request"  
+  
+  /georeference:
+    post:
+      tags: 
+        - "API methods"
+      summary: "Writes a locality georeference to the database."
+      consumes:
+        - application/json  # Specify the request content type
+      produces:
+        - application/json  # A response JSON in the form {"success": True, "msg": "Georeference created", "locacationid": georef.id } 
+      parameters:
+        - name: "access data"
+          in: body
+          description: "JSON data for the api"
+          required: true
+          schema:
+            type: object
+            properties:
+              locationid:
+                type: string 
+              georef_data:
+                type: object
+                properties:
+                  locationID:
+                    type: string
+                  locality:
+                    type: string
+                  decimalLatitude:
+                    type: string
+                  decimalLongitude:
+                    type: string
+                  geodeticDatum:
+                    type: string
+                  coordinateUncertaintyInMeters:
+                    type: string
+                  coordinatePrecision:
+                    type: double
+                  pointRadiusSpatialFit:
+                    type: string
+                  footprintWKT:
+                    type: string
+                  footprintSRS:
+                    type: string
+                  footprintSpatialFit:
+                    type: number
+                  georeferencedBy:
+                    type: string
+                  georeferencedDate:
+                    type: string
+                  georeferenceProtocol:
+                    type: string
+                  georeferenceSources:
+                    type: string
+                  georeferenceRemarks:
+                    type: string
+                  shareLink:
+                    type: string
+                  sec_representation:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        properties:
+                          type: object
+                        geometry:
+                          type: object
       responses:
         200:
           description: "OK"

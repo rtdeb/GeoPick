@@ -53,10 +53,10 @@ def middleware():
             access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
             request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
 
-
+# Writes a georeferenced locality, a spatial geometry, to the database.
 def georeferenceToDB(locationid, georeference_json):
     georef = db_create_georef(db, locationid, json.dumps(georeference_json))
-    return jsonify({"success": True, "msg": "Georef created", "id": georef.id })
+    return jsonify({"success": True, "msg": "Georeference created", "locacationid": georef.id })
 
 @app.route('/v1/georeference', methods=['POST'])
 @jwt_required()
@@ -66,12 +66,12 @@ def write_georeference():
     georef_json = georeferenceToDB(locationid, georef_data)
     return georef_json
 
-@app.route('/v1/georeferences/<geopick_id>', methods=['GET'])
+@app.route('/v1/georeferences/<locationid>', methods=['GET'])
 # @jwt_required()
-def read_georeference(geopick_id):
-    shared_georef = db_get_georef(db, geopick_id)
+def read_georeference(locationid):
+    shared_georef = db_get_georef(db, locationid)
     if shared_georef:
-        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(geopick_id)})
+        return jsonify({"success": True, "msg": "Georef retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)})
     else:
         return jsonify({"success": False, "msg": "Not found"}), 404
 
