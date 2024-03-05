@@ -84,6 +84,8 @@ const promote_reference_to_editable = function(site_layer, nominatim_layer, mbc_
         }
         if( geom_type == 'Polygon'){
             geom = turf.multiPolygon(coords);
+        } else if( geom_type == 'LineString' ){
+            geom = turf.multiLineString(coords);
         }        
     }
 
@@ -222,9 +224,11 @@ const load_api_data = function(site_layer, mbc_layer, centroid_layer, map){
             geom_type = geom[i].geometry.type;
             coords.push(geom[i].geometry.coordinates);
         }
-        if( geom_type == 'Polygon'){
+        if( geom_type == 'Polygon' ){
             geom = turf.multiPolygon(coords);
-        }                
+        } else if( geom_type == 'LineString' ){
+            geom = turf.multiLineString(coords);
+        }
     }
 
     const fetchdata = {
