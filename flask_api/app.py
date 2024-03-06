@@ -44,59 +44,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tra
 db.init_app(app)
 migrate = Migrate(app, db)
 
-@app.before_request
-def middleware():
-    http_origin = request.environ.get('HTTP_ORIGIN','origin')
-    http_referer = request.environ.get('HTTP_REFERER','referer')    
-    if request.environ['REQUEST_METHOD'] != 'OPTIONS':
-        if os.environ.get('API_REQUEST_ORIGINS') == http_origin or http_referer.startswith(http_origin):
-            access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
-            request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
-
+##### FUNCTIONS =================================================================== #
 # Writes a georeferenced locality, a spatial geometry, to the database.
 def georeferenceToDB(locationid, georeference_json):
     georef = db_create_georef(db, locationid, json.dumps(georeference_json))
     return jsonify({"success": True, "msg": "Georeference created", "locacationid": georef.id })
-
-@app.route('/v1/georeference', methods=['POST'])
-@jwt_required()
-def write_georeference():    
-    locationid = request.json.get("locationid", None)
-    georef_data = request.json.get("georef_data", None)
-    georef_json = georeferenceToDB(locationid, georef_data)
-    return georef_json, 200
-
-@app.route('/v1/georeferences/<locationid>', methods=['GET'])
-@jwt_required()
-def read_georeference(locationid):
-    shared_georef = db_get_georef(db, locationid)
-    if shared_georef:
-        return jsonify({"success": True, "msg": "Georeference retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)}), 200
-    else:
-        return jsonify({"success": False, "msg": "Not found"}), 404
-
-@app.route('/v1/georeferences', methods=['GET'])
-@jwt_required()
-def list_georeferences():
-    current_user_id = get_jwt_identity()
-    author = db.get_or_404(User, current_user_id)
-    if author.username == os.environ.get('USERNAME'):
-        page = request.args.get("page", 1, type=int)
-        per_page = request.args.get("per-page", 100, type=int)
-        georefs = db_get_georef_page(db, page, per_page)
-        results = {
-            "results": [{"id": g.id, "locationid": g.locationid, "georef_data": json.loads(g.georef_data), "time_created": g.time_created} for g in georefs.items],
-            "pagination": {
-                "count": georefs.total,
-                "page": page,
-                "per_page": per_page,
-                "pages": georefs.pages,
-            },
-        }
-        results = jsonify(results)
-        return results, 200
-    else:
-        return jsonify({"success": False, "msg": "Not allowed"}), 401
 
 def parse_sec_request():
     json_location = request.get_json()
@@ -115,16 +67,6 @@ def generate_location_id(timestamp_str):
     random_number = str(random.randint(100, 999))
     location_id = "geopick-api-" + v_api + "-" + timestamp_str + "-" + random_number
     return location_id
-
-# Given an incoming spatial geometry in GeoJSON format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application. This is a method intended to be used only by the GeoPick web application. To directly use the API please refer to the 'georeference-dwc' endpoint.
-@app.route('/v1/sec', methods=['POST'])
-@jwt_required()
-def sec():
-    json_location = parse_sec_request()
-    location_wgs84 = gp.json_to_geoseries(json_location)
-    georeference_json = gp.get_json_georeference(location_wgs84)
-    response = georeference_json
-    return response, 200
 
 # Simple check to assume coordinates are in EPSG4326
 def isLatLon(lat, lon): 
@@ -183,6 +125,71 @@ def reorganizeJSON(json_obj):
     }    
     return json_georef
 
+##### ENDPOINTS =================================================================== #
+@app.before_request
+def middleware():
+    http_origin = request.environ.get('HTTP_ORIGIN','origin')
+    http_referer = request.environ.get('HTTP_REFERER','referer')    
+    if request.environ['REQUEST_METHOD'] != 'OPTIONS':
+        if os.environ.get('API_REQUEST_ORIGINS') == http_origin or http_referer.startswith(http_origin):
+            access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
+            request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
+
+# ENDPOINT /v1/georeference ------------------------------------------------------- #
+@app.route('/v1/georeference', methods=['POST'])
+@jwt_required()
+def write_georeference():    
+    locationid = request.json.get("locationid", None)
+    georef_data = request.json.get("georef_data", None)
+    georef_json = georeferenceToDB(locationid, georef_data)
+    return georef_json, 200
+
+# ENDPOINT /v1/georeferences/<locationid> ----------------------------------------- #
+@app.route('/v1/georeferences/<locationid>', methods=['GET'])
+@jwt_required()
+def read_georeference(locationid):
+    shared_georef = db_get_georef(db, locationid)
+    if shared_georef:
+        return jsonify({"success": True, "msg": "Georeference retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)}), 200
+    else:
+        return jsonify({"success": False, "msg": "Not found"}), 404
+
+# ENDPOINT /v1/georeferences ------------------------------------------------------ #
+@app.route('/v1/georeferences', methods=['GET'])
+@jwt_required()
+def list_georeferences():
+    current_user_id = get_jwt_identity()
+    author = db.get_or_404(User, current_user_id)
+    if author.username == os.environ.get('USERNAME'):
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per-page", 100, type=int)
+        georefs = db_get_georef_page(db, page, per_page)
+        results = {
+            "results": [{"id": g.id, "locationid": g.locationid, "georef_data": json.loads(g.georef_data), "time_created": g.time_created} for g in georefs.items],
+            "pagination": {
+                "count": georefs.total,
+                "page": page,
+                "per_page": per_page,
+                "pages": georefs.pages,
+            },
+        }
+        results = jsonify(results)
+        return results, 200
+    else:
+        return jsonify({"success": False, "msg": "Not allowed"}), 401
+
+# ENDPOINT /v1/sec ---------------------------------------------------------------- #
+# Given an incoming spatial geometry in GeoJSON format returns its complete point-radius georeference including its SEC, in a format to be consumed by the GeoPick application. This is a method intended to be used only by the GeoPick web application. To directly use the API please refer to the 'georeference-dwc' endpoint.
+@app.route('/v1/sec', methods=['POST'])
+@jwt_required()
+def sec():
+    json_location = parse_sec_request()
+    location_wgs84 = gp.json_to_geoseries(json_location)
+    georeference_json = gp.get_json_georeference(location_wgs84)
+    response = georeference_json
+    return response, 200
+
+# ENDPOINT /v1/georeference-dwc --------------------------------------------------- #
 # Given an incoming spatial geometry in WKT format returns its complete point-radius georeference including its SEC, in Darwin Core Standard. It adds to the DWC georeference an additional non-DWC field: the 'sec_representation' (polygonal representation as a WKT).
 @app.route('/v1/georeference-dwc', methods=['POST'])
 @jwt_required()
@@ -246,11 +253,13 @@ def georeference_dwc():
         response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon). One or more longitude or latitude values are outside of their range. Valid ranges are: Longitude [-180, 180] and Latitude: [-90, 90]"}        
         return jsonify(response), 400
 
+# ENDPOINT /v1/version ------------------------------------------------------------ #
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
 def version():    
-    return jsonify({'version': v})
+    return jsonify({'version': v_api})
 
+# ENDPOINT /v1/user --------------------------------------------------------------- #
 @app.route("/v1/user", methods=["POST"])
 @jwt_required()
 def create_user():
@@ -269,7 +278,7 @@ def create_user():
     else:
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
-
+# ENDPOINT /v1/authenticate ------------------------------------------------------- #
 @app.route("/v1/authenticate", methods=["POST"])
 def auth_user():
     username = request.json.get("username", None)
@@ -283,7 +292,6 @@ def auth_user():
     
 # Register custom command
 app.cli.add_command(custom_commands.create_superuser)
-
 
 if __name__ == '__main__':
     app.run(debug=False, port=os.environ.get('API_PORT'))
