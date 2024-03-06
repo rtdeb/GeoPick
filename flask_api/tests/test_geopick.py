@@ -19,7 +19,7 @@ def test_api_version():
     package_path = join(env_dir, 'package.json')
     f = open(package_path)
     package_json = json.load(f)
-    v = package_json['version']
+    v = package_json['version-api']
     with t.test_client() as c:
         rv = c.post('/v1/authenticate', json={
             'username': os.environ.get('USERNAME'), 'password': os.environ.get('PASSWORD')
