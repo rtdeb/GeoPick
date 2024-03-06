@@ -66,7 +66,7 @@ For those acquainted with GitHub, you may [use GitHub's interface to raise issue
 <hr>
 
 ### HOW TO INSTALL
-_NOTE: The Dockerfile is used to configure and run the API in GeoPick's public host. It is not needed for deploying your own instance._
+_NOTE: The 'Dockerfile' file is used to configure and run the API in GeoPick's public host. It is not needed for deploying your own instance._
 
 To download, install, and run the application, please follow these steps:
 
