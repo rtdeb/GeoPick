@@ -62,11 +62,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       filename: "api_docs.html",
-      template: "src/api_docs.html",
-      templateParameters: {
-        title: "Swagger GeoPick docs",
-        version: version,
-      },
+      template: "src/api_docs.html",      
       favicon: "src/favicon.ico",
       inject: "body",
       chunks:['swagger']

@@ -27,6 +27,7 @@ const adjust_spec = function(spec){
     spec.basePath = reduced_pathname + spec.basePath;
 }
 
+alert(api_url);
 
 adjust_spec(spec);
 
