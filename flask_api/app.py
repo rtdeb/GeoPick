@@ -257,7 +257,7 @@ def georeference_dwc():
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()
 def version():    
-    return jsonify({'version': v})
+    return jsonify({'version-api': v_api})
 
 # ENDPOINT /v1/user --------------------------------------------------------------- #
 @app.route("/v1/user", methods=["POST"])
