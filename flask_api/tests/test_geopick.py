@@ -28,7 +28,7 @@ def test_api_version():
         token = json_response['token']
         rversion = c.get('/v1/version', headers={'Authorization' : 'Bearer ' + token})
         json_response = json.loads(rversion.data)
-        assert json_response['version'] == v
+        assert json_response['version-api'] == v
 
 def test_api_auth():
     with t.test_client() as c:
