@@ -158,6 +158,9 @@ You can change the port by modifying the *webpack.dev.js* file before executing 
 
 Once done, you can access the application at `http://localhost:8085`, or at the web server address where you deployed the application.
 
+```
+NOTE: The Dockerfile above can be ignored. It is used to configure and run the API in GeoPick's public host. It is not needed for deploying your own instance.
+```
 <hr>
 
 ### Changelog
