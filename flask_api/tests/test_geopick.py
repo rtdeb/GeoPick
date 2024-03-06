@@ -14,7 +14,6 @@ def test_env_file_present():
     load_dotenv(dotenv_path)
     assert os.path.isfile(dotenv_path)
 
-
 def test_api_version():
     package_path = join(env_dir, 'package.json')
     f = open(package_path)
