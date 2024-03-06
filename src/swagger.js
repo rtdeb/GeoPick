@@ -6,7 +6,13 @@ const api_url = process.env.API_URL;
 const spec = require('./swagger-config.yaml');
 
 const parse_url = function(url){
-    _url = new URL(url);
+    if(url=='/'){
+        const getUrl = window.location;
+        const baseUrl = getUrl .protocol + "//" + getUrl.host;            
+        _url = new URL(baseUrl);
+    }else{
+        _url = new URL(url);    
+    }
     return {
         protocol: _url.protocol,
         hostname: _url.hostname,
@@ -26,8 +32,6 @@ const adjust_spec = function(spec){
     const reduced_pathname = parsed_url.pathname.slice(0,-1);
     spec.basePath = reduced_pathname + spec.basePath;
 }
-
-alert(api_url);
 
 adjust_spec(spec);
 
