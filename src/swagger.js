@@ -33,6 +33,8 @@ const adjust_spec = function(spec){
     spec.basePath = reduced_pathname + spec.basePath;
 }
 
+alert(process.env.API_REQUEST_ORIGINS);
+
 adjust_spec(spec);
 
 const ui = SwaggerUI({
