@@ -34,6 +34,3 @@ const ui = SwaggerUI({
   spec,
   dom_id: '#swagger',
 });
-
-console.log(parse_url(api_url));
-console.log(spec);

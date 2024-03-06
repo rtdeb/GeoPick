@@ -64,14 +64,14 @@ def write_georeference():
     locationid = request.json.get("locationid", None)
     georef_data = request.json.get("georef_data", None)
     georef_json = georeferenceToDB(locationid, georef_data)
-    return georef_json
+    return georef_json, 200
 
 @app.route('/v1/georeferences/<locationid>', methods=['GET'])
-# @jwt_required()
+@jwt_required()
 def read_georeference(locationid):
     shared_georef = db_get_georef(db, locationid)
     if shared_georef:
-        return jsonify({"success": True, "msg": "Georeference retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)})
+        return jsonify({"success": True, "msg": "Georeference retrieved", "data": shared_georef.georef_data, "path": '/?share={0}'.format(locationid)}), 200
     else:
         return jsonify({"success": False, "msg": "Not found"}), 404
 
@@ -94,7 +94,7 @@ def list_georeferences():
             },
         }
         results = jsonify(results)
-        return results
+        return results, 200
     else:
         return jsonify({"success": False, "msg": "Not allowed"}), 401
 
@@ -124,7 +124,7 @@ def sec():
     location_wgs84 = gp.json_to_geoseries(json_location)
     georeference_json = gp.get_json_georeference(location_wgs84)
     response = georeference_json
-    return response
+    return response, 200
 
 # Simple check to assume coordinates are in EPSG4326
 def isLatLon(lat, lon): 
@@ -241,9 +241,10 @@ def georeference_dwc():
             ])
         json_string = json.dumps(response)
         georeferenceToDB(locationid, json.loads(json_string))
+        return jsonify(response), 200
     else:
         response = {"Error": "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon). One or more longitude or latitude values are outside of their range. Valid ranges are: Longitude [-180, 180] and Latitude: [-90, 90]"}        
-    return jsonify(response)
+        return jsonify(response), 400
 
 @app.route('/v1/version', methods=['GET'])
 @jwt_required()

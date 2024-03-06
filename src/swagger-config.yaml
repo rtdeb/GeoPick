@@ -54,7 +54,7 @@ paths:
                 type: string
                 description: "Valid password of registered user"
       responses:
-        400:
+        404:
           description: "No user with these credentials exist"
         200:
           description: "Authentication successful"
@@ -92,7 +92,9 @@ paths:
                   type: boolean                  
                   example: true
         400:
-          description: "User could not be created."
+          description: "User already exists or generic error."
+        401: 
+          description: "Users lacks privilege."
 
 # Georeferencing methods
   /georeference-dwc:
@@ -144,9 +146,9 @@ paths:
             
       responses:
         200:
-          description: "OK"
+          description: "Point-radius calculation success."
         400:
-          description: "Point-radius calculation failed."  
+          description: "Footprint geometry does not appear to be in EPSG:4326 (Lat/Lon)."  
   
   /georeference:
     post:
@@ -218,9 +220,7 @@ paths:
                           type: object
       responses:
         200:
-          description: "OK"
-        400:
-          description: "Could not write georeference to the database."  
+          description: "Georeference written to the database."
 
   /georeferences/{locationid}:
     get:
@@ -255,7 +255,7 @@ paths:
                   type: boolean
                   description: "Indicates whether the operation was successful"
                   example: true
-        400:
+        404:
           description: "There is no georeference with such locationID"
 
   /georeferences:
@@ -356,8 +356,8 @@ paths:
                   type: boolean
                   description: "Indicates whether the operation was successful"
                   example: true
-        400:
-          description: "Retrieving of paged list of georeferences failed."
+        401:
+          description: "User lacks privilege."
 
 # Endpoints to be used only by the Geopick's web application
   /sec:
@@ -394,7 +394,5 @@ paths:
       responses:
         200:
           description: "OK"
-        400:
-          description: "Point-radius calculation failed."  
                                   
                                 
