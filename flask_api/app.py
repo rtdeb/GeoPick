@@ -131,9 +131,14 @@ def middleware():
     http_origin = request.environ.get('HTTP_ORIGIN','origin')
     http_referer = request.environ.get('HTTP_REFERER','referer')    
     if request.environ['REQUEST_METHOD'] != 'OPTIONS':
-        if os.environ.get('API_REQUEST_ORIGINS') == http_origin or http_referer.startswith(http_origin):
-            access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
-            request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
+        if http_origin == 'origin' or http_origin == '': #HTTP_ORIGIN not present
+            if http_referer.startswith(os.environ.get('API_REQUEST_ORIGINS')):
+                access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
+                request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
+        else:
+            if os.environ.get('API_REQUEST_ORIGINS') == http_origin or http_referer.startswith(http_origin):
+                access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
+                request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
 
 # ENDPOINT /v1/georeference ------------------------------------------------------- #
 @app.route('/v1/georeference', methods=['POST'])
