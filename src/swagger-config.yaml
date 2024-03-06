@@ -3,7 +3,7 @@ swagger: "2.0"
 
 info:
   version: "1.0.0"
-  title: "GeoPick API documentation (Swagger)"
+  title: "GeoPick API documentation"
   description: "List of API endpoints"
 
 host: 127.0.0.1:8085 
