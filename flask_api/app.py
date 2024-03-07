@@ -132,7 +132,7 @@ def middleware():
     http_referer = request.environ.get('HTTP_REFERER','referer')    
     if request.environ['REQUEST_METHOD'] != 'OPTIONS':
         if http_origin == 'origin' or http_origin == '': #HTTP_ORIGIN not present
-            if http_referer.startswith(os.environ.get('API_REQUEST_ORIGINS')):
+            if os.environ.get('API_REQUEST_ORIGINS') is None or http_referer.startswith(os.environ.get('API_REQUEST_ORIGINS')):
                 access_token = create_access_token(identity=1, expires_delta=timedelta(days=1))
                 request.environ["HTTP_AUTHORIZATION"] = f"Bearer " + access_token        
         else:
