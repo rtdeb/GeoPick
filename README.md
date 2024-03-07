@@ -163,6 +163,10 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### Changelog
+#### Version 2.1.0
+- Front-end code refactoring
+- API Documentation 
+  
 #### Version 2.0.0
 - Added new compulsory Darwin Core field _locality_.  
 - Added new automatically assigned Darwin Core field _locationID_.  
