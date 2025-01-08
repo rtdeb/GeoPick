@@ -5,6 +5,7 @@ COPY flask_api /srv/flask_api/
 
 WORKDIR /srv/
 
+RUN apt-get update && apt-get install -y libexpat1
 RUN pip install -r requirements.txt --src /usr/local/src
 RUN touch .env && pip install pyuwsgi --src /usr/local/src
 
