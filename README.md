@@ -163,6 +163,9 @@ Once done, you can access the application at `http://localhost:8085`, or at the 
 <hr>
 
 ### Changelog
+#### Version 2.1.1
+- Switched base layers from Bing Maps to Esri World Imagery
+
 #### Version 2.1.0
 - Front-end code refactoring
 - API Documentation 
