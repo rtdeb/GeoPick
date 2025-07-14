@@ -252,29 +252,15 @@ var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
 });
 
-var bing_aerial = L.tileLayer.bing({
-  bingMapsKey: bing_api_key,
+var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
 });
 
-var bing_aerial_labels = L.tileLayer.bing({
-  bingMapsKey: bing_api_key,
-  imagerySet: "AerialWithLabels",
-});
-
-var bing_roads = L.tileLayer.bing({
-  bingMapsKey: bing_api_key,
-  imagerySet: "Road",
-});
-
-var bing_roads_dark = L.tileLayer.bing({
-  bingMapsKey: bing_api_key,
-  imagerySet: "CanvasDark",
-});
 
 var map = L.map("map", {
   center: [51.505, -0.09],
   zoom: 3,
-  layers: [bing_aerial_labels],
+  layers: [Esri_WorldImagery],
   zoomControl: false,
   dragging: !L.Browser.mobile,
 });
@@ -302,10 +288,7 @@ map.addLayer(nominatim_layer);
 
 var baseMaps = {
   OpenStreetMap: osm,
-  "Bing Aerial": bing_aerial,
-  "Bing Aerial+roads": bing_aerial_labels,
-  "Bing Roads": bing_roads,
-  "Bing Roads dark": bing_roads_dark,
+  "ESRI World Imagery": Esri_WorldImagery,  
 };
 
 L.control.layers(baseMaps, null, { position: "topleft" }).addTo(map);
