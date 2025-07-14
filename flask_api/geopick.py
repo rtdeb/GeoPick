@@ -2,6 +2,7 @@ import geopandas as gpd
 import pandas as pd
 import pyproj
 import shapely
+from shapely.geometry import shape
 import numpy as np
 import json
 import math
@@ -206,8 +207,8 @@ def get_json_georeference(location):
     data = {"georef": "None"}
   return data
 
-def json_to_geoseries(json):
-  location = gpd.read_file(json, driver = 'GeoJSON')
+def json_to_geoseries(json_str):
+  location = gpd.read_file(json_str, driver ='GeoJSON')
   location.crs = 4326
   location = location["geometry"]
   return location

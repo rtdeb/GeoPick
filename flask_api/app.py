@@ -16,8 +16,9 @@ from flask_api.models import User, db
 from flask_migrate import Migrate
 from flask_api.commands import custom_commands
 from sqlalchemy.exc import IntegrityError
+import shapely
 from shapely.wkt import dumps
-from shapely.geometry import Polygon, MultiPolygon, LineString, MultiLineString
+from shapely.geometry import Polygon, MultiPolygon, LineString, MultiLineString, shape
 import time
 from collections import OrderedDict
 
@@ -50,12 +51,28 @@ def georeferenceToDB(locationid, georeference_json):
     georef = db_create_georef(db, locationid, json.dumps(georeference_json))
     return jsonify({"success": True, "msg": "Georeference created", "locacationid": georef.id })
 
+def check_geometry(json_location_str):
+    json_data = json.loads(json_location_str)
+    geometry = json_data['geometry']
+    print("It's a {0}".format(geometry['type']))
+    if geometry['type'] == 'Polygon':
+        shapely_polygon = shape(geometry)
+        exterior_ring = shapely.get_exterior_ring(shapely_polygon)
+        print("Counterclockwise - {0}".format(shapely.is_ccw(exterior_ring)))
+    elif geometry['type'] == 'MultiPolygon':
+        shapely_multipolygon = shape(geometry)
+        polygons = list(shapely_multipolygon.geoms)
+        for p in polygons:
+            exterior_ring = shapely.get_exterior_ring(p)
+            print("Counterclockwise - {0}".format(shapely.is_ccw(exterior_ring)))
+
 def parse_sec_request():
     json_location = request.get_json()
     json_location = str(json_location)
     json_location = json_location.replace("'", "\"")
     if json_location[0] == "[":
-        json_location = json_location[1:len(json_location) - 1]    
+        json_location = json_location[1:len(json_location) - 1]
+    check_geometry(json_location)
     return json_location
 
 def getUTC():
