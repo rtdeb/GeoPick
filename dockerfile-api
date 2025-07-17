@@ -1,0 +1,13 @@
+FROM python:3.11-slim AS api
+
+COPY requirements.txt package.json /srv/
+COPY flask_api /srv/flask_api/
+
+WORKDIR /srv/
+
+RUN apt-get update && apt-get install -y libexpat1
+RUN pip install -r requirements.txt --src /usr/local/src
+RUN touch .env && pip install pyuwsgi --src /usr/local/src
+
+CMD cd flask_api && flask db upgrade && flask create_superuser && cd .. && uwsgi --http-socket 0.0.0.0:8000 --wsgi-file flask_api/app.py --callable app --processes 4 --threads 2
+

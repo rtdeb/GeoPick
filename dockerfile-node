@@ -1,0 +1,14 @@
+FROM node:16-alpine
+
+COPY package.json /app/
+COPY .env /app/
+COPY package-lock.json /app/
+COPY src /app/src/
+COPY logo /app/logo/
+COPY webpack.common.js /app/
+COPY webpack.dev.js /app/
+COPY webpack.prod.js /app/
+
+WORKDIR /app/
+
+RUN npm install
