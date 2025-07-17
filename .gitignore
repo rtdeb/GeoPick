@@ -28,7 +28,6 @@ grt_api.patch
 log.md
 node_modules
 notebooks/matomo_params.json
-package-lock.json
 flask_api/__pycache__
 R/tests
 resources
