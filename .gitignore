@@ -23,6 +23,7 @@ flask_api/migrations/__pycache__/
 flask_api/migrations/versions/__pycache__/
 flask_api/tests/__pycache__/
 GeoPick.Rproj
+geopick_venv
 git_push.sh
 grt_api.patch
 log.md
@@ -33,8 +34,4 @@ flask_api/__pycache__
 R/tests
 resources
 tmp
-ui.css
-ui.html
-ui.js
-ui.md
-venv
+wb

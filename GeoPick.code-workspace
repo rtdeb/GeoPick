@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"r.helpPanel.enableHoverLinks": true,
+		"r.helpPanel.enableSyntaxHighlighting": true,
+		"r.lsp.diagnostics": true,
+		"r.lsp.enabled": true,
+		"r.rmarkdown.enableCodeLens": false,
+		"r.rmarkdown.knit.openOutputFile": true,
+		"r.session.emulateRStudioAPI": true,
+		"julia.environmentPath": "/Users/arnald/Library/CloudStorage/OneDrive-UAB/wb/GeoPick"
+	}
+}

@@ -62,7 +62,7 @@ const set_share_link = function (locationid) {
 };
 
 const empty_controls = function () {
-  for (c in controls) {
+  for (const c in controls) {
     if (
       $("#" + controls[c])
         .val()
@@ -188,7 +188,7 @@ const copy_share_link = function (share_link) {
 };
 
 const show_api_centroid_data_wkt = function (parsed_json, wkt) {
-  geometry = parsed_json.centroid.geometry.features[0].geometry;
+  const geometry = parsed_json.centroid.geometry.features[0].geometry;
   $("#centroid_x").val(geometry.coordinates[0].toFixed(7));
   $("#centroid_y").val(geometry.coordinates[1].toFixed(7));
 
@@ -200,7 +200,7 @@ const show_api_centroid_data_wkt = function (parsed_json, wkt) {
 };
 
 const show_api_centroid_data = function (parsed_json, geom) {
-  geometry = parsed_json.centroid.geometry.features[0].geometry;
+  const geometry = parsed_json.centroid.geometry.features[0].geometry;
   $("#centroid_x").val(geometry.coordinates[0].toFixed(7));
   $("#centroid_y").val(geometry.coordinates[1].toFixed(7));
 
@@ -211,7 +211,7 @@ const show_api_centroid_data = function (parsed_json, geom) {
   /* The following if code is cumbersome in order to deal with inconsistencies in the geom variable between lines and polygons. For lines we needed to build the MULTILINESTRING wkt ourselves beacause the convertToWK did not like. When lines, geom arrives as an array of LINESTRINGs instead of a MULTILINESTRING, while for polygons, geom already arrives as MULTIPOLYGON, and, in this latter case, convertToWK works.
    */
   if (geom.length == 1) {
-    wkt = convertToWK(geom[0]);
+    var wkt = convertToWK(geom[0]);
   } else {
     if (typeof geom.type == "undefined") {
       if (geom[0].geometry.type == "LineString") {
@@ -225,11 +225,11 @@ const show_api_centroid_data = function (parsed_json, geom) {
               ")"
           )
           .join(", ");
-        wkt = "MULTILINESTRING (" + coordinates + ")";
+        var wkt = "MULTILINESTRING (" + coordinates + ")";
       }
     } else {
       if (geom.geometry.type == "MultiPolygon") {
-        wkt = convertToWK(geom);
+        var wkt = convertToWK(geom);
       }
     }
   }
@@ -241,7 +241,7 @@ const show_api_centroid_data = function (parsed_json, geom) {
 const presentConfirmResetValidation = function (event) {
   if ($("#location_id").val() != "") {
     event.preventDefault();
-    message =
+    const message =
       "You are about to change either the 'Locality', 'Georeferenced by' or 'Georeference remarks' on a georeference that has already been validated. If you continue, you will have to validate again the record and it will be considered a different georeference. Do you want to continue?";
     dialogConfirm(message);
   }
